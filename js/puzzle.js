@@ -14,27 +14,41 @@ const height = window.innerHeight;
 
 var mainImage;
 function preload(){
-  loadImage('https://cdn.glitch.me/3dd806ba-9708-47f9-a7a4-0ffc8d4ae4bf/redPoo.jpg?v=1639777911432',(img)=>{
-    mainImage = img
-  })
+  // loadImage('https://cdn.glitch.me/3dd806ba-9708-47f9-a7a4-0ffc8d4ae4bf/redPoo.jpg?v=1639777911432',(img)=>{
+  //   mainImage = img
+  //   console.log(`image.width: ${img.width}`)
+  //   console.log(`image.height: ${img.height}`)
+
+  // })
 }
+
 function setup() {
   var cnv = createCanvas(window.innerWidth, window.innerHeight);
   cnv.parent("canvas");
   loadImage(
-    "https://cdn.glitch.me/3dd806ba-9708-47f9-a7a4-0ffc8d4ae4bf/link.jpeg?v=1640428492948",
+    // "https://raw.githubusercontent.com/DC-CC-21/G2022/15c80a5c05f043c7e75c49be04f52648471a8c98/assets/puzzle1.svg",
+    "https://raw.githubusercontent.com/DC-CC-21/G2022/46418a521635c4bc9664cec8272d9d47d9e54178/assets/Puzzle2.svg",
+    // "https://raw.githubusercontent.com/DC-CC-21/G2022/15c80a5c05f043c7e75c49be04f52648471a8c98/assets/Puzzle3.svg", 
+    // "https://cdn.glitch.me/3dd806ba-9708-47f9-a7a4-0ffc8d4ae4bf/link.jpeg?v=1640428492948",
     (IMAGE) => {
-      IMAGE.width = width / 2;
-      IMAGE.height = height / 2;
-      IMAGE.resize(width / 2, height / 2);
+      // IMAGE.resize(width / 2, height / 2);
+      console.log(`image.width: ${IMAGE.width}`)
+      console.log(`image.height: ${IMAGE.height}`)
       img = IMAGE;
     }
   );
 }
 
-var difficulty = ~~Math.sqrt(20);
-var puzzleW = width / 2;
-var puzzleH = height / 2;
+var difficulty = ~~Math.sqrt(4);
+var puzzleW = Map(800,0,1536,0,width);
+var puzzleH = puzzleW * 0.75;
+var transX = (width-puzzleW)/2;
+var transY = (height-puzzleH)/2;
+
+console.log(puzzleW + ' PuzzleW')
+console.log(puzzleH + ' PuzzleH')
+console.log(width)
+console.log(height)
 var pieceW;
 var pieceH;
 var pieces = [];
@@ -55,6 +69,7 @@ class Piece {
 
     this.c = createGraphics(width, height);
     this.c.image(this.img, 0, 0);
+    
     this.c = this.c.get(this.x, this.y, this.w, this.h);
 
     // this.x *= 1.1;
@@ -141,77 +156,30 @@ class Piece {
 }
 
 scene = 'display'
-//Create Buttons
-class Button {
-  constructor(self) {
-    for (let i = 0; i < Object.keys(self).length; i++) {
-      this[Object.keys(self)[i]] = self[Object.keys(self)[i]];
-    }
-   
-  }
-  display() {
-    strokeWeight(this.strokeWeight || 1);
-    stroke(this.stroke || 0);
-    
-    fill(color(this.fill) || 255);
-    if (this.help) {
-      if (this.isin()) {
-        fill(0, 255, 0, 100);
-      }
-    }
-    switch (this.shape) {
-      case "rect":
-        rect(this.x, this.y, this.w, this.h);
-        break;
-      case "ellipse":
-        ellipse(this.x, this.y, this.radius, this.radius);
-    }
-    if(this.text){
-      fill(this.tFill || 255);
-      stroke(this.tStroke || this.tFill)
-      textSize(this.tSize);
-      text(this.text,this.x + this.tx, this.y + this.ty);
-    }
-    
-  }
-  isin() {
-    if (this.shape === "rect") {
-      return (
-        mouseX > this.x &&
-        mouseX < this.x + this.w &&
-        mouseY > this.y &&
-        mouseY < this.y + this.h
-      );
-    } else {
-      return dist(this.x, this.y, mouseX, mouseY) < this.radius / 2;
-    }
-  }
-  click() {
-    if (this.isin()) {
-      this.cmd();
-    }
-  }
-}
+//Create Button Class
+
+
+// create buttons
 var Back = new Button({
   //shape
-  x: 100,
-  y: 100,
-  w: 60,
+  x: 10,
+  y: 10,
+  w: 70,
   h: 40,
   strokeWeight:1,
   stroke:'rgba(255,255,0,50)',
   fill:'#00aaff',
-  radius: 100,
+  radius: 10,
   shape: "rect",
 
   //text
   tx:0,
   ty:0,
 
-  text:'Back',
+  text:'PUZZLES',
   tFill:'rgb(255,0,0)',
   tStroke:'rgb(255,0,0',
-  tSize:'20',
+  tSize:14,
 
 
   //command and help
@@ -220,6 +188,23 @@ var Back = new Button({
     scene = 'main'
   },
 })
+var puzzleBtns = [
+  new Button({
+    //shape
+    x: 10,
+    y: 10,
+    w: 70,
+    h: 40,
+    shape: "image",
+    src:"",
+    // src:'https://cdn.glitch.com/a9975ea6-8949-4bab-addb-8a95021dc2da%2Fillustration.svg?v=1618177344016',
+    //command and help
+    help: true,
+    cmd: () => {
+      scene = 'main'
+    },
+  })
+]
 var mainBtns = [
   new Button({
     x: 300,
@@ -233,7 +218,7 @@ var mainBtns = [
     shape: "rect",
     help: true,
     cmd: () => {
-      scene = 'display'
+      scene = 'puzzleSetup'
     },
   })
 ]
@@ -245,8 +230,9 @@ class Game {
     //set vars
     pieceW = puzzleW / difficulty;
     pieceH = puzzleH / difficulty;
-    img.width = puzzleW;
-    img.height = puzzleH;
+    // img.resize(puzzleW,puzzleH)
+    // img.width = puzzleW;
+    // img.height = puzzleH;
 
     //createPieces
     for (let i = 0; i < difficulty; i++) {
@@ -258,8 +244,8 @@ class Game {
             w: pieceW,
             h: pieceH,
             img: img,
-            transX: width / 4,
-            transY: height / 4,
+            transX: transX,
+            transY: transY,
           })
         );
       }
@@ -299,6 +285,13 @@ Number of Pieces: ${pieces.length}`,
     for(var i = 0; i < mainBtns.length; i ++){
       mainBtns[i].display()
     }
+    
+  }
+  puzzleSetup(){
+    background(255,255,0,50)
+    for(var i = 0; i < puzzleBtns.length;  i ++){
+      puzzleBtns[i].display()
+    }
   }
 }
 
@@ -308,14 +301,20 @@ var game = new Game();
 function draw() {
   background(75);
   if (!drawOnce) {
+    
     if (img) {
+      console.log(`before ${img.width},${img.height}`)
+      
+      // img.resize(puzzleW,puzzleH)
       game.create();
       drawOnce = 1;
+      console.log(`after ${img.width},${img.height}`)
     }
   }
   fill(255);
-  rect(width / 4, height / 4, width / 2, height / 2);
+  rect(transX, transY, puzzleW, puzzleH);
   game[scene]();
+  // if(img)image(img,0,0)
 }
 
 
