@@ -78,7 +78,7 @@ class Piece {
     }
 
     this.c = createGraphics(width, height);
-    this.c.image(this.img, 0, 0);
+    this.c.image(this.img, 0, 0,puzzleW,puzzleH);
     
     this.c = this.c.get(this.x, this.y, this.w, this.h);
 
@@ -165,7 +165,7 @@ class Piece {
   }
 }
 
-scene = 'puzzleSetup'
+scene = 'display'
 //Create Button Class
 
 
@@ -223,11 +223,15 @@ class Game {
   create() {
     pieces = []
     //set vars
+    // difficulty = ~~Math.sqrt(10);
     pieceW = puzzleW / difficulty;
     pieceH = puzzleH / difficulty;
     // img.resize(puzzleW,puzzleH)
     img.width = puzzleW;
     img.height = puzzleH;
+    console.log('img.width ' + img.width + ' puzzleWidth ' + puzzleW )
+    console.log('img.height ' + img.height + 'puzzleHeight ' + puzzleH)
+
 
     //createPieces
     for (let i = 0; i < difficulty; i++) {
@@ -281,7 +285,9 @@ function draw() {
   }
   fill(255);
   rect(transX, transY, puzzleW, puzzleH);
-  if(scene === 'display'){game[scene]();}
+  if(scene === 'display' && img){
+    game[scene]();
+  }
   else{
     background(255)
     fill(0,0,0)
@@ -290,8 +296,6 @@ function draw() {
     text('HTML DISPLAY',width/2,height/2)
   }
 }
-
-
 
 var dragging = false;
 // touch and mouse
@@ -385,9 +389,37 @@ imgs.forEach((element)=>{
         console.log(`image.width: ${IMAGE.width}`)
         console.log(`image.height: ${IMAGE.height}`)
         img = IMAGE;
+        img.width = puzzleW;
+        img.height = puzzleH;
         game.create()
         // scene = 'display'
 
       }
     ); 
 })})
+
+
+
+function htmlPress(){
+  var pieceCount = document.getElementsByName('numberOfPieces')
+  for(var i = 0; i < pieceCount.length; i ++){
+    console.log(pieceCount[i].value)
+    if(pieceCount[i].checked){
+      difficulty = ~~Math.sqrt(Number(pieceCount[i].value))
+    }
+  }
+  console.log(difficulty)
+  if(difficulty){
+    game.create()
+    scene = 'display'
+    document.getElementById('pieceSetup').style.display = 'none'
+    document.getElementById('canvas').style.display = 'block'
+    document.getElementById('warning').style.display = 'none'
+  }
+  else{
+    document.getElementById('warning').style.display = 'block'
+}
+}
+
+document.getElementById('start').addEventListener('touchend',htmlPress)
+document.getElementById('start').addEventListener('click',htmlPress)
