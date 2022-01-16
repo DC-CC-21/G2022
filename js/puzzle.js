@@ -7,36 +7,51 @@ function Rotate(deg) {
 function Map(value, istart, istop, ostart, ostop) {
   return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 }
+function puzzleUrls(path,n){
+  var urls = []
+  for(let i = 1; i < n+1; i ++){
+    urls.push({src:`./assets/${path}/${path}${i}.svg`})
+  }
+  return urls
+}
 
 var img;
 const width = window.innerWidth;
 const height = window.innerHeight;
-
 var mainImage;
-function preload(){
-  // loadImage('https://cdn.glitch.me/3dd806ba-9708-47f9-a7a4-0ffc8d4ae4bf/redPoo.jpg?v=1639777911432',(img)=>{
-  //   mainImage = img
-  //   console.log(`image.width: ${img.width}`)
-  //   console.log(`image.height: ${img.height}`)
-
-  // })
+var puzzleImgs = {
+  ocean:puzzleUrls('beach',2), 
+  mountains:puzzleUrls('mountain',2),
+  underwater:puzzleUrls('underwater',3),
 }
+var puzzleBtns = []
+var loadedPuzzles = 0;
 
+function preload(){
+  // for(var i = 0; i < Object.keys(puzzleImgs).length; i ++){
+  //   var key = Object.keys(puzzleImgs)[i]
+  //   for(var j = 0; j < Object.keys(puzzleImgs[key]).length; j ++){
+  //     var n = Object.keys(puzzleImgs[key])[j]
+  //     var fullPath = puzzleImgs[key][n].src
+  //     loadImage(fullPath,(IMG)=>{
+  //       puzzleImgs[key][n].path = img
+  //       loadedPuzzles++;
+  //       console.log(loadedPuzzles)
+  //     })
+  //   }
+  // }
+}
 function setup() {
   var cnv = createCanvas(window.innerWidth, window.innerHeight);
   cnv.parent("canvas");
   loadImage(
-    // "https://raw.githubusercontent.com/DC-CC-21/G2022/15c80a5c05f043c7e75c49be04f52648471a8c98/assets/puzzle1.svg",
-    "https://raw.githubusercontent.com/DC-CC-21/G2022/46418a521635c4bc9664cec8272d9d47d9e54178/assets/Puzzle2.svg",
-    // "https://raw.githubusercontent.com/DC-CC-21/G2022/15c80a5c05f043c7e75c49be04f52648471a8c98/assets/Puzzle3.svg", 
-    // "https://cdn.glitch.me/3dd806ba-9708-47f9-a7a4-0ffc8d4ae4bf/link.jpeg?v=1640428492948",
+    './assets/beach/beach1.svg',
     (IMAGE) => {
-      // IMAGE.resize(width / 2, height / 2);
       console.log(`image.width: ${IMAGE.width}`)
       console.log(`image.height: ${IMAGE.height}`)
       img = IMAGE;
     }
-  );
+  );  
 }
 
 var difficulty = ~~Math.sqrt(4);
@@ -44,11 +59,6 @@ var puzzleW = Map(800,0,1536,0,width);
 var puzzleH = puzzleW * 0.75;
 var transX = (width-puzzleW)/2;
 var transY = (height-puzzleH)/2;
-
-console.log(puzzleW + ' PuzzleW')
-console.log(puzzleH + ' PuzzleH')
-console.log(width)
-console.log(height)
 var pieceW;
 var pieceH;
 var pieces = [];
@@ -155,7 +165,7 @@ class Piece {
   }
 }
 
-scene = 'display'
+scene = 'puzzleSetup'
 //Create Button Class
 
 
@@ -188,23 +198,7 @@ var Back = new Button({
     scene = 'main'
   },
 })
-var puzzleBtns = [
-  new Button({
-    //shape
-    x: 10,
-    y: 10,
-    w: 70,
-    h: 40,
-    shape: "image",
-    src:"",
-    // src:'https://cdn.glitch.com/a9975ea6-8949-4bab-addb-8a95021dc2da%2Fillustration.svg?v=1618177344016',
-    //command and help
-    help: true,
-    cmd: () => {
-      scene = 'main'
-    },
-  })
-]
+
 var mainBtns = [
   new Button({
     x: 300,
@@ -227,12 +221,13 @@ var mainBtns = [
 class Game {
   constructor() {}
   create() {
+    pieces = []
     //set vars
     pieceW = puzzleW / difficulty;
     pieceH = puzzleH / difficulty;
     // img.resize(puzzleW,puzzleH)
-    // img.width = puzzleW;
-    // img.height = puzzleH;
+    img.width = puzzleW;
+    img.height = puzzleH;
 
     //createPieces
     for (let i = 0; i < difficulty; i++) {
@@ -255,20 +250,9 @@ class Game {
     for (var i = pieces.length - 1; i >= 0; i--) {
       pieces[i].display();
     }
-    push();
-    translate(x, y);
-    Rotate(col);
-    if (img) {
-      // image(img, -50, -50);
-    }
-    pop();
-
-    fill(255);
-
     if (frameCount % 10 === 0) {
       frm = frameRate();
     }
-
     text(
       `frameRate: ${frm}
 Number of Pieces: ${pieces.length}`,
@@ -276,22 +260,6 @@ Number of Pieces: ${pieces.length}`,
       20
     );
     textAlign(CENTER,CENTER)
-    Back.display()
-  }
-  main(){
-    // image(mainImage,0,0,width,height)
-    background(255,0,0);
-    
-    for(var i = 0; i < mainBtns.length; i ++){
-      mainBtns[i].display()
-    }
-    
-  }
-  puzzleSetup(){
-    background(255,255,0,50)
-    for(var i = 0; i < puzzleBtns.length;  i ++){
-      puzzleBtns[i].display()
-    }
   }
 }
 
@@ -313,8 +281,14 @@ function draw() {
   }
   fill(255);
   rect(transX, transY, puzzleW, puzzleH);
-  game[scene]();
-  // if(img)image(img,0,0)
+  if(scene === 'display'){game[scene]();}
+  else{
+    background(255)
+    fill(0,0,0)
+    textSize(45)
+    textAlign(CENTER,CENTER)
+    text('HTML DISPLAY',width/2,height/2)
+  }
 }
 
 
@@ -322,12 +296,7 @@ function draw() {
 var dragging = false;
 // touch and mouse
 function end_and_release() {
-  console.log(dragging);
-  if(scene === 'main'){
-    for(var i = 0; i < mainBtns.length; i ++){
-      mainBtns[i].click()
-    }
-  }
+  // console.log(dragging);
   if(scene === 'display'){
     if (!dragging) {
       for (var i = 0; i < pieces.length; i++) {
@@ -340,11 +309,8 @@ function end_and_release() {
           pieces[i].snap();
         }
       }
-      col += 90;
-      Back.click()
     }
   }
-
   //set dragging to false
   for (var i = 0; i < pieces.length; i++) {
     pieces[i].snap();
@@ -404,3 +370,24 @@ function mousePressed() {
     }
   }
 }
+
+
+var imgs = document.querySelectorAll('img')
+imgs.forEach((element)=>{
+  element.addEventListener("click",(event)=>{
+    document.getElementById('puzzleSetup').style.display = 'none';
+    document.getElementById('pieceSetup').style.display = 'block'
+    console.log(event.target.src)
+
+    loadImage(
+      event.target.src,
+      (IMAGE) => {
+        console.log(`image.width: ${IMAGE.width}`)
+        console.log(`image.height: ${IMAGE.height}`)
+        img = IMAGE;
+        game.create()
+        // scene = 'display'
+
+      }
+    ); 
+})})

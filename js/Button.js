@@ -24,13 +24,14 @@ class Button {
         ellipse(this.x, this.y, this.radius, this.radius);
       case 'image':
         if(!this.image){
-          loadImage(this.src,(img)=>{
+        rect(this.x,this.y,this.w,this.h)
+        loadImage(this.src,(img)=>{
             this.image = img
           })
         }
         else{
-        rect(this.x,this.y,this.w,this)
-        // image(this.image,this.x,this.y,this.w,this.h)
+
+        image(this.image,this.x,this.y,this.w,this.h)
         }
     }
     if(this.text){
@@ -43,7 +44,7 @@ class Button {
     
   }
   isin() {
-    if (this.shape === "rect") {
+    if (this.shape === "rect" || this.shape === 'image') {
       return (
         mouseX > this.x &&
         mouseX < this.x + this.w &&
