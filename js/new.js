@@ -7,7 +7,7 @@ var _height = canvasSize * 0.8;
 var _width = canvasSize;
 
 function setup() {
-  var cnv = createCanvas(window.innerWidth, window.innerHeight);
+  var cnv = createCanvas(window.innerWidth*0.9, window.innerHeight*0.9);
   cnv.parent("canvas");
 }
 
@@ -37,7 +37,7 @@ class PuzzlePiece {
     this.x = Math.random() * puzzleWidth;
     this.y = Math.random() * puzzleHeight;
     this.rotation = 0;
-    this.size = (this.w + this.h) ;
+    this.size = this.w + this.h;
   }
   display() {
     if (this.isClicked) {
@@ -118,15 +118,19 @@ class PuzzlePiece {
 
 var puzzleImg;
 function createPuzzle(difficulty, IMG) {
+  canvasSize =
+    window.innerWidth > window.innerHeight
+      ? window.innerHeight
+      : window.innerWidth;
+  canvasSize *= 0.8;
+  puzzleWidth = canvasSize;
+  puzzleHeight = canvasSize * 0.8;
+  imageWidth = puzzleWidth / difficulty;
+  imageHeight = puzzleHeight / difficulty;
+  transX = (puzzleWidth - imageWidth) / 2;
+  transY = (puzzleHeight - imageHeight) / 2;
   loadImage(IMG, (loadedImg) => {
     puzzleImg = loadedImg;
-
-    puzzleWidth = canvasSize;
-    puzzleHeight = canvasSize * 0.8;
-    imageWidth = puzzleWidth / difficulty;
-    imageHeight = puzzleHeight / difficulty;
-    transX = (puzzleWidth - imageWidth) / 2;
-    transY = (puzzleHeight - imageHeight) / 2;
 
     console.log(`height: ${height}`);
     console.log(`width: ${width}`);
