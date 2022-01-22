@@ -7,10 +7,10 @@ function Rotate(deg) {
 function Map(value, istart, istop, ostart, ostop) {
   return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 }
-function puzzleUrls(path,n){
+function puzzleUrls(path, n) {
   var urls = []
-  for(let i = 1; i < n+1; i ++){
-    urls.push({src:`./assets/${path}/${path}${i}.svg`})
+  for (let i = 1; i < n + 1; i++) {
+    urls.push({ src: `./assets/${path}/${path}${i}.svg` })
   }
   return urls
 }
@@ -20,14 +20,14 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 var mainImage;
 var puzzleImgs = {
-  ocean:puzzleUrls('beach',2), 
-  mountains:puzzleUrls('mountain',2),
-  underwater:puzzleUrls('underwater',3),
+  ocean: puzzleUrls('beach', 2),
+  mountains: puzzleUrls('mountain', 2),
+  underwater: puzzleUrls('underwater', 3),
 }
 var puzzleBtns = []
 var loadedPuzzles = 0;
 
-function preload(){
+function preload() {
   // for(var i = 0; i < Object.keys(puzzleImgs).length; i ++){
   //   var key = Object.keys(puzzleImgs)[i]
   //   for(var j = 0; j < Object.keys(puzzleImgs[key]).length; j ++){
@@ -51,14 +51,14 @@ function setup() {
       console.log(`image.height: ${IMAGE.height}`)
       img = IMAGE;
     }
-  );  
+  );
 }
 
 var difficulty = ~~Math.sqrt(4);
-var puzzleW = Map(800,0,1536,0,width);
+var puzzleW = Map(800, 0, 1536, 0, width);
 var puzzleH = puzzleW * 0.75;
-var transX = (width-puzzleW)/2;
-var transY = (height-puzzleH)/2;
+var transX = (width - puzzleW) / 2;
+var transY = (height - puzzleH) / 2;
 var pieceW;
 var pieceH;
 var pieces = [];
@@ -78,8 +78,8 @@ class Piece {
     }
 
     this.c = createGraphics(width, height);
-    this.c.image(this.img, 0, 0,puzzleW,puzzleH);
-    
+    this.c.image(this.img, 0, 0, puzzleW, puzzleH);
+
     this.c = this.c.get(this.x, this.y, this.w, this.h);
 
     // this.x *= 1.1;
@@ -104,7 +104,7 @@ class Piece {
     // } else {
     //   fill(255, 0, 0, 50);
     // }
-  fill(0,0)
+    fill(0, 0)
     push();
     translate(this.x + this.w / 2, this.y + this.h / 2);
     Rotate(this.rotation);
@@ -176,20 +176,20 @@ var Back = new Button({
   y: 10,
   w: 70,
   h: 40,
-  strokeWeight:1,
-  stroke:'rgba(255,255,0,50)',
-  fill:'#00aaff',
+  strokeWeight: 1,
+  stroke: 'rgba(255,255,0,50)',
+  fill: '#00aaff',
   radius: 10,
   shape: "rect",
 
   //text
-  tx:0,
-  ty:0,
+  tx: 0,
+  ty: 0,
 
-  text:'PUZZLES',
-  tFill:'rgb(255,0,0)',
-  tStroke:'rgb(255,0,0',
-  tSize:14,
+  text: 'PUZZLES',
+  tFill: 'rgb(255,0,0)',
+  tStroke: 'rgb(255,0,0',
+  tSize: 14,
 
 
   //command and help
@@ -205,9 +205,9 @@ var mainBtns = [
     y: 300,
     w: 100,
     h: 100,
-    strokeWeight:1,
-    stroke:'rgba(255,255,0,50)',
-    fill:'rgb(255,0,0)',
+    strokeWeight: 1,
+    stroke: 'rgba(255,255,0,50)',
+    fill: 'rgb(255,0,0)',
     radius: 100,
     shape: "rect",
     help: true,
@@ -219,7 +219,7 @@ var mainBtns = [
 
 // Create Game
 class Game {
-  constructor() {}
+  constructor() { }
   create() {
     pieces = []
     //set vars
@@ -229,7 +229,7 @@ class Game {
     // img.resize(puzzleW,puzzleH)
     img.width = puzzleW;
     img.height = puzzleH;
-    console.log('img.width ' + img.width + ' puzzleWidth ' + puzzleW )
+    console.log('img.width ' + img.width + ' puzzleWidth ' + puzzleW)
     console.log('img.height ' + img.height + 'puzzleHeight ' + puzzleH)
 
 
@@ -263,7 +263,7 @@ Number of Pieces: ${pieces.length}`,
       10,
       20
     );
-    textAlign(CENTER,CENTER)
+    textAlign(CENTER, CENTER)
   }
 }
 
@@ -273,10 +273,10 @@ var game = new Game();
 function draw() {
   background(75);
   if (!drawOnce) {
-    
+
     if (img) {
       console.log(`before ${img.width},${img.height}`)
-      
+
       // img.resize(puzzleW,puzzleH)
       game.create();
       drawOnce = 1;
@@ -285,15 +285,15 @@ function draw() {
   }
   fill(255);
   rect(transX, transY, puzzleW, puzzleH);
-  if(scene === 'display' && img){
+  if (scene === 'display' && img) {
     game[scene]();
   }
-  else{
+  else {
     background(255)
-    fill(0,0,0)
+    fill(0, 0, 0)
     textSize(45)
-    textAlign(CENTER,CENTER)
-    text('HTML DISPLAY',width/2,height/2)
+    textAlign(CENTER, CENTER)
+    text('HTML DISPLAY', width / 2, height / 2)
   }
 }
 
@@ -301,7 +301,7 @@ var dragging = false;
 // touch and mouse
 function end_and_release() {
   // console.log(dragging);
-  if(scene === 'display'){
+  if (scene === 'display') {
     if (!dragging) {
       for (var i = 0; i < pieces.length; i++) {
         if (pieces[i].clicked) {
@@ -321,13 +321,13 @@ function end_and_release() {
     pieces[i].clicked = false;
   }
   dragging = false;
-  
-  for(var i = 0,j = 0; i < pieces.length; i ++){
-    if(pieces[i].fixed){
+
+  for (var i = 0, j = 0; i < pieces.length; i++) {
+    if (pieces[i].fixed) {
       j += 1
     }
   }
-  if(j === pieces.length-1){
+  if (j === pieces.length - 1) {
     completed = true;
   }
 }
@@ -346,7 +346,7 @@ function mouse_touch_drag() {
 function touchMoved() {
   return mouse_touch_drag();
 }
-function touchStarted(){
+function touchStarted() {
   return false
 }
 function touched() {
@@ -377,8 +377,8 @@ function mousePressed() {
 
 
 var imgs = document.querySelectorAll('img')
-imgs.forEach((element)=>{
-  element.addEventListener("click",(event)=>{
+imgs.forEach((element) => {
+  element.addEventListener("click", (event) => {
     document.getElementById('puzzleSetup').style.display = 'none';
     document.getElementById('pieceSetup').style.display = 'block'
     console.log(event.target.src)
@@ -395,31 +395,32 @@ imgs.forEach((element)=>{
         // scene = 'display'
 
       }
-    ); 
-})})
+    );
+  })
+})
 
 
 
-function htmlPress(){
+function htmlPress() {
   var pieceCount = document.getElementsByName('numberOfPieces')
-  for(var i = 0; i < pieceCount.length; i ++){
+  for (var i = 0; i < pieceCount.length; i++) {
     console.log(pieceCount[i].value)
-    if(pieceCount[i].checked){
+    if (pieceCount[i].checked) {
       difficulty = ~~Math.sqrt(Number(pieceCount[i].value))
     }
   }
   console.log(difficulty)
-  if(difficulty){
+  if (difficulty) {
     game.create()
     scene = 'display'
     document.getElementById('pieceSetup').style.display = 'none'
     document.getElementById('canvas').style.display = 'block'
     document.getElementById('warning').style.display = 'none'
   }
-  else{
+  else {
     document.getElementById('warning').style.display = 'block'
-}
+  }
 }
 
-document.getElementById('start').addEventListener('touchend',htmlPress)
-document.getElementById('start').addEventListener('click',htmlPress)
+document.getElementById('start').addEventListener('touchend', htmlPress)
+document.getElementById('start').addEventListener('click', htmlPress)

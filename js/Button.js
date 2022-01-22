@@ -6,7 +6,7 @@ class Button {
 
   }
   display() {
-    if(this.shape !== 'image'){
+    if (this.shape !== 'image') {
       strokeWeight(this.strokeWeight || 1);
       stroke(this.stroke || 0);
       fill(color(this.fill) || 255);
@@ -18,30 +18,30 @@ class Button {
     }
     switch (this.shape) {
       case "rect":
-        rect(this.x, this.y, this.w, this.h,this.radius);
+        rect(this.x, this.y, this.w, this.h, this.radius);
         break;
       case "ellipse":
         ellipse(this.x, this.y, this.radius, this.radius);
       case 'image':
-        if(!this.image){
-        rect(this.x,this.y,this.w,this.h)
-        loadImage(this.src,(img)=>{
+        if (!this.image) {
+          rect(this.x, this.y, this.w, this.h)
+          loadImage(this.src, (img) => {
             this.image = img
           })
         }
-        else{
+        else {
 
-        image(this.image,this.x,this.y,this.w,this.h)
+          image(this.image, this.x, this.y, this.w, this.h)
         }
     }
-    if(this.text){
-      textAlign(CENTER,CENTER)
+    if (this.text) {
+      textAlign(CENTER, CENTER)
       fill(this.tFill || 255);
       stroke(this.tStroke || this.tFill)
       textSize(this.tSize);
-      text(this.text,this.x+this.tx+this.w/2, this.y+this.ty+this.h/2);
+      text(this.text, this.x + this.tx + this.w / 2, this.y + this.ty + this.h / 2);
     }
-    
+
   }
   isin() {
     if (this.shape === "rect" || this.shape === 'image') {
