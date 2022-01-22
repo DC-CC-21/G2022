@@ -37,6 +37,7 @@ class PuzzlePiece {
     this.x = Math.random() * puzzleWidth;
     this.y = Math.random() * puzzleHeight;
     this.rotation = 0;
+    this.size = (this.w + this.h) ;
   }
   display() {
     if (this.isClicked) {
@@ -44,7 +45,7 @@ class PuzzlePiece {
       this.y = mouseY;
     }
 
-    rect(this.origX, this.origY, this.w, this.h);
+    // rect(this.origX, this.origY, this.w, this.h);
     if (this.image) {
       image(this.image, this.x, this.y);
     }
