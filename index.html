@@ -1,83 +1,124 @@
 <!DOCTYPE html>
 <html>
+  <head lang="en">
+    <title>Puzzle App</title>
 
-<head lang='en'>
-  <title>Puzzle App</title>
+    <!-- meta -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Put your description here." />
 
-  <!-- meta -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Put your description here.">
+    <!-- css and apple-touch-icon -->
+    <link rel="apple-touch-icon" href="./assets/mountain/mountain1.svg" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
 
-  <!-- css and apple-touch-icon -->
-  <link rel="apple-touch-icon" href="./assets/mountain/mountain1.svg">
-  <link rel="stylesheet" type='text/css' href="./css/style.css" />
+    <!-- Import javascript file -->
+    <script src="https://cdn.jsdelivr.net/npm/p5/lib/p5.min.js"></script>
+    <script src="./js/main.js" defer></script>
+    <script src="./js/new.js" defer></script>
+  </head>
 
-  <!-- Import javascript file -->
-  <script src="https://cdn.jsdelivr.net/npm/p5/lib/p5.min.js"></script>
-  <script src='./js/main.js' defer></script>
-  <script src='./js/new.js' defer></script>
-</head>
-
-<body>
-
-  <section id='scene1'>
-    <div class='beach'>
-      <h2>Beach Puzzles</h2>
-      <div class='images'>
-        <img src='./assets/beach/beach1.svg' alt='beach1' class='puzzleImg' />
-        <img src='./assets/beach/beach2.svg' alt='beach2' class='puzzleImg' />
+  <body>
+    <section id="scene1">
+      <div class="beach">
+        <h2>Beach Puzzles</h2>
+        <div class="images">
+          <img src="./assets/beach/beach1.svg" alt="beach1" class="puzzleImg" />
+          <img src="./assets/beach/beach2.svg" alt="beach2" class="puzzleImg" />
+        </div>
       </div>
-    </div>
-    <div class='mountain'>
-      <h2>Mountain Puzzles</h2>
-      <div class='images'>
-        <img src='./assets/mountain/mountain1.svg' alt='mountain1' class='puzzleImg' />
-        <img src='./assets/mountain/mountain2.svg' alt='mountain2' class='puzzleImg' />
-        <!-- <img src='./assets/mountain/mountain3.svg' /> -->
+      <div class="mountain">
+        <h2>Mountain Puzzles</h2>
+        <div class="images">
+          <img
+            src="./assets/mountain/mountain1.svg"
+            alt="mountain1"
+            class="puzzleImg"
+          />
+          <img
+            src="./assets/mountain/mountain2.svg"
+            alt="mountain2"
+            class="puzzleImg"
+          />
+          <!-- <img src='./assets/mountain/mountain3.svg' /> -->
+        </div>
       </div>
-    </div>
-    <div class='underwater'>
-      <h2>Underwater Puzzles</h2>
-      <div class='images'>
-        <img src='./assets/underwater/underwater1.svg' alt='underwater1' class='puzzleImg' />
-        <img src='./assets/underwater/underwater2.svg' alt='underwater2' class='puzzleImg' />
-        <img src='./assets/underwater/underwater3.svg' alt='underwater3' class='puzzleImg' />
-        <img src='./assets/underwater/underwater4.svg' alt='underwater4' class='puzzleImg' />
-        <img src='./assets/underwater/underwater1.svg' alt='underwater1' class='puzzleImg' />
-        <img src='./assets/underwater/underwater2.svg' alt='underwater2' class='puzzleImg' />
-        <img src='./assets/underwater/underwater3.svg' alt='underwater3' class='puzzleImg' />
-        <img src='./assets/underwater/underwater4.svg' alt='underwater4' class='puzzleImg' />
+      <div class="underwater">
+        <h2>Underwater Puzzles</h2>
+        <div class="images">
+          <img
+            src="./assets/underwater/underwater1.svg"
+            alt="underwater1"
+            class="puzzleImg"
+          />
+          <img
+            src="./assets/underwater/underwater2.svg"
+            alt="underwater2"
+            class="puzzleImg"
+          />
+          <img
+            src="./assets/underwater/underwater3.svg"
+            alt="underwater3"
+            class="puzzleImg"
+          />
+          <img
+            src="./assets/underwater/underwater4.svg"
+            alt="underwater4"
+            class="puzzleImg"
+          />
+          <img
+            src="./assets/underwater/underwater1.svg"
+            alt="underwater1"
+            class="puzzleImg"
+          />
+          <img
+            src="./assets/underwater/underwater2.svg"
+            alt="underwater2"
+            class="puzzleImg"
+          />
+          <img
+            src="./assets/underwater/underwater3.svg"
+            alt="underwater3"
+            class="puzzleImg"
+          />
+          <img
+            src="./assets/underwater/underwater4.svg"
+            alt="underwater4"
+            class="puzzleImg"
+          />
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id='scene2'>
-    <img src='./assets/underwater/underwater3.svg' alt='img' id='selectedImage'>
-    <div id='pieceCount'>
-      <input id='2' type="radio" value='9' name='numberOfPieces'>
-      <label for='2'>9</label>
+    <section id="scene2">
+      <img
+        src="./assets/underwater/underwater3.svg"
+        alt="img"
+        id="selectedImage"
+      />
+      <div id="pieceCount">
+        <input id="2" type="radio" value="9" name="numberOfPieces" />
+        <label for="2">9</label>
 
-      <input id='3' type="radio" value='16' name='numberOfPieces'>
-      <label for='3'>16</label>
+        <input id="3" type="radio" value="16" name="numberOfPieces" />
+        <label for="3">16</label>
 
-      <input id='4' type="radio" value='25' name='numberOfPieces'>
-      <label for='4'>25</label>
+        <input id="4" type="radio" value="25" name="numberOfPieces" />
+        <label for="4">25</label>
 
-      <input id='5' type="radio" value='36' name='numberOfPieces'>
-      <label for='5'>36</label>
+        <input id="5" type="radio" value="36" name="numberOfPieces" />
+        <label for="5">36</label>
 
-      <input id='6' type="radio" value='64' name='numberOfPieces'>
-      <label for='6'>64</label>
+        <input id="6" type="radio" value="64" name="numberOfPieces" />
+        <label for="6">64</label>
 
-      <input id='7' type="radio" value='100' name='numberOfPieces'>
-      <label for='7'>100</label>
-    </div>
-    <button id='start'>Start</button>
-  </section>
-  <section id='scene3'>
-    <div id='canvas'></div>
-  </section>
-</body>
-
+        <input id="7" type="radio" value="100" name="numberOfPieces" />
+        <label for="7">100</label>
+      </div>
+      <button id="start">Start</button>
+    </section>
+    <section id="scene3">
+      <div id="canvas"></div>
+    </section>
+  </body>
 </html>
