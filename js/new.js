@@ -27,9 +27,10 @@ class Piece{
             this[Object.keys(self)[i]] = self[Object.keys(self)[i]]
         }
 
-        this.c = createGraphics(puzzleW,puzzleH)
-        this.c.image(this.msk,0,0,puzzleW,puzzleH)
-        this.image = this.c.get(this.x,this.y,this.w,this.h)
+        // this.c = createGraphics(puzzleW,puzzleH)
+        background(0,0)
+        image(this.msk,0,0,puzzleW,puzzleH)
+        this.image = get(this.x,this.y,this.w,this.h)
 
         this.origX = this.x;
         this.origY = this.y;
