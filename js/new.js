@@ -1,12 +1,14 @@
-var width;
-var height;
-var puzzleW;
-var puzzleH;
-var drawOnce = 0;
-var puzzleImg;
-var imageW;
-var imageH;
-var difficulty = 3;
+let width;
+let height;
+let puzzleW;
+let puzzleH;
+let drawOnce = 0;
+let puzzleImg;
+let imageW;
+let imageH;
+let pieces = []
+
+difficulty = 3;
 
 function setup(){
     width = window.innerWidth;
@@ -24,14 +26,21 @@ class Piece{
         for(let i = 0; i < Object.keys(self).length; i ++){
             this[Object.keys(self)[i]] = self[Object.keys(self)[i]]
         }
+
+        this.c = createGraphics(puzzleW,puzzleH)
+        this.c.image(this.msk,0,0,puzzleW,puzzleH)
+        this.image = this.c.get(this.x,this.y,this.w,this.h)
+
+        this.origX = this.x;
+        this.origY = this.y;
     }
     display(){
         stroke(0)
-        // fill(this.x,this.y,this.w)
+        fill(this.x,this.y,this.w,50)
         rect(this.x,this.y,this.w,this.h)
+        if(this.image) image(this.image,this.x,this.y)
     }
 }
-var pieces = []
 
 function draw(){
     if(!drawOnce){
@@ -47,6 +56,7 @@ function draw(){
     fill(255)
     rect(0,0,puzzleW,puzzleH)
     if(puzzleImg){
+        // image(puzzleImg,0,0,puzzleW,puzzleH)
         if(!pieces.length){
             for(var i = 0; i < puzzleW; i +=imageW){
                 for (var j = 0; j < puzzleH; j += imageH) {
@@ -67,6 +77,5 @@ function draw(){
                 pieces[i].display()
             }
         }
-        // image(puzzleImg,0,0,puzzleW,puzzleH)
     }
 }
