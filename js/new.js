@@ -15,6 +15,33 @@ function setup(){
     cnv.parent('canvas')
 }
 
+<<<<<<< HEAD
+=======
+class Piece{
+    constructor(self){
+        for(let i = 0; i < Object.keys(self).length; i ++){
+            this[Object.keys(self)[i]] = self[Object.keys(self)[i]]
+        }
+
+        // this.c = createGraphics(puzzleW,puzzleH)
+        background(0,0)
+        image(this.msk,0,0,puzzleW,puzzleH)
+        this.image = get(this.x,this.y,this.w,this.h)
+
+        this.origX = this.x;
+        this.origY = this.y;
+
+        this.x = Math.random()*width
+        this.y = Math.random()*height
+    }
+    display(){
+        stroke(0)
+        fill(this.x,this.y,this.w,50)
+        rect(this.x,this.y,this.w,this.h)
+        if(this.image) image(this.image,this.x,this.y)
+    }
+}
+>>>>>>> beb8198983d3ac8134ec5cbc5d4a9814849cf61a
 
 function draw(){
     if(!drawOnce){
