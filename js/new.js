@@ -33,6 +33,9 @@ class Piece{
 
         this.origX = this.x;
         this.origY = this.y;
+
+        this.x = Math.random()*width
+        this.y = Math.random()*height
     }
     display(){
         stroke(0)
@@ -56,7 +59,7 @@ function draw(){
     fill(255)
     rect(0,0,puzzleW,puzzleH)
     if(puzzleImg){
-        // image(puzzleImg,0,0,puzzleW,puzzleH)
+        image(puzzleImg,0,0,puzzleW,puzzleH)
         if(!pieces.length){
             for(var i = 0; i < puzzleW; i +=imageW){
                 for (var j = 0; j < puzzleH; j += imageH) {
