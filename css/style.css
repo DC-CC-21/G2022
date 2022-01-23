@@ -1,7 +1,7 @@
 :root{
-    --scene1--:none;
+    /*--scene1--:none;*/
     --scene2--:none;
-    /* --scene3--:none; */
+    --scene3--:none; 
 }
 
 *{
