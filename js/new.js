@@ -17,9 +17,9 @@ function setup(){
 
 
 function draw(){
-    if(!drawOnce && img){
+    if(!drawOnce){
         drawOnce = 1;
-        loadImage(img,(img)=>{
+        loadImage('./assets/beach/beach1.svg',(img)=>{
             puzzleImg = img;
         })
     }
