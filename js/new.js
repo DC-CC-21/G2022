@@ -15,8 +15,6 @@ function setup(){
     cnv.parent('canvas')
 }
 
-<<<<<<< HEAD
-=======
 class Piece{
     constructor(self){
         for(let i = 0; i < Object.keys(self).length; i ++){
@@ -41,15 +39,18 @@ class Piece{
         if(this.image) image(this.image,this.x,this.y)
     }
 }
->>>>>>> beb8198983d3ac8134ec5cbc5d4a9814849cf61a
 
-function draw(){
+function createPuzzle(difficulty,IMAGE){
     if(!drawOnce){
         drawOnce = 1;
-        loadImage('./assets/beach/beach1.svg',(img)=>{
+        loadImage(IMAGE,(img)=>{
             puzzleImg = img;
         })
     }
+}
+
+function draw(){
+
     background(75)
 
     fill(255)
