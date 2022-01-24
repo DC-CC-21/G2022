@@ -4,6 +4,10 @@ var puzzleW;
 var puzzleH;
 var drawOnce = 0;
 var puzzleImg;
+var pieceW;
+var pieceH;
+var pieces = [];
+
 function setup(){
     width = window.innerWidth;
     height = window.innerHeight;
@@ -37,15 +41,41 @@ class Piece{
         fill(this.x,this.y,this.w,50)
         rect(this.x,this.y,this.w,this.h)
         if(this.image) image(this.image,this.x,this.y)
+
+        if(dist(this.x,this.y,this.origX,this.origY) > 0.1){
+            this.assemble()
+            fill(255)
+            rect(this.x,this.y,this.w,this.h)
+        }
+    }
+    assemble(){
+        this.x += (this.origX - this.x)/20
+        this.y += (this.origY - this.y)/20
     }
 }
 
 function createPuzzle(difficulty,IMAGE){
+    pieceW = (puzzleW/difficulty);
+    pieceH = (puzzleH/difficulty);
+    console.log(pieceW)
+    console.log(pieceH)
     if(!drawOnce){
         drawOnce = 1;
         loadImage(IMAGE,(img)=>{
             puzzleImg = img;
+            for(var i = 0; i < puzzleW; i += pieceW){
+                for(var j = 0; j < puzzleH; j += pieceH){
+                    pieces.push(new Piece({
+                        x:i,
+                        y:j,
+                        w:pieceW,
+                        h:pieceH,
+                        msk:puzzleImg
+                    }))
+                }
+            }
         })
+        
     }
 }
 
@@ -57,5 +87,10 @@ function draw(){
     rect(0,0,puzzleW,puzzleH)
     if(puzzleImg){
         image(puzzleImg,0,0,puzzleW,puzzleH)
+    }
+    if(pieces.length > 0){
+        for(var i = 0; i < pieces.length; i ++){
+            pieces[i].display()
+        }
     }
 }
