@@ -1,0 +1,37 @@
+*{
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*{
+  margin: 0;
+  padding: 0;
+}
+body {
+  text-align: center;
+  font-size: 16px;
+  font-family: 'Times New Roman', sans-serif;
+}
+main {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+div {
+  width: 20rem;
+  margin: auto;
+}
+img {
+  width: 100%;
+  border: 5px solid yellow;
+}
+a {
+  font-size: 1em;
+  text-decoration-line: none;
+}
+/*************************Medium Css**************************************/
+@media only screen and (min-width: 32.5em){
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
