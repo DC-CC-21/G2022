@@ -26,7 +26,8 @@ startBtn.addEventListener('click', () => {
     for (var i = 0; i < pieceCount.length; i++) {
         console.log('value: ' + pieceCount[i].value)
         if (pieceCount[i].checked) {
-            difficulty = ~~Math.sqrt(Number(pieceCount[i].value))
+            difficulty = Number(pieceCount[i].value)
+            // difficulty = ~~Math.sqrt(Number(pieceCount[i].value))
         }
     }
 

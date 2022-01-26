@@ -72,7 +72,8 @@ img{
 
 #canvas{
     background-color:black;
-    display:flex;
+    /* display:flex; */
+    display:none;
     justify-content:center;
     align-items: center;
 }
@@ -90,3 +91,12 @@ img{
     
 
 } */
+
+#count{
+    display:block;
+    /* position:fixed; */
+    /* left:50%; */
+    /* top:50%; */
+    text-align: center;
+
+}
