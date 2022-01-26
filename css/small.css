@@ -8,9 +8,23 @@
   padding: 0;
 }
 body {
+  background-color: #ffebce;
   text-align: center;
   font-size: 16px;
   font-family: 'Times New Roman', sans-serif;
+}
+header, footer {
+  background-color: #007a54;
+  color: #f8f6f1;
+  padding: 1em;
+}
+footer {
+  margin-top: 1.2em;
+}
+.notHomeH {
+  display: grid;
+  grid-template-columns: 0 1fr 1em;
+  text-align: center;
 }
 main {
   display: grid;
@@ -22,11 +36,22 @@ div {
 }
 img {
   width: 100%;
-  border: 5px solid yellow;
+  height: auto;
+  border: 5px solid #ff0a74;
+  margin-top: 1.2em;;
 }
 a {
+  color: #0a0a0a;
   font-size: 1em;
   text-decoration-line: none;
+  margin-bottom: 1em;
+}
+nav {
+  width: 3em;
+}
+nav img {
+  width: 100%;
+  border: none;
 }
 /*************************Medium Css**************************************/
 @media only screen and (min-width: 32.5em){
