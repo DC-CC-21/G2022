@@ -7,7 +7,9 @@ var puzzleImg;
 var pieceW;
 var pieceH;
 var pieces = [];
-
+function Random(min, max) {
+  return Math.random() * (max - min) + min;
+}
 function setup() {
   width = window.innerWidth;
   height = window.innerHeight;
@@ -24,20 +26,22 @@ class Piece {
     for (let i = 0; i < Object.keys(self).length; i++) {
       this[Object.keys(self)[i]] = self[Object.keys(self)[i]];
     }
-
+    this.origX = this.x;
+    this.origY = this.y;
     // this.c = createGraphics(puzzleW,puzzleH)
     background(0, 0);
     image(this.msk, 0, 0, puzzleW, puzzleH);
-    this.image = get(this.x, this.y, this.w, this.h);
+    this.image = get(this.origX, this.origY, this.w, this.h);
 
-    this.origX = this.x;
-    this.origY = this.y;
 
-    this.x = Math.random() * width;
-    this.y = Math.random() * height;
+
+
     this.rotation = Math.random() * 360;
+    this.x = Random(this.w,puzzleW-this.w)
+    this.y = Random(this.h,puzzleH-this.h)
   }
   display() {
+
     stroke(0);
     fill(this.x, this.y, this.w, 50);
     rect(this.x, this.y, this.w, this.h);
@@ -46,23 +50,23 @@ class Piece {
     rotate(this.rotation / (180 / Math.PI));
     if (this.image) image(this.image, -this.w / 2, -this.h / 2);
 
-    if (
-      dist(this.x, this.y, this.origX, this.origY) < 0.1 &&
-      this.rotation > 0
-    ) {
-    } else {
-      this.assemble();
-      fill(255);
+    // if (
+    //   dist(this.x, this.y, this.origX, this.origY) < 0.1 &&
+    //   this.rotation > 0
+    // ) {
+    // } else {
+    //   this.assemble();
+    //   fill(255);
 
-      rect(-this.w / 2, -this.h / 2, this.w, this.h);
-    }
+    //   rect(-this.w / 2, -this.h / 2, this.w, this.h);
+    // }
     pop();
-    if (this.rotation >= 360) {
-      this.rotation = 0;
-    }
-    if (this.rotation > 0) {
-      this.rotation += (360 - this.rotation) / 10;
-    }
+    // if (this.rotation >= 360) {
+    //   this.rotation = 0;
+    // }
+    // if (this.rotation > 0) {
+    //   this.rotation += (360 - this.rotation) / 10;
+    // }
   }
   assemble() {
     this.x += (this.origX - this.x) / 10;
@@ -72,7 +76,7 @@ class Piece {
 
 var xPos = 0;
 var yPos = 0;
-var speed = 10;
+var speed = 100;
 var i = 0;
 var count = document.getElementById("count");
 count.style.backgroundColor = "white";
@@ -120,11 +124,14 @@ function createPieces() {
     // rect(x * w, y * h, w, h);
     xPos += 1;
     setTimeout(createPieces, speed);
+    document.getElementById('count').style.width = round((pieces.length / (difficulty))*100,1)+'%'
   }
   else{
     // root.style.setProperty('--scene3--', 'flex')
     document.getElementById('canvas').style.display = 'flex'
+    
     document.getElementById('count').style.display = 'none'
+    
   }
 }
 //   if (i < puzzleW) {
