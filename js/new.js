@@ -76,7 +76,7 @@ class Piece {
 
 var xPos = 0;
 var yPos = 0;
-var speed = 100;
+var speed = 10;
 var i = 0;
 var count = document.getElementById("count");
 count.style.backgroundColor = "white";
@@ -152,8 +152,8 @@ function createPieces() {
 //   }
 
 function createPuzzle(difficulty, IMAGE) {
-  pieceW = puzzleW / Math.sqrt(difficulty);
-  pieceH = puzzleH / Math.sqrt(difficulty);
+  pieceW = ~~(puzzleW / Math.sqrt(difficulty));
+  pieceH = ~~(puzzleH / Math.sqrt(difficulty));
   console.log(pieceW);
   console.log(pieceH);
   loadImage(IMAGE, (img) => {
