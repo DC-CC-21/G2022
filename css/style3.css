@@ -1,0 +1,13 @@
+.piece{
+    display:flex;
+    position:absolute;
+    width:100px;
+    height:100px;
+    background-color:#00aaff;
+    border:1px solid black;
+
+    cursor:move;
+    align-items:center;
+    justify-content:center;
+    font-size:3em; 
+  }
