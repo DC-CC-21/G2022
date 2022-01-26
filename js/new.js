@@ -70,45 +70,83 @@ class Piece {
   }
 }
 
+var xPos = 0;
+var yPos = 0;
+var speed = 10;
 var i = 0;
-var j = 0;
-var speed = 5;
 var count = document.getElementById("count");
+count.style.backgroundColor = "white";
+
 function createPieces() {
-  for (var i = 0; i < puzzleW; i += pieceW) {
-    for (var j = 0; j < puzzleH; j += pieceH) {
+  // for (var i = 0; i < puzzleW; i += pieceW) {
+  //   for (var j = 0; j < puzzleH; j += pieceH) {
+  //     if (j >= puzzleH - 1) {
+  //       continue;
+  //     }
+  //     if (i >= puzzleW - 1) {
+  //       continue;
+  //     }
+  //     pieces.push(
+  //       new Piece({
+  //         x: i,
+  //         y: j,
+  //         w: pieceW,
+  //         h: pieceH,
+  //         msk: puzzleImg,
+  //       })
+  //     );
+  //     count.innerHTML = `Cycles ${pieces.length / (difficulty * difficulty)}`;
+  //   }
+  // }
+  if (i < difficulty) {
+    i += 1;
+
+    if (xPos >= Math.sqrt(difficulty)) {
+      xPos = 0;
+      yPos += 1;
+    }
+
       pieces.push(
         new Piece({
-          x: i,
-          y: j,
+          x: xPos*pieceW,
+          y: yPos*pieceH,
           w: pieceW,
           h: pieceH,
           msk: puzzleImg,
         })
       );
-      count.innerHTML = `Cycles ${pieces.length / (difficulty * difficulty)}`;
-    }
+    count.innerHTML = `Building Puzzle ${round((pieces.length / (difficulty))*100,1)}%`;
+
+    // rect(x * w, y * h, w, h);
+    xPos += 1;
+    setTimeout(createPieces, speed);
   }
-  //   if (i < puzzleW) {
-  //       if (j < puzzleH) {
-  //           i += pieceW;
-  //           pieces.push(
-  //               new Piece({
-  //                   x: i,
-  //                   y: j,
-  //                   w: pieceW,
-  //                   h: pieceH,
-  //                   msk: puzzleImg,
-  //                 })
-  //                 );
-  //                 setTimeout(createPieces, speed);
-  //             }
-  //             j += pieceH;
-  //   }
+  else{
+    // root.style.setProperty('--scene3--', 'flex')
+    document.getElementById('canvas').style.display = 'flex'
+    document.getElementById('count').style.display = 'none'
+  }
 }
+//   if (i < puzzleW) {
+//       if (j < puzzleH) {
+//           i += pieceW;
+//           pieces.push(
+//               new Piece({
+//                   x: i,
+//                   y: j,
+//                   w: pieceW,
+//                   h: pieceH,
+//                   msk: puzzleImg,
+//                 })
+//                 );
+//                 setTimeout(createPieces, speed);
+//             }
+//             j += pieceH;
+//   }
+
 function createPuzzle(difficulty, IMAGE) {
-  pieceW = puzzleW / difficulty;
-  pieceH = puzzleH / difficulty;
+  pieceW = puzzleW / Math.sqrt(difficulty);
+  pieceH = puzzleH / Math.sqrt(difficulty);
   console.log(pieceW);
   console.log(pieceH);
   loadImage(IMAGE, (img) => {
@@ -136,9 +174,14 @@ function draw() {
   if (puzzleImg) {
     // image(puzzleImg,0,0,puzzleW,puzzleH)
   }
-  if (pieces.length > 0) {
+  if (pieces.length/difficulty === 1) {
+        
+
     for (var i = 0; i < pieces.length; i++) {
       pieces[i].display();
     }
+  }
+  else{
+    background(255)
   }
 }
