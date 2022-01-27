@@ -9,7 +9,7 @@ let puzzleW = puzzle.clientWidth;
 let puzzleH = puzzle.clientHeight;
 
 let difficulty = 25;
-console.log(window.location)
+console.log(window.location);
 difficulty = sq(~~Math.sqrt(difficulty));
 let pieceW = puzzleW / Math.sqrt(difficulty);
 let pieceH = puzzleH / Math.sqrt(difficulty);
@@ -42,8 +42,8 @@ function createPieces() {
     d.style.height = pieceH + "px";
     // d.style.left = xPos * pieceW + "px";
     // d.style.top = yPos * pieceH + "px";
-    d.style.left = Math.random()*puzzleW+ "px";
-    d.style.top =  Math.random()*puzzleH+ "px";
+    d.style.left = Math.random() * puzzleW + "px";
+    d.style.top = Math.random() * puzzleH + "px";
     puzzle.append(d);
     xPos += 1;
     d.innerHTML = xPos + yPos * ~~Math.sqrt(difficulty);
@@ -58,10 +58,17 @@ function dist(x, y, x2, y2) {
 createPieces();
 
 let element;
-
+let touching = false;
 window.addEventListener("mousedown", chooseElement);
 window.addEventListener("mousemove", moveElement);
 window.addEventListener("mouseup", releaseElement);
+
+window.addEventListener("touchstart", () => {
+  touching = true;
+  chooseElement();
+});
+window.addEventListener("touchmove", moveElement);
+window.addEventListener("touchend", releaseElement);
 
 function chooseElement(e) {
   e.preventDefault();
@@ -73,8 +80,13 @@ function chooseElement(e) {
 function moveElement(e) {
   e.preventDefault();
   if (element) {
-    element.style.left = e.clientX + "px";
-    element.style.top = e.clientY + "px";
+    if (touching) {
+      element.style.left = e.touches[0].clientX + "px";
+      element.style.top = e.touches[0].clientY + "px";
+    } else {
+      element.style.left = e.clientX + "px";
+      element.style.top = e.clientY + "px";
+    }
   }
 }
 function releaseElement(e) {
