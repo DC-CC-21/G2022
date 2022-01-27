@@ -1,10 +1,10 @@
 * {
+  user-select: none;
   padding: 0px;
   margin: 0px;
 }
 
 .piece {
-  user-select: none;
   display: flex;
   position: absolute;
   width: 100px;
@@ -26,12 +26,19 @@
 
 body {
   overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: 1fr auto 1fr;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
 }
 #puzzle {
+  grid-column: 2/3;
+  grid-row: 2/3;
+  display: block;
+  position: relative;
   width: 100vw;
   height: 80vw;
   background-color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
