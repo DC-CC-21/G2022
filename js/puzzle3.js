@@ -79,8 +79,8 @@ puzzle.addEventListener("mouseup", releaseElement);
 puzzle.addEventListener("touchstart", (e) => {
   touching = true;
   chooseElement(e);
-});
-puzzle.addEventListener("touchmove", moveElement);
+},{passive:true});
+puzzle.addEventListener("touchmove", moveElement,{passive:true});
 puzzle.addEventListener("touchend", releaseElement);
 
 //choose a puzzle piece
