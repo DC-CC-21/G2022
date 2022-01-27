@@ -23,7 +23,9 @@
   font-size:150%;
 }
 
-
+body{
+    overflow:hidden;
+}
 #puzzle{
     width:100vw;
     height:80vw;

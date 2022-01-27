@@ -63,22 +63,23 @@ window.addEventListener("mousedown", chooseElement);
 window.addEventListener("mousemove", moveElement);
 window.addEventListener("mouseup", releaseElement);
 
-window.addEventListener("touchstart", () => {
+window.addEventListener("touchstart", (e) => {
   touching = true;
-  chooseElement();
+  chooseElement(e);
 });
 window.addEventListener("touchmove", moveElement);
 window.addEventListener("touchend", releaseElement);
 
 function chooseElement(e) {
-  e.preventDefault();
+//   e.preventDefault();
   console.log("click");
   element = e.target;
   element.style.zIndex = "1";
   console.log(element.innerHTML);
+  return false
 }
 function moveElement(e) {
-  e.preventDefault();
+//   e.preventDefault();
   if (element) {
     if (touching) {
       element.style.left = e.touches[0].clientX + "px";
@@ -88,13 +89,15 @@ function moveElement(e) {
       element.style.top = e.clientY + "px";
     }
   }
+  return false
 }
 function releaseElement(e) {
-  e.preventDefault();
+//   e.preventDefault();
   element.style.zIndex = "0";
   snapPiece();
 
   element = false;
+//   return false
 }
 function readPx(value) {
   return Number(value.replace("px", ""));
