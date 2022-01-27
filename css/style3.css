@@ -1,9 +1,10 @@
-*{
-    padding:0px;
-    margin:0px;
+* {
+  padding: 0px;
+  margin: 0px;
 }
 
 .piece {
+  user-select: none;
   display: flex;
   position: absolute;
   width: 100px;
@@ -11,26 +12,26 @@
 
   /* background-image: url("../assets/FlowerBground.svg"); */
   /* background-size:contain; */
-  background-repeat:no-repeat;
-  background-position:10px;
+  background-repeat: no-repeat;
+  background-position: 10px;
   background-color: #00aaff;
-  
+
   border: 1px solid black;
 
   cursor: move;
   align-items: center;
   justify-content: center;
-  font-size:150%;
+  font-size: 150%;
 }
 
-body{
-    overflow:hidden;
+body {
+  overflow: hidden;
 }
-#puzzle{
-    width:100vw;
-    height:80vw;
-    background-color:black;
-    display:flex;
-    justify-content: center;
-    align-items: center;
+#puzzle {
+  width: 100vw;
+  height: 80vw;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
