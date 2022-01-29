@@ -1,6 +1,5 @@
-let search = window.location.search
-search = search.slice(1,search.length).split(':')
-
+let search = window.location.search;
+search = search.slice(1, search.length).split(":");
 
 const canvas =
   window.innerWidth > window.innerHeight
@@ -18,7 +17,20 @@ let pieceH = puzzleH / Math.sqrt(difficulty);
 let speed = 5;
 let xPos = 0;
 let yPos = 0;
-let puzzleImg = `./assets/${search[0].slice(0,search[0].length-1)}s/${search[0]}.svg`//"./assets/underwater/underwater1.svg";
+
+let puzzleImg;
+
+if (search[0] === "Custom") {
+  localforage.getItem("myfile").then((blob) => {
+    puzzleImg = window.URL.createObjectURL(blob[0]);
+    createPieces();
+  }); //search[0];"blob:http://127.0.0.1:5500/d6a96aba-7fd5-4c4a-996a-27a123c6817d"//search.slice(0,search.length-1).join(':')
+} else {
+  puzzleImg = `./assets/${search[0].slice(0, search[0].length - 1)}s/${
+    search[0]
+  }.svg`; //"./assets/underwater/underwater1.svg";
+}
+
 let rotation = true;
 let angles = [0, 90, 180, 270];
 // puzzle.style.backgroundImage = `url(${puzzleImg})`
@@ -67,7 +79,6 @@ function dist(x, y, x2, y2) {
   let Y = y - y2;
   return Math.sqrt(sq(X) + sq(Y));
 }
-createPieces();
 
 let element;
 let touching = false;
@@ -80,11 +91,15 @@ puzzle.addEventListener("mousemove", moveElement);
 puzzle.addEventListener("mouseup", releaseElement);
 // window.addEventListener("click", rotateElement);
 //touchevents
-puzzle.addEventListener("touchstart", (e) => {
-  touching = true;
-  chooseElement(e);
-},{passive:true});
-puzzle.addEventListener("touchmove", moveElement,{passive:true});
+puzzle.addEventListener(
+  "touchstart",
+  (e) => {
+    touching = true;
+    chooseElement(e);
+  },
+  { passive: true }
+);
+puzzle.addEventListener("touchmove", moveElement, { passive: true });
 puzzle.addEventListener("touchend", releaseElement);
 
 //choose a puzzle piece
@@ -92,57 +107,60 @@ function chooseElement(e) {
   element = e.target;
   if (element.className !== "piece") {
     return;
-  }
-  if (touching) {
-    if (e.touches) {
-      overlap.x = readPx(element.style.left) - e.touches[0].clientX;
-      overlap.y = readPx(element.style.top) - e.touches[0].clientY;
+  } else {
+    if (touching) {
+      if (e.touches) {
+        overlap.x = readPx(element.style.left) - e.touches[0].clientX;
+        overlap.y = readPx(element.style.top) - e.touches[0].clientY;
+      } else {
+        overlap.x = readPx(element.style.left) - e.clientX;
+        overlap.y = readPx(element.style.top) - e.clientY;
+      }
     } else {
       overlap.x = readPx(element.style.left) - e.clientX;
       overlap.y = readPx(element.style.top) - e.clientY;
     }
-  } else {
-    overlap.x = readPx(element.style.left) - e.clientX;
-    overlap.y = readPx(element.style.top) - e.clientY;
-  }
 
-  element.style.zIndex = "1";
-  console.log(element.innerHTML);
-  return false;
+    element.style.zIndex = "1";
+    return false;
+  }
 }
 //drag a puzzle piece
 function moveElement(e) {
-  if (e.target.className !== "piece") {
+  if (!element) {
     return;
-  }
-
-  dragging = true;
-  if (element) {
-    if (touching) {
-      element.style.left = e.touches[0].clientX + overlap.x + "px";
-      element.style.top = e.touches[0].clientY + overlap.y + "px";
-    } else {
-      element.style.left = e.clientX + overlap.x + "px";
-      element.style.top = e.clientY + overlap.y + "px";
+  } else if (element.className !== "piece") {
+    return;
+  } else {
+    dragging = true;
+    if (element) {
+      if (touching) {
+        element.style.left = e.touches[0].clientX + overlap.x + "px";
+        element.style.top = e.touches[0].clientY + overlap.y + "px";
+      } else {
+        element.style.left = e.clientX + overlap.x + "px";
+        element.style.top = e.clientY + overlap.y + "px";
+      }
     }
+    return false;
   }
-  return false;
 }
 //rotate
 function rotateElement(e) {
-  if (e.target.className !== "piece") {
+  if (element.className !== "piece") {
     return;
-  }
+  } else {
+    let original = e.target.style.transform;
+    original = Number(original.replace(/rotate\(|(deg)|\)$/gm, "")) + 90;
+    if (original >= 360) {
+      original = 0;
+    }
 
-  let original = e.target.style.transform;
-  original = Number(original.replace(/rotate\(|(deg)|\)$/gm, "")) + 90;
-  if (original >= 360) {
-    original = 0;
+    e.target.style.transform = `rotate(${original}deg)`;
+    return false;
   }
-
-  e.target.style.transform = `rotate(${original}deg)`;
-  return false;
 }
+
 //release
 function releaseElement(e) {
   if (e.target.className !== "piece") {
