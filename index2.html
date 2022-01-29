@@ -1,28 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Puzzles</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Put your description here." />
+    <!-- Import the webpage's stylesheet -->
+    <link rel="stylesheet" type="text/css" href="./css/style2.css" />
+    <script src="./js/libraryhome.js" defer></script>
+  </head>
 
-<head>
-  <title>Puzzles</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Put your description here.">
-  <!-- Import the webpage's stylesheet -->
-  <link rel="stylesheet" type='text/css' href="./css/style2.css" />
-  <script src='./js/libraryhome.js' defer></script>
-</head>
-
-<body>
-  <section id='pieceSetup'>
-    <div id='selectedImg'><img id='image' src='./assets/beach/beach1.svg' alt='puzzle image'></div>
-    <h1 id='warning'><strong>Please Select a Number of Pieces</strong></h1>
-    <ul id='pieceCount'>
-      Piece Count:
-      <li><input type='radio' name='numberOfPieces' value='10'>10</li>
-      <li><input type='radio' name='numberOfPieces' value='64'>64</li>
-      <li><input type='radio' name='numberOfPieces' value='100'>100</li>
-    </ul>
-    <button id='start'>Start</button>
-  </section>
-</body>
-
+  <body>
+    <main>
+      <div id="imageContainer">
+        <img id="img" src="#" />
+      </div>
+      <input id='choosefile' type="file"/>
+      <div id="pieceBtns">Number of Pieces:
+        <label> <input type="radio" name="numberOfPieces" value="4" />4 </label>
+        <label> <input type="radio" name="numberOfPieces" value="9" />9 </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="16" />16
+        </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="25" />25
+        </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="64" />64
+        </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="100" />100
+        </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="256" />256
+        </label>
+      </div>
+      <button id='start'>Start</button>
+    </main>
+  </body>
 </html>

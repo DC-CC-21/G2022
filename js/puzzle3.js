@@ -1,3 +1,7 @@
+let search = window.location.search
+search = search.slice(1,search.length).split(':')
+
+
 const canvas =
   window.innerWidth > window.innerHeight
     ? window.innerHeight
@@ -8,13 +12,13 @@ puzzle.style.height = canvas * 0.8 + "px";
 let puzzleW = puzzle.clientWidth;
 let puzzleH = puzzle.clientHeight;
 
-let difficulty = 9;
+let difficulty = Number(search[1]);
 let pieceW = puzzleW / Math.sqrt(difficulty);
 let pieceH = puzzleH / Math.sqrt(difficulty);
 let speed = 5;
 let xPos = 0;
 let yPos = 0;
-let puzzleImg = "./assets/underwater/underwater1.svg";
+let puzzleImg = `./assets/${search[0].slice(0,search[0].length-1)}s/${search[0]}.svg`//"./assets/underwater/underwater1.svg";
 let rotation = true;
 let angles = [0, 90, 180, 270];
 // puzzle.style.backgroundImage = `url(${puzzleImg})`
