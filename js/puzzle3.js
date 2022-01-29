@@ -87,10 +87,10 @@ let overlap = { x: 0, y: 0 };
 
 //mouse events
 $(puzzle).on("touchstart mousedown", (e) => {
-  console.log(e.type)
+  console.log(e.type);
   if (e.type == "touchstart") {
     touching = true;
-    chooseElement(e)
+    chooseElement(e);
   } else if (e.type == "mousedown") {
     chooseElement(e);
   }
@@ -114,11 +114,13 @@ $(puzzle).on("touchend mouseup", releaseElement);
 let currentRotation;
 function chooseElement(e) {
   element = e.target;
-  currentRotation = Number(element.style.transform.replace(/rotate\(|(deg)|\)$/gm, ""));
+  currentRotation = Number(
+    element.style.transform.replace(/rotate\(|(deg)|\)$/gm, "")
+  );
   if (element.className !== "piece") {
     return;
   } else {
-    console.log(e.clientX)
+    console.log(e.clientX);
     if (touching) {
       if (e.touches) {
         overlap.x = readPx(element.style.left) - e.touches[0].clientX;
@@ -158,7 +160,8 @@ function moveElement(e) {
 }
 //rotate
 function rotateElement(e) {
-  document.getElementById('hi').innerHTML = Number(document.getElementById('hi').innerHTML)+1
+  document.getElementById("hi").innerHTML =
+    Number(document.getElementById("hi").innerHTML) + 1;
   if (e.target.className !== "piece") {
     return;
   } else {
@@ -180,13 +183,14 @@ function releaseElement(e) {
   }
 
   if (!dragging && rotation) {
+    element.style.zIndex = "0";
+    snapPiece();
+    element = false;
+    dragging = false;
     rotateElement(e);
-    // return false;
+    return false;
   }
-  element.style.zIndex = "0";
-  snapPiece();
-  element = false;
-  dragging = false;
+  return
 }
 
 function readPx(value) {
