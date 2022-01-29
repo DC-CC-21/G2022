@@ -103,8 +103,10 @@ puzzle.addEventListener("touchmove", moveElement, { passive: true });
 puzzle.addEventListener("touchend", releaseElement);
 
 //choose a puzzle piece
+let rotation;
 function chooseElement(e) {
   element = e.target;
+  rotation = Number(original.replace(/rotate\(|(deg)|\)$/gm, ""));
   if (element.className !== "piece") {
     return;
   } else {
@@ -147,11 +149,11 @@ function moveElement(e) {
 }
 //rotate
 function rotateElement(e) {
-  if (element.className !== "piece") {
+  if (e.target.className !== "piece") {
     return;
   } else {
     let original = e.target.style.transform;
-    original = Number(original.replace(/rotate\(|(deg)|\)$/gm, "")) + 90;
+    original = rotation + 90;
     if (original >= 360) {
       original = 0;
     }
