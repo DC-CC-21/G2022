@@ -158,11 +158,12 @@ function moveElement(e) {
 }
 //rotate
 function rotateElement(e) {
+  document.getElementById('hi').innerHTML = Number(document.getElementById('hi').innerHTML)+1
   if (e.target.className !== "piece") {
     return;
   } else {
     let original = e.target.style.transform;
-    original = currentRotation + 90;
+    original = currentRotation + 45;
     if (original >= 360) {
       original = 0;
     }
