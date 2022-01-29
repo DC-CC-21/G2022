@@ -87,6 +87,7 @@ let overlap = { x: 0, y: 0 };
 
 //mouse events
 $(puzzle).on("touchstart mousedown", (e) => {
+  // e.stopImmediatePropagation();
   console.log(e.type);
   if (e.type == "touchstart") {
     touching = true;
@@ -140,6 +141,7 @@ function chooseElement(e) {
 }
 //drag a puzzle piece
 function moveElement(e) {
+  e.stopImmediatePropagation();
   if (!element) {
     return;
   } else if (element.className !== "piece") {
@@ -160,6 +162,7 @@ function moveElement(e) {
 }
 //rotate
 function rotateElement(e) {
+  e.stopImmediatePropagation();
   document.getElementById("hi").innerHTML =
     Number(document.getElementById("hi").innerHTML) + 1;
   if (e.target.className !== "piece") {
@@ -178,19 +181,19 @@ function rotateElement(e) {
 
 //release
 function releaseElement(e) {
+  e.stopImmediatePropagation();
   if (e.target.className !== "piece") {
     return;
   }
 
   if (!dragging && rotation) {
-    element.style.zIndex = "0";
-    snapPiece();
-    element = false;
-    dragging = false;
     rotateElement(e);
     return false;
   }
-  return
+  element.style.zIndex = "0";
+  snapPiece();
+  element = false;
+  dragging = false;
 }
 
 function readPx(value) {
