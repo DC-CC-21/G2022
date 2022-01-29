@@ -70,7 +70,7 @@ function createPieces() {
 
     puzzle.append(d);
     xPos += 1;
-    d.innerHTML = xPos + yPos * ~~Math.sqrt(difficulty);
+    d.innerHTML = ''//xPos + yPos * ~~Math.sqrt(difficulty);
     setTimeout(createPieces, speed);
   }
 }
@@ -169,7 +169,7 @@ function rotateElement(e) {
     return;
   } else {
     let original = e.target.style.transform;
-    original = currentRotation + 45;
+    original = currentRotation + 90;
     if (original >= 360) {
       original = 0;
     }
