@@ -86,30 +86,39 @@ let dragging = false;
 let overlap = { x: 0, y: 0 };
 
 //mouse events
-puzzle.addEventListener("mousedown", chooseElement);
-puzzle.addEventListener("mousemove", moveElement);
-puzzle.addEventListener("mouseup", releaseElement);
+$(puzzle).on("touchstart mousedown", (e) => {
+  console.log(e.type)
+  if (e.type == "touchstart") {
+    touching = true;
+    chooseElement(e)
+  } else if (e.type == "mousedown") {
+    chooseElement(e);
+  }
+});
+$(puzzle).on("touchmove mousemove", moveElement);
+$(puzzle).on("touchend mouseup", releaseElement);
 // window.addEventListener("click", rotateElement);
 //touchevents
-puzzle.addEventListener(
-  "touchstart",
-  (e) => {
-    touching = true;
-    chooseElement(e);
-  },
-  { passive: true }
-);
-puzzle.addEventListener("touchmove", moveElement, { passive: true });
-puzzle.addEventListener("touchend", releaseElement);
+// puzzle.addEventListener(
+//   "touchstart",
+//   (e) => {
+//     touching = true;
+//     chooseElement(e);
+//   },
+//   { passive: true }
+// );
+// puzzle.addEventListener("touchmove", moveElement, { passive: true });
+// puzzle.addEventListener("touchend", releaseElement);
 
 //choose a puzzle piece
-let rotation;
+let currentRotation;
 function chooseElement(e) {
   element = e.target;
-  rotation = Number(original.replace(/rotate\(|(deg)|\)$/gm, ""));
+  currentRotation = Number(element.style.transform.replace(/rotate\(|(deg)|\)$/gm, ""));
   if (element.className !== "piece") {
     return;
   } else {
+    console.log(e.clientX)
     if (touching) {
       if (e.touches) {
         overlap.x = readPx(element.style.left) - e.touches[0].clientX;
@@ -153,7 +162,7 @@ function rotateElement(e) {
     return;
   } else {
     let original = e.target.style.transform;
-    original = rotation + 90;
+    original = currentRotation + 90;
     if (original >= 360) {
       original = 0;
     }
@@ -169,7 +178,7 @@ function releaseElement(e) {
     return;
   }
 
-  if (!dragging) {
+  if (!dragging && rotation) {
     rotateElement(e);
     // return false;
   }
