@@ -95,8 +95,8 @@ class Player {
     this.prev = this.element.getBoundingClientRect();
 
     this.moveX();
-    this.element.style.left = this.prev.x + window.scrollX + this.velX + "px";
     this.collideLR()
+    this.element.style.left = this.prev.x + window.scrollX + this.velX + "px";
 
     this.moveY();
     this.element.style.top = this.prev.y + window.scrollY + this.velY + "px";

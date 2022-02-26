@@ -27,7 +27,7 @@ footer {
   text-align: center;
 }
 div {
-  width:  20em;
+  width:  90%;
   margin: 0 auto;
 }
 img {
@@ -42,6 +42,7 @@ a {
   text-decoration-line: none;
   margin-bottom: 1em;
 }
+/*********************Waterfalls****************************************/
 nav {
   width: 3em;
 }
@@ -52,12 +53,14 @@ nav img {
 /*************************Medium Css**************************************/
 @media only screen and (min-width: 32.5em){
   main {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    /*grid-template-columns: 1fr 1fr;
-  */}
-  div {
-    margin: 1em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+}
+/*************************Large Css**************************************/
+@media only screen and (min-width: 64em){
+  main {
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
