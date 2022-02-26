@@ -17,7 +17,8 @@ let pieceH = puzzleH / Math.sqrt(difficulty);
 let speed = 5;
 let xPos = 0;
 let yPos = 0;
-
+let rotation = true;
+let angles = [0, 90, 180, 270];
 let puzzleImg;
 
 if (search[0] === "Custom") {
@@ -29,10 +30,11 @@ if (search[0] === "Custom") {
   puzzleImg = `./assets/${search[0].slice(0, search[0].length - 1)}s/${
     search[0]
   }.svg`; //"./assets/underwater/underwater1.svg";
+  createPieces()
 }
+// puzzleImg = '.assets/Waterfalls/Waterfall7.svg'
+console.log(puzzleImg)
 
-let rotation = true;
-let angles = [0, 90, 180, 270];
 // puzzle.style.backgroundImage = `url(${puzzleImg})`
 // puzzle.style.backgroundSize = `${puzzleW}px ${puzzleH}px`;
 // puzzle.style.backgroundPosition = '0px 0px'
