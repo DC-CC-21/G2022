@@ -1,6 +1,10 @@
 *{
     padding:0px;
 }
+body{
+    overflow:hidden;
+
+}
 #container{
     /* min-width:50px;
     min-height:50px; */
