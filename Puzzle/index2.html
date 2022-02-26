@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Puzzles</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Put your description here." />
+    <!-- Import the webpage's stylesheet -->
+    <link rel="stylesheet" type="text/css" href="./css/style2.css" />
+    <script src="https://cdn.rawgit.com/localForage/localForage/4ce19202/dist/localforage.min.js" defer></script>
+    <script src="./js/libraryhome.js" defer></script>
+  </head>
+
+  <body>
+    <main>
+      <div id="imageContainer">
+        <img id="img" src="http://127.0.0.1:5500/d6a96aba-7fd5-4c4a-996a-27a123c6817d" />
+      </div>
+      <input id='choosefile' type="file"/>
+      <div id="pieceBtns">Number of Pieces:
+        <label> <input type="radio" name="numberOfPieces" value="4" />4 </label>
+        <label> <input type="radio" name="numberOfPieces" value="9" />9 </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="16" />16
+        </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="25" />25
+        </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="64" />64
+        </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="100" />100
+        </label>
+        <label>
+          <input type="radio" name="numberOfPieces" value="256" />256
+        </label>
+      </div>
+      <button id='start'>Start</button>
+    </main>
+  </body>
+</html>

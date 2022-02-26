@@ -1,0 +1,31 @@
+*{
+    padding:0px;
+}
+#container{
+    /* min-width:50px;
+    min-height:50px; */
+ 
+    background-color:blue;
+}
+.blocks{
+    position:absolute;
+    width:100px;
+    height:100px;
+    background-color:aqua;
+    border:1px solid black;
+    font-size: 0.8em;;
+}
+.player{
+    position:absolute;
+    width:100px;
+    height:100px;
+    background-color:rgb(0, 17, 255);
+    border:1px solid rgb(255, 0, 0);
+}
+.player, .blocks{
+    display:flex;
+    justify-content: center;
+    align-items: center !important;
+    /* text-align: center; */
+    /* justify-content: center; */
+}
