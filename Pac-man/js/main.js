@@ -1,175 +1,150 @@
 const container = document.getElementById("container");
-const stats = document.getElementById("stats");
-const path = window.location.pathname.split("/");
-stats.innerHTML = path[path.length - 1];
 
-/* Game variables */
-const levels = [
+let bSize = 90;
+let blocks = [];
+let drawOnce = 0;
+let player;
+let levels = [
   [
-    "bbbbbbbbbbbbb",
-    "b           b",
-    "b bbb   bbb b",
-    "b b       b b",
-    "b b bb bb b b",
-    "b   b   b   b",
-    "b     p     b",
-    "b   b   b   b",
-    "b b bb bb b b",
-    "b b       b b",
-    "b bbb   bbb b",
-    "b           b",
-    "bbbbbbbbbbbbb",
+    "bbbbbbbbbbb",
+    "b         b",
+    "b bbb bbb b",
+    "b b     b b",
+    "b b b b b b",
+    "b    p    b",
+    "b b b b b b",
+    "b b     b b",
+    "b bbb bbb b",
+    "b         b",
+    "bbbbbbbbbbb",
   ],
   [],
 ];
-let canvasSize =
-  window.innerWidth > window.innerHeight
-    ? window.innerHeight
-    : window.innerWidth;
-
-let bSize = canvasSize / 2;
-let keys = [];
-let blocks = [];
-let p;
-let transX = 0;
-let transY = 0;
-let drawOnce = 0;
 let lvl = 0;
-
-let customKeys = {
+let keys = [];
+let keyCode = {
   left: "ArrowLeft",
   right: "ArrowRight",
-  up: "ArrowUp", //'w',
+  up: "ArrowUp",
   down: "ArrowDown",
 };
-/* functions */
-function Map(value, istart, istop, ostart, ostop) {
-  return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+
+function collide(a, b) {
+  return (
+    a.x - b.x < b.width &&
+    b.x - a.x < a.width &&
+    a.y - b.y < b.height &&
+    b.y - a.y < a.height
+  );
 }
 
-/* game */
+Object.defineProperty(HTMLDivElement.prototype, "getPos", {
+  value: function getPos() {
+    function readPx(n) {
+      return Number(n.replace(/px/g, ""));
+    }
+    return {
+      x: readPx(this.style.left),
+      y: readPx(this.style.top),
+      width: readPx(this.style.width),
+      height: readPx(this.style.height),
+    };
+  },
+  writable: true,
+  configurable: true,
+});
+
 class Block {
   constructor(x, y) {
     this.element = document.createElement("div");
+    this.element.style.width = `${bSize}px`;
+    this.element.style.height = `${bSize}px`;
+    this.element.style.left = `${x}px`;
+    this.element.style.top = `${y}px`;
     this.element.innerHTML = "block";
-    this.element.setAttribute("class", "blocks");
-    this.element.style.width = bSize + "px";
-    this.element.style.height = bSize + "px";
-    this.element.style.left = ~~(x * bSize) + "px";
-    this.element.style.top = ~~(y * bSize) + "px";
+    this.element.setAttribute("class", "block");
     container.append(this.element);
-    this.prev = this.element.getBoundingClientRect();
+
+    // this.prev = this.element.getBoundingClientRect();
+    this.prev = this.element.getPos();
   }
   update() {
-    this.prev = this.element.getBoundingClientRect();
+    // this.prev = this.element.getBoundingClientRect();
+    this.prev = this.element.getPos();
+
+    this.element.style.left = this.prev.x + "px";
   }
 }
 
 class Player {
   constructor(x, y) {
+    this.size = bSize / 2;
+
+    //Setup elements
     this.element = document.createElement("div");
-    this.element.innerHTML = "player";
+    this.element.style.width = `${this.size}px`;
+    this.element.style.height = `${this.size}px`;
+    this.element.style.left = `${x + this.size / 2}px`;
+    this.element.style.top = `${y + this.size / 2}px`;
+    this.element.innerHTML = "block";
     this.element.setAttribute("class", "player");
-    this.element.style.width = ~~(bSize/2) + "px";
-    this.element.style.height = ~~(bSize/2) + "px";
-    this.element.style.left = ~~(x * bSize) + "px";
-    this.element.style.top = ~~(y * bSize) + "px";
     container.append(this.element);
 
+    this.prev = this.element.getPos();
     this.velX = 0;
     this.velY = 0;
     this.speed = 2;
-    this.prev = this.element.getBoundingClientRect();
   }
-  moveX() {
-    if (keys[customKeys.left]) {
-      this.velX = -this.speed;
-      this.velY = 0;
-    }
-    if (keys[customKeys.right]) {
-      this.velX = this.speed;
-      this.velY = 0;
-    }
-  }
-  moveY() {
-    if (keys[customKeys.up]) {
-      this.velX = 0;
-      this.velY = -this.speed;
-    }
-    if (keys[customKeys.down]) {
-      this.velX = 0;
-      this.velY = this.speed;
-    }
-  }
-
   move() {
-    this.prev = this.element.getBoundingClientRect();
+    this.prev = this.element.getPos();
 
-<<<<<<< HEAD
-    this.moveX();
-    this.collideLR()
-    this.element.style.left = this.prev.x + window.scrollX + this.velX + "px";
-
-=======
->>>>>>> 5677b0fd30b56ddcae8b7f776f2005c2b30c482e
-    this.moveY();
-    this.element.style.top =
-      this.element.getBoundingClientRect().y +
-      window.scrollY +
-      this.velY +
-      "px";
+    this.keysUD();
+    this.element.style.top = this.prev.y + this.velY + "px";
     this.collideUD();
 
-    this.moveX();
-    this.element.style.left =
-      this.element.getBoundingClientRect().x +
-      window.scrollX +
-      this.velX +
-      "px";
+    this.keysLR();
+    this.element.style.left = this.prev.x + this.velX + "px";
     this.collideLR();
-
-    transX += this.velX;
-    transY += this.velY;
-  }
-  collide(that) {
-    this.current = this.element.getBoundingClientRect();
-    that.current = that.element.getBoundingClientRect();
-    return (
-      ~~this.current.x - ~~that.current.x < that.current.width &&
-      ~~that.current.x - ~~this.current.x < this.current.width &&
-      ~~this.current.y - ~~that.current.y < that.current.height &&
-      ~~that.current.y - ~~this.current.y < this.current.height
-    );
-    // return (
-    //     this.current.x > that.current.x && this.current.x < that.current.x + that.current.width &&
-    //     this.current.y > that.current.y && this.current.y < that.current.y + that.current.height
-    // )
   }
   collideLR() {
-    for (let i = blocks.length - 1; i >= 0; i--) {
-      let b = blocks[i].prev;
-      if (this.collide(blocks[i])) {
-        this.velX = 0;
+    for (let i = 0; i < blocks.length; i++) {
+      let a = this.element.getPos();
+      let b = blocks[i].element.getPos();
+      if (collide(this.element.getPos(), blocks[i].element.getPos())) {
         this.element.style.left =
-          this.prev.x < b.x
-            ? b.x - this.prev.width + "px"
-            : b.x + b.width + "px";
-
-        // this.element.style.left =  b.x + b.width + 'px'
+          this.prev.x < b.x ? b.x - a.width + "px" : b.x + b.width + "px";
       }
     }
   }
   collideUD() {
-    for (let i = blocks.length - 1; i >= 0; i--) {
-      let b = blocks[i].prev;
-      if (this.collide(blocks[i])) {
+    for (let i = 0; i < blocks.length; i++) {
+      let a = this.element.getPos();
+      let b = blocks[i].element.getPos();
+      if (collide(this.element.getPos(), blocks[i].element.getPos())) {
         this.element.style.top =
-          this.prev.y < b.y
-            ? b.y - this.prev.height + "px"
-            : b.y + b.height + "px";
-        this.velY = 0;
-        // this.element.style.left =  b.x + b.width + 'px'
+          this.prev.y < b.y ? b.y - a.height + "px" : b.y + b.height + "px";
       }
+    }
+  }
+
+  keysLR() {
+    if (keys[keyCode.left]) {
+      this.velX = -this.speed;
+      this.velY = 0;
+    }
+    if (keys[keyCode.right]) {
+      this.velX = this.speed;
+      this.velY = 0;
+    }
+  }
+  keysUD() {
+    if (keys[keyCode.up]) {
+      this.velX = 0;
+      this.velY = -this.speed;
+    }
+    if (keys[keyCode.down]) {
+      this.velX = 0;
+      this.velY = this.speed;
     }
   }
 }
@@ -177,69 +152,51 @@ class Player {
 class Game {
   constructor() {}
 
-  createGame() {
-    bSize = ~~Map(60, 0, 382, 0, canvasSize);
-    console.log(`
-    canvasSize: ${canvasSize}\nbSize: ${bSize}\ncontainer${container.getBoundingClientRect().width}
-    `)
-    let s = 0;
-    // bSize = ~~(canvasSize / levels[lvl].length);
+  create() {
     for (let i = 0; i < levels[lvl].length; i++) {
       for (let j = 0; j < levels[lvl][i].length; j++) {
         let id = levels[lvl][i][j];
         switch (id) {
           case "b":
-            if(j * bSize > s){
-              s = j*bSize
-            }
-            blocks.push(new Block(j, i));
+            blocks.push(new Block(j * bSize, i * bSize));
             break;
           case "p":
-            console.log(s)
-            transX = j*bSize//~~(canvasSize/2)//~~(canvasSize / 2);
-            transY = i*bSize;
-
-            p = new Player(j, i);
-            break;
-          default:
-            break;
+            player = new Player(j * bSize, i * bSize);
         }
       }
     }
   }
+  update() {
+    for (let i = 0; i < blocks.length; i++) {
+      blocks[i].update();
+    }
+    player.move();
 
-  display() {
-    // for(let i = blocks.length-1; i >= 0; i --){
-    //     blocks[i].update()
-    // }
+    let trans = player.element.getPos();
+    let canvas = container.getPos();
 
-    p.move();
-
-    window.scroll(transX, transY);
+    window.scrollTo(
+      trans.x - window.innerWidth / 2 + trans.width,
+      trans.y - window.innerHeight / 2 + trans.height
+    );
   }
 }
+const game = new Game();
 
-const g = new Game();
 function draw() {
   if (!drawOnce) {
-    g.createGame();
+    game.create();
     drawOnce = 1;
   } else {
-    g.display();
+    game.update();
   }
-  // let elementPos = element.getBoundingClientRect()
-  // element.style.top = elementPos.y + 1 + 'px';
   requestAnimationFrame(draw);
 }
 draw();
 
 document.addEventListener("keydown", (e) => {
-  e.preventDefault();
   keys[e.key] = true;
 });
 document.addEventListener("keyup", (e) => {
   keys[e.key] = false;
 });
-
-/* Last Modified */
-document.getElementById("lm").innerHTML = document.lastModified;
