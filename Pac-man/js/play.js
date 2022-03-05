@@ -17,15 +17,15 @@ function Dist(x1, y1, x2, y2) {
 let levels = [
   [
     "bbbbbbbbbbb",
-    "b         b",
+    "bg       gb",
     "b bbb bbb b",
     "b b     b b",
     "b b b b b b",
     "b    p    b",
     "b b b b b b",
     "b b     b b",
-    "b2bbb bbb b",
-    "bg1       b",
+    "b bbb bbb b",
+    "bg       gb",
     "bbbbbbbbbbb",
   ],
   [
@@ -123,7 +123,10 @@ class Block {
 }
 
 document.addEventListener("click", () => {
-  ghosts[0].checkSides();
+  console.log(ghosts[0].checkSides());
+  console.log(ghosts[0].velX, ghosts[0].velY);
+  console.log(ghosts[0].element.getPos());
+  console.log(ghosts[0].prev);
 });
 
 class Ghost {
@@ -140,32 +143,32 @@ class Ghost {
     // this.element.innerHTML = "block";
     this.element.setAttribute("class", "ghost");
 
-    // this.testX = document.createElement("div");
-    // this.testX.style.width = `${bSize * 1.3}px`;
-    // this.testX.style.height = `${this.size}px`;
-    // this.testX.style.left = `${x + this.size / 2}px`;
-    // this.testX.style.top = `${y + this.size / 2}px`;
-    // this.testX.setAttribute("class", "ghost");
-    // this.testX.style.backgroundColor = "white";
-    // // thtestent.innerHTML = "block";
-    // container.append(this.testX);
-
-    // this.testY = document.createElement("div");
-    // this.testY.style.width = `${this.size}px`;
-    // this.testY.style.height = `${bSize * 1.3}px`;
-    // this.testY.style.left = `${x + this.size / 2}px`;
-    // this.testY.style.top = `${y + this.size / 2}px`;
-    // this.testY.setAttribute("class", "ghost");
-    // this.testY.style.backgroundColor = "red";
+    this.testX = document.createElement("div");
+    this.testX.style.width = `${bSize * 1.3}px`;
+    this.testX.style.height = `${this.size / 2}px`;
+    this.testX.style.left = `${x + this.size / 2}px`;
+    this.testX.style.top = `${y + this.size / 2}px`;
+    this.testX.setAttribute("class", "ghost");
+    this.testX.style.backgroundColor = "white";
     // thtestent.innerHTML = "block";
-    // container.append(this.testY);
+    container.append(this.testX);
+
+    this.testY = document.createElement("div");
+    this.testY.style.width = `${this.size / 2}px`;
+    this.testY.style.height = `${bSize * 1.3}px`;
+    this.testY.style.left = `${x + this.size / 2}px`;
+    this.testY.style.top = `${y + this.size / 2}px`;
+    this.testY.setAttribute("class", "ghost");
+    this.testY.style.backgroundColor = "red";
+    // this.testent.innerHTML = "block";
+    container.append(this.testY);
 
     container.append(this.element);
 
     // this.prev = this.element.getBoundingClientRect();
     this.sides = [];
     this.prev = this.element.getPos();
-    this.velX = 0;
+    this.velX = 1;
     this.velY = 0;
     this.speed = 2;
     this.current = 0;
@@ -193,29 +196,41 @@ class Ghost {
     } else {
       this.sides.push("down");
     }
+    let direction = this.sides;
 
-    switch (this.sides[~~(Math.random() * this.sides.length)]) {
-      case "left":
-        this.velX = -this.speed;
-        this.velY = 0;
-        break;
-      case "right":
-        this.velX = this.speed;
-        this.velY = 0;
-        break;
-      case "top":
-        this.velX = 0;
-        this.velY = -this.speed;
-        break;
-      case "down":
-        this.velX = 0;
-        this.velY = this.speed;
-        break;
+    if (
+      JSON.stringify(this.sides) !== JSON.stringify(this.prevSides) ||
+      JSON.stringify(this.element.getPos()) === JSON.stringify(this.prev)
+    ) {
+      // console.log('1: '+this.sides)
+      // console.log('2: '+this.prevSides)
+      let dir = direction[~~(Math.random() * direction.length)];
+      switch (dir) {
+        case "left":
+          this.velX = -this.speed;
+          this.velY = 0;
+          break;
+        case "right":
+          this.velX = this.speed;
+          this.velY = 0;
+          break;
+        case "top":
+          this.velX = 0;
+          this.velY = -this.speed;
+          break;
+        case "down":
+          this.velX = 0;
+          this.velY = this.speed;
+          break;
+      }
     }
+    let s = this.prevSides;
+    this.prevSides = this.sides;
     //id[~~(this.a.y/bSize)][~~(this.a.x/bSize)+1])right
     //id[~~(this.a.y/bSize)][~~(this.a.x/bSize)-1])left
     //id[~~(this.a.y/bSize)+1][~~(this.a.x/bSize)])//down
     //id[~~(this.a.y/bSize)-1][~~(this.a.x/bSize)])top
+    return [direction, this.sides, s];
   }
   update() {
     // this.prev = this.element.getBoundingClientRect();
@@ -245,29 +260,31 @@ class Ghost {
       }
     }
 
-    // {
-    //   this.testX.style.left =
-    //     this.element.getPos().x -
-    //     this.testX.getPos().width / 2 +
-    //     this.element.getPos().width / 2 +
-    //     "px";
-    //   this.testX.style.top =
-    //     this.element.getPos().y -
-    //     this.testX.getPos().height / 2 +
-    //     this.element.getPos().height / 2 +
-    //     "px";
+    {
+      this.testX.style.left =
+        this.element.getPos().x -
+        this.testX.getPos().width / 2 +
+        this.element.getPos().width / 2 +
+        "px";
+      this.testX.style.top =
+        this.element.getPos().y -
+        this.testX.getPos().height / 2 +
+        this.element.getPos().height / 2 +
+        "px";
 
-    //   this.testY.style.left =
-    //     this.element.getPos().x -
-    //     this.testY.getPos().width / 2 +
-    //     this.element.getPos().width / 2 +
-    //     "px";
-    //   this.testY.style.top =
-    //     this.element.getPos().y -
-    //     this.testY.getPos().height / 2 +
-    //     this.element.getPos().height / 2 +
-    //     "px";
-    // }
+      this.testY.style.left =
+        this.element.getPos().x -
+        this.testY.getPos().width / 2 +
+        this.element.getPos().width / 2 +
+        "px";
+      this.testY.style.top =
+        this.element.getPos().y -
+        this.testY.getPos().height / 2 +
+        this.element.getPos().height / 2 +
+        "px";
+    }
+
+    this.checkSides();
   }
 
   changeVel() {
