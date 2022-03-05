@@ -11,10 +11,13 @@ body {
   position: relative;
   /* margin: auto; */
   background-color: black;
+
 }
 .player,
 .block,
-.coin {
+.coin,
+.ghost {
+  border-radius:2px;
   position: absolute;
   display: flex;
   align-items: center;
@@ -24,16 +27,18 @@ body {
 }
 .block {
   background-color: blue;
-  /* background-image: url("../../../images/Platformer/rock4.svg"); */
-
 }
 .player {
-
   background-color: red;
 }
 .coin {
   background-color: yellow;
 }
+.ghost {
+  background-color: green;
+  z-index:1;
+}
+
 #cCount{
   display:block;
   position:absolute;
