@@ -8,24 +8,24 @@ const coinCount = document.getElementById("coinCount");
 function Map(value, istart, istop, ostart, ostop) {
   return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 }
-function Dist(x1,y1,x2,y2){
+function Dist(x1, y1, x2, y2) {
   let x = x1 - x2;
   let y = y1 - y2;
-  return Math.sqrt(x*x + y*y)
+  return Math.sqrt(x * x + y * y);
 }
 // ARRAYS
 let levels = [
   [
     "bbbbbbbbbbb",
-    "b  g   g  b",
+    "b         b",
     "b bbb bbb b",
     "b b     b b",
     "b b b b b b",
     "b    p    b",
     "b b b b b b",
     "b b     b b",
-    "b bbb bbb b",
-    "b  g   g  b",
+    "b2bbb bbb b",
+    "bg1       b",
     "bbbbbbbbbbb",
   ],
   [
@@ -65,12 +65,12 @@ let custom = {
   },
 
   images: {
-    block: "../../../images/Platformer/rock4.svg",
-    coin: "../../../images/Platformer/OneRing.svg",
-    player: "../../../images/Platformer/Legolas.svg",
+    // block: "../../../images/Platformer/rock4.svg",
+    // coin: "../../../images/Platformer/OneRing.svg",
+    // player: "../../../images/Platformer/Legolas.svg",
   },
 };
-localStorage.setItem('file1', JSON.stringify(custom))
+localStorage.setItem("file1", JSON.stringify(custom));
 
 function collide(a, b) {
   return (
@@ -122,74 +122,192 @@ class Block {
   }
 }
 
+document.addEventListener("click", () => {
+  ghosts[0].checkSides();
+});
+
 class Ghost {
   constructor(x, y) {
-    this.size = ~~(bSize / 2);
+    this.size = ~~(bSize * 0.9);
     this.element = document.createElement("div");
     if (custom.images.ghost) {
       this.element.style.backgroundImage = `url(${custom.images.ghost})`;
     }
     this.element.style.width = `${this.size}px`;
     this.element.style.height = `${this.size}px`;
-    this.element.style.left = `${x + this.size / 2}px`;
-    this.element.style.top = `${y + this.size / 2}px`;
+    this.element.style.left = `${x + bSize * 0.05}px`;
+    this.element.style.top = `${y + bSize * 0.05}px`;
     // this.element.innerHTML = "block";
     this.element.setAttribute("class", "ghost");
+
+    // this.testX = document.createElement("div");
+    // this.testX.style.width = `${bSize * 1.3}px`;
+    // this.testX.style.height = `${this.size}px`;
+    // this.testX.style.left = `${x + this.size / 2}px`;
+    // this.testX.style.top = `${y + this.size / 2}px`;
+    // this.testX.setAttribute("class", "ghost");
+    // this.testX.style.backgroundColor = "white";
+    // // thtestent.innerHTML = "block";
+    // container.append(this.testX);
+
+    // this.testY = document.createElement("div");
+    // this.testY.style.width = `${this.size}px`;
+    // this.testY.style.height = `${bSize * 1.3}px`;
+    // this.testY.style.left = `${x + this.size / 2}px`;
+    // this.testY.style.top = `${y + this.size / 2}px`;
+    // this.testY.setAttribute("class", "ghost");
+    // this.testY.style.backgroundColor = "red";
+    // thtestent.innerHTML = "block";
+    // container.append(this.testY);
+
     container.append(this.element);
 
     // this.prev = this.element.getBoundingClientRect();
+    this.sides = [];
     this.prev = this.element.getPos();
-    this.velX = 1;
+    this.velX = 0;
     this.velY = 0;
+    this.speed = 2;
+    this.current = 0;
+    this.prevX = 0;
+    this.prevY = 0;
+  }
+  checkSides() {
+    this.sides = [];
+    this.a = this.element.getPos();
+    let id = levels[lvl];
+
+    if (id[~~(this.a.y / bSize)][~~(this.a.x / bSize) - 1] === "b") {
+    } else {
+      this.sides.push("left");
+    }
+    if (id[~~(this.a.y / bSize)][~~(this.a.x / bSize) + 1] === "b") {
+    } else {
+      this.sides.push("right");
+    }
+    if (id[~~(this.a.y / bSize) - 1][~~(this.a.x / bSize)] === "b") {
+    } else {
+      this.sides.push("top");
+    }
+    if (id[~~(this.a.y / bSize) + 1][~~(this.a.x / bSize)] === "b") {
+    } else {
+      this.sides.push("down");
+    }
+
+    switch (this.sides[~~(Math.random() * this.sides.length)]) {
+      case "left":
+        this.velX = -this.speed;
+        this.velY = 0;
+        break;
+      case "right":
+        this.velX = this.speed;
+        this.velY = 0;
+        break;
+      case "top":
+        this.velX = 0;
+        this.velY = -this.speed;
+        break;
+      case "down":
+        this.velX = 0;
+        this.velY = this.speed;
+        break;
+    }
+    //id[~~(this.a.y/bSize)][~~(this.a.x/bSize)+1])right
+    //id[~~(this.a.y/bSize)][~~(this.a.x/bSize)-1])left
+    //id[~~(this.a.y/bSize)+1][~~(this.a.x/bSize)])//down
+    //id[~~(this.a.y/bSize)-1][~~(this.a.x/bSize)])top
   }
   update() {
     // this.prev = this.element.getBoundingClientRect();
     this.prev = this.element.getPos();
 
-    this.element.style.left = this.prev.x + "px";
-
     this.element.style.top = this.prev.y + this.velY + "px";
     this.collideUD(blocks, "block");
+    for (let i = 0; i < ghosts.length; i++) {
+      let a = this.element.getPos();
+      let b = ghosts[i].element.getPos();
+      if (collide(a, b) && Dist(a.x, a.y, b.x, b.y)) {
+        this.element.style.top =
+          this.prev.y < b.y ? b.y - a.height + "px" : b.y + b.height + "px";
+        this.velY *= -1;
+      }
+    }
 
     this.element.style.left = this.prev.x + this.velX + "px";
     this.collideLR(blocks, "block");
+    for (let i = 0; i < ghosts.length; i++) {
+      let a = this.element.getPos();
+      let b = ghosts[i].element.getPos();
+      if (collide(a, b) && Dist(a.x, a.y, b.x, b.y)) {
+        this.element.style.left =
+          this.prev.x < b.x ? b.x - a.width + "px" : b.x + b.width + "px";
+        this.velX *= -1;
+      }
+    }
+
+    // {
+    //   this.testX.style.left =
+    //     this.element.getPos().x -
+    //     this.testX.getPos().width / 2 +
+    //     this.element.getPos().width / 2 +
+    //     "px";
+    //   this.testX.style.top =
+    //     this.element.getPos().y -
+    //     this.testX.getPos().height / 2 +
+    //     this.element.getPos().height / 2 +
+    //     "px";
+
+    //   this.testY.style.left =
+    //     this.element.getPos().x -
+    //     this.testY.getPos().width / 2 +
+    //     this.element.getPos().width / 2 +
+    //     "px";
+    //   this.testY.style.top =
+    //     this.element.getPos().y -
+    //     this.testY.getPos().height / 2 +
+    //     this.element.getPos().height / 2 +
+    //     "px";
+    // }
+  }
+
+  changeVel() {
+    let r = Math.random();
+    if (r > 0.5) {
+      this.velX = Math.random() > 0.5 ? -this.speed : this.speed;
+      this.velY = 0;
+    } else {
+      this.velX = 0;
+      this.velY = Math.random() > 0.5 ? -this.speed : this.speed;
+    }
+    console.log(this.velX, this.velY);
   }
   collideLR(arr, type) {
     for (let i = 0; i < arr.length; i++) {
-      let a = this.element.getPos();
-      let b = arr[i].element.getPos();
       if (collide(this.element.getPos(), arr[i].element.getPos())) {
-          switch(type){
-            case 'block':
-              this.element.style.left =
-              this.prev.x < b.x ? b.x - a.width + "px" : b.x + b.width + "px";
-              break;
-
-            case 'ghost':
-               break;
-          }
+        let a = this.element.getPos();
+        let b = arr[i].element.getPos();
+        this.element.style.left =
+          this.prev.x < b.x ? b.x - a.width + "px" : b.x + b.width + "px";
+        // this.changeVel();
+        return;
       }
     }
   }
-  collideUD(arr, type) {
-    for (let i = 0; i < arr.length; i++) {
-      let a = this.element.getPos();
-      let b = arr[i].element.getPos();
-      if (collide(this.element.getPos(), arr[i].element.getPos())) {
-        switch(type){
-          case 'block':
-            this.element.style.top =
-            this.prev.y < b.y ? b.y - a.height + "px" : b.y + b.height + "px";
-            break;
-          case 'ghost':
 
-            break;
-        }
+  collideUD(arr, type) {
+    // this.testY.style.backgroundColor = "green";
+    for (let i = 0; i < arr.length; i++) {
+      if (collide(this.element.getPos(), arr[i].element.getPos())) {
+        let a = this.element.getPos();
+        let b = arr[i].element.getPos();
+        this.element.style.top =
+          this.prev.y < b.y ? b.y - a.height + "px" : b.y + b.height + "px";
+        // this.changeVel();
+        return;
       }
     }
   }
 }
-
 class Coin {
   constructor(x, y) {
     this.size = bSize * 0.8;
@@ -344,8 +462,8 @@ class Game {
     for (let i = 0; i < blocks.length; i++) {
       blocks[i].update();
     }
-    for (let i = 0; i < ghosts.length; i ++){
-      ghosts[i].update()
+    for (let i = 0; i < ghosts.length; i++) {
+      ghosts[i].update();
     }
     player.move();
 
