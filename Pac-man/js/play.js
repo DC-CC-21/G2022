@@ -45,13 +45,30 @@ let levels = [
     "b             b",
     "bbbbbbbbbbbbbbb",
   ],
+  [
+    "bbbbbbbbbbbbbbbbb",
+    "b       g       b",
+    "b  b b  b  b b  b",
+    "b b   b   b   b b",
+    "b   b  b b  b   b",
+    "b b  b  b  b  b b",
+    "b  b  b   b  b  b",
+    "b g b   p   b g b",
+    "b  b  b   b  b  b",
+    "b b  b  b  b  b b",
+    "b   b  b b  b   b",
+    "b b   b   b   b b",
+    "b  b b  b  b b  b",
+    "b       g       b",
+    "bbbbbbbbbbbbbbbbb",
+  ],
 ];
 let blocks = [];
 let coins = [];
 let ghosts = [];
 let keys = [];
 
-let bSize = ~~Map(50, 0, 496, 0, canvasSize);
+let bSize = ~~Map(40, 0, 496, 0, canvasSize);
 let drawOnce = 0;
 let player;
 let lvl = 0;
