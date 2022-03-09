@@ -1,5 +1,0 @@
-{
-    "display_override": ["window-control-overlay", "minimal-ui"],
-    "display": "fullscreen",
-    "start_url":"/play.html"
-  }

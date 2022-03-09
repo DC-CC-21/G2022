@@ -49,3 +49,6 @@ body {
   z-index:2;
   padding:0px 5px;
 }
+#testX, #testY {
+  display:none;
+}

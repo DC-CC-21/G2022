@@ -72,6 +72,7 @@ let bSize = ~~Map(40, 0, 496, 0, canvasSize);
 let drawOnce = 0;
 let player;
 let lvl = 0;
+let numberOfCoins;
 
 let custom = {
   keyCodes: {
@@ -82,9 +83,10 @@ let custom = {
   },
 
   images: {
-    // block: "../../../images/Platformer/rock4.svg",
-    // coin: "../../../images/Platformer/OneRing.svg",
-    // player: "../../../images/Platformer/Legolas.svg",
+    block: "../../../images/Platformer/rock4.svg",
+    coin: "../../../images/Platformer/OneRing.svg",
+    player: "../../../images/Platformer/Legolas.svg",
+    ghost:"../../../images/Platformer/Orc.svg"
   },
 };
 localStorage.setItem("file1", JSON.stringify(custom));
@@ -167,6 +169,7 @@ class Ghost {
     this.testX.style.top = `${y + this.size / 2}px`;
     this.testX.setAttribute("class", "ghost");
     this.testX.style.backgroundColor = "white";
+    this.testX.setAttribute('id', 'testX')
     // thtestent.innerHTML = "block";
     container.append(this.testX);
 
@@ -176,6 +179,7 @@ class Ghost {
     this.testY.style.left = `${x + this.size / 2}px`;
     this.testY.style.top = `${y + this.size / 2}px`;
     this.testY.setAttribute("class", "ghost");
+    this.testY.setAttribute('id', 'testY')
     this.testY.style.backgroundColor = "red";
     // this.testent.innerHTML = "block";
     container.append(this.testY);
@@ -302,6 +306,9 @@ class Ghost {
     }
 
     this.checkSides();
+    if(collide(player.element.getPos(),this.element.getPos())){
+      window.location = 'gameover.html'
+    }
   }
 
   changeVel() {
@@ -416,6 +423,11 @@ class Player {
             coinCount.innerHTML = Number(coinCount.innerHTML) + 1;
             arr[i].element.remove();
             arr.splice(i, 1);
+
+            if(Number(coinCount.innerHTML) >= numberOfCoins){
+              drawOnce = 0;
+            }
+
             break;
         }
       }
@@ -465,6 +477,15 @@ class Game {
   }
 
   create() {
+    container.innerHTML = ''
+    coinCount.innerHTML = ''
+    ghosts = []
+    blocks = []
+    coins = []
+    player = undefined;
+
+
+
     for (let i = 0; i < levels[lvl].length; i++) {
       for (let j = 0; j < levels[lvl][i].length; j++) {
         let id = levels[lvl][i][j];
@@ -488,13 +509,15 @@ class Game {
         }
       }
     }
+    numberOfCoins = coins.length
+
     container.style.width = this.width + bSize + "px";
     container.style.height = this.height + bSize + "px";
     console.log(container.getPos());
   }
   update() {
     for (let i = 0; i < blocks.length; i++) {
-      blocks[i].update();
+      // blocks[i].update();
     }
     for (let i = 0; i < ghosts.length; i++) {
       ghosts[i].update();
