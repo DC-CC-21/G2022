@@ -1,14 +1,67 @@
-.blocks{
-    position: absolute;
-    width:100px;
-    height:100px;
-    background-color:blue;
-    color:black;
+/* #region collapse*/
+/* #endregion collapse*/
+.blocks {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: blue;
+  color: black;
 }
-.food{
-    position: absolute;
-    width:100px;
-    height:100px;
-    background-color:red;
-    color:black;
+.head {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: rgba(95, 95, 255, 255);
+  color: black;
+}
+
+.food {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  color: black;
+}
+
+.grid {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: rgba(75, 75, 75, 10);
+  border: 1px solid black;
+  color: black;
+
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, grey 2px, transparent 2px),
+    linear-gradient(to bottom, grey 2px, transparent 2px);
+}
+
+#grid {
+  /* background-color: black; */
+  background-image: linear-gradient(to right, black 2px, transparent 2px),
+    linear-gradient(to bottom, black 2px, gray 2px);
+}
+
+#score{
+  background-color:rgba(255, 255, 255, 0.863);
+  padding:5px;
+}
+
+#grid,
+#container,
+#score,
+#left,
+#right,
+#up,
+#down{
+  position:absolute;
+}
+
+button{
+  background-color:rgba(36, 36, 36, 0.767);
+  color:rgb(255, 255, 255);
+  font-size:200%;
+  text-align:center;
+  width:50px;
+  height:50px;
 }
