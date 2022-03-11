@@ -38,8 +38,8 @@
 
 #grid {
   /* background-color: black; */
-  background-image: linear-gradient(to right, black 2px, transparent 2px),
-    linear-gradient(to bottom, black 2px, gray 2px);
+  background-image: linear-gradient(to right, black 1px, transparent 1px),
+    linear-gradient(to bottom, black 1px, gray 1px);
 }
 
 #score{

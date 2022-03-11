@@ -33,6 +33,9 @@ function Dist(x1, y1, x2, y2) {
   let y = y1 - y2;
   return Math.sqrt(x * x + y * y);
 }
+function Map(value, istart, istop, ostart, ostop) {
+  return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+}
 function randomSpace(){
   return {
     x: (~~((Math.random()*SNAKE.width)/SNAKE.size))*SNAKE.size,
@@ -43,11 +46,13 @@ function randomSpace(){
 const container = document.getElementById("container");
 const grid = document.getElementById("grid");
 const score = document.getElementById('score')
-
+const canvasSize = window.innerWidth > window.innerHeight ? window.innerHeight: window.innerWidth
+console.log(canvasSize)
+//602 706
 let SNAKE = {
-  width: 23 * 20,
-  height: 34 * 20,
-  size: 20,
+  width: Map(23 * 20,0,602,0,window.innerWidth),
+  height: Map(34 * 20,0,706,0,window.innerHeight),
+  size: Map(20,0,478,0,canvasSize),
   startLen: 5,
   startCol: 5,
   startRow: 3,
@@ -55,6 +60,9 @@ let SNAKE = {
   mode: "snake",
   trans:{x:0,y:0}
 };
+SNAKE.width = ~~(SNAKE.width/SNAKE.size)*SNAKE.size
+SNAKE.height = ~~(SNAKE.height/SNAKE.size)*SNAKE.size
+
 SNAKE.columns = ~~(SNAKE.width / SNAKE.size);
 SNAKE.rows = ~~(SNAKE.height / SNAKE.size);
 
@@ -85,6 +93,8 @@ class Snake {
     SNAKE.trans.x = (window.innerWidth-SNAKE.width)/2
     SNAKE.trans.y = (window.innerHeight-SNAKE.height)/2
 
+    console.log(window.innerWidth)
+    console.log(window.innerHeight)
     grid.style.left = SNAKE.trans.x+'px';
     grid.style.top = SNAKE.trans.y+'px';
     
