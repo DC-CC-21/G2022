@@ -370,3 +370,10 @@ up.addEventListener("click", () => {
 down.addEventListener("click", () => {
   snakes[0].vel = [0, SNAKE.size];
 });
+document.addEventListener('touchstart', (e)=>{
+  e.preventDefault()
+})
+
+document.addEventListener('touchmove', (e)=>{
+  e.preventDefault()
+})
