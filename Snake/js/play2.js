@@ -114,7 +114,7 @@ class SnakeGame {
 
     //buttons
     console.log(canvasSize);
-    document.querySelectorAll('button').forEach((btn) => {
+    document.querySelectorAll("button").forEach((btn) => {
       btn.style.width = Map(80, 0, 490, 0, canvasSize) + "px";
       btn.style.height = Map(80, 0, 490, 0, canvasSize) + "px";
       btn.style.backgroundSize = `${btn.style.width} ${btn.style.height}`;
@@ -370,10 +370,10 @@ up.addEventListener("click", () => {
 down.addEventListener("click", () => {
   snakes[0].vel = [0, SNAKE.size];
 });
-document.addEventListener('touchstart', (e)=>{
-  e.preventDefault()
-})
+document.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+});
 
-document.addEventListener('touchmove', (e)=>{
-  e.preventDefault()
-})
+document.addEventListener("touchmove", (e) => {
+  e.preventDefault();
+});
