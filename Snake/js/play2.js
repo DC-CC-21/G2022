@@ -13,7 +13,7 @@ Object.defineProperty(HTMLDivElement.prototype, "getPos", {
   writable: true,
   configurable: true,
 });
-Object.defineProperty(HTMLButtonElement.prototype, "getPos", {
+Object.defineProperty(HTMLSpanElement.prototype, "getPos", {
   value: function getPos() {
     function readPx(n) {
       return Number(n.replace(/px/g, ""));
