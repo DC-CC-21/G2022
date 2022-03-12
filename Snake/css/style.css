@@ -2,35 +2,12 @@
   padding: 0px;
   margin: 0px;
 }
-:root{
-  --weight:normal;
-  --c:black;
+:root {
+  --weight: normal;
+  --c: black;
 }
 /* #region collapse*/
 /* #endregion collapse*/
-.blocks {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background-color: blue;
-  color: black;
-
-}
-.head {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background-color: rgba(95, 95, 255, 255);
-  color: black;
-}
-
-.food {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background-color: red;
-  color: black;
-}
 
 #grid {
   /* background-color: black; */
@@ -41,22 +18,17 @@
 #scoreContainer {
   background-color: rgba(255, 255, 255, 0.863);
   padding: 3px;
-
 }
-h3{
-  font-family: 'IBM Plex Sans KR', sans-serif;
+h3 {
+  font-family: "IBM Plex Sans KR", sans-serif;
   font-weight: var(--weight);
-  color:var(--c);
-  font-size:80%;
+  color: var(--c);
+  font-size: 80%;
 }
 
 #grid,
 #container,
-#scoreContainer,
-#left,
-#right,
-#up,
-#down {
+#scoreContainer {
   position: absolute;
 }
 
@@ -69,28 +41,37 @@ button {
   width: 50px;
   height: 50px;
 } */
-button{
-  width:50px;
-  height:50px;
-  background-size:cover;
-  border:none;
-  background-color:rgba(141, 8, 8, 0);
+button {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  border: none;
+  background-color: rgba(141, 8, 8, 0);
 }
-#left{
-  background-image:url('../../Snake/assets/Left\ Arrow.svg');
-  background-size:cover;
-  
+#left {
+  background-image: url("../../Snake/assets/Left\ Arrow.svg");
+  background-size: cover;
 }
-#right{
-  
-  background-image:url('../../Snake/assets/Right\ Arrow.svg');
-  
+#right {
+  background-image: url("../../Snake/assets/Right\ Arrow.svg");
 }
-#up{
-  background-image:url('../../Snake/assets/Up\ Arrow.svg');
-  background-size:cover;
+#up {
+  background-image: url("../../Snake/assets/Up\ Arrow.svg");
+  background-size: cover;
 }
-#down{
-  background-image:url('../../Snake/assets/Down\ Arrow.svg');
-  background-size:cover;
+#down {
+  background-image: url("../../Snake/assets/Down\ Arrow.svg");
+  background-size: cover;
+}
+body {
+  background-color: white;
+}
+
+.obj {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: blue;
+  color: black;
 }

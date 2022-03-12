@@ -43,7 +43,11 @@ function randomSpace() {
   };
 }
 function toGrid(value) {
-  return ~~(value / SNAKE.size) * SNAKE.size;
+  return {
+    x: (value.x / SNAKE.size).toFixed(0) * SNAKE.size,
+    y: (value.y / SNAKE.size).toFixed(0) * SNAKE.size,
+    vel: value.vel,
+  };
 }
 
 const container = document.getElementById("container");
@@ -56,24 +60,20 @@ const canvasSize =
   window.innerWidth > window.innerHeight
     ? window.innerHeight
     : window.innerWidth;
-console.log(canvasSize);
-//602 706
+
 let SNAKE = {
   width: Map(23 * 10, 0, 602, 0, window.innerWidth),
   height: Map(34 * 10, 0, 706, 0, window.innerHeight),
   size: Map(20, 0, 478, 0, canvasSize),
   startLen: 5,
-  startCol: 5,
-  startRow: 3,
   segmentGrow: 3,
   mode: "snake",
   trans: { x: 0, y: 0 },
   columns: 20,
   rows: 20,
+  foodC: "rgb(0,255,0)",
 };
 
-console.log(window.innerWidth);
-console.log(window.innerHeight);
 if (window.innerWidth >= window.innerHeight) {
   SNAKE.height = window.innerHeight * 0.8;
   SNAKE.size = SNAKE.height / SNAKE.rows;
@@ -83,23 +83,19 @@ if (window.innerWidth >= window.innerHeight) {
   SNAKE.size = SNAKE.width / SNAKE.columns;
   SNAKE.height = SNAKE.rows * SNAKE.size;
 }
-console.log(SNAKE);
-
-// SNAKE.width = ~~(SNAKE.width / SNAKE.size) * SNAKE.size;
-// SNAKE.height = ~~(SNAKE.height / SNAKE.size) * SNAKE.size;
-// SNAKE.width = SNAKE.columns * SNAKE.size;
-// SNAKE.width = SNAKE.rows * SNAKE.size;
 
 let left = document.getElementById("left");
 let right = document.getElementById("right");
 let up = document.getElementById("up");
 let down = document.getElementById("down");
-
 let food = randomSpace();
 let gameOver = false;
 
 class SnakeGame {
-  constructor() {}
+  constructor() {
+    this.setHtml();
+    this.createGrid();
+  }
   setHtml() {
     SNAKE.trans.x = (window.innerWidth - SNAKE.width) / 2;
     SNAKE.trans.y = (window.innerHeight - SNAKE.height) / 2;
@@ -117,15 +113,25 @@ class SnakeGame {
     scoreContainer.style.top = SNAKE.trans.y + "px";
 
     //buttons
+    console.log(canvasSize);
+    document.querySelectorAll("button").forEach((btn) => {
+      btn.style.width = Map(80, 0, 490, 0, canvasSize) + "px";
+      btn.style.height = Map(80, 0, 490, 0, canvasSize) + "px";
+      btn.style.backgroundSize = `${btn.style.width} ${btn.style.height}`;
+    });
+    let btnW = left.getPos().width;
+    let btnH = left.getPos().height;
     left.style.left = SNAKE.trans.x + "px";
-    left.style.top = SNAKE.height + SNAKE.trans.y - 60 + "px";
-    right.style.left = SNAKE.trans.x + 60 + "px";
-    right.style.top = SNAKE.height + SNAKE.trans.y - 60 + "px";
+    left.style.top = SNAKE.height - btnH + SNAKE.trans.y + "px";
 
-    up.style.left = SNAKE.width + SNAKE.trans.x - 60 + "px";
-    up.style.top = SNAKE.height + SNAKE.trans.y - 120 + "px";
-    down.style.left = SNAKE.width + SNAKE.trans.x - 60 + "px";
-    down.style.top = SNAKE.height + SNAKE.trans.y - 60 + "px";
+    right.style.left = SNAKE.trans.x + btnW * 1.1 + "px";
+    right.style.top = SNAKE.height - btnH + SNAKE.trans.y + "px";
+
+    up.style.left = SNAKE.width - btnW + SNAKE.trans.x + "px";
+    up.style.top = SNAKE.height - btnH * 2.1 + SNAKE.trans.y + "px";
+
+    down.style.left = SNAKE.width - btnW + SNAKE.trans.x + "px";
+    down.style.top = SNAKE.height - btnH + SNAKE.trans.y + "px";
 
     //score
     Hscore.innerHTML = Number(localStorage.getItem("Hscore")) || "0";
@@ -140,70 +146,62 @@ class SnakeGame {
     grid.style.height = SNAKE.height + "px";
     grid.style.backgroundSize = `${SNAKE.size}px ${SNAKE.size}px`;
   }
+  segment(x, y, width, height, color) {
+    let element = document.createElement("div");
+    element.setAttribute("class", "obj");
+    element.style.left = x + "px";
+    element.style.top = y + "px";
+    element.style.width = width + "px";
+    element.style.height = height + "px";
+    element.style.backgroundColor = color;
+    container.append(element);
+  }
+  handleGameOver() {
+    document.querySelectorAll(".obj").forEach((e) => {
+      e.style.backgroundColor = "white";
+    });
+    console.log(document.querySelectorAll(".obj").length);
+  }
 }
 
-let sg = new SnakeGame();
-sg.setHtml();
-sg.createGrid();
+let g = new SnakeGame();
 
 class Snake {
-  constructor(vel) {
+  constructor(value) {
     this.segments = [];
-    this.segments2 = [];
-    this.startX = SNAKE.startCol * SNAKE.size;
-    this.startY = SNAKE.startRow * SNAKE.size;
-    this.vel = vel; //[SNAKE.size, 0];
+    this.startX = value.x;
+    this.startY = value.y;
+    this.vel = value.vel; //[SNAKE.size, 0];
     this.count = 0;
-
+    this.segmentC = value.segmentC;
+    this.headC = value.headC;
     // this.setHtml();
 
     this.createBody();
   }
   createBody() {
     for (let i = 0; i < SNAKE.startLen; i++) {
-      this.segments.push({
-        x: this.startX - i * SNAKE.size,
-        y: this.startY,
-        vel: this.vel,
-      });
+      this.segments.push(
+        toGrid({
+          x: this.startX - i * SNAKE.size,
+          y: this.startY,
+          vel: this.vel,
+        })
+      );
     }
   }
 
-  segment(x, y, width, height, c) {
-    let element = document.createElement("div");
-    element.setAttribute("class", c);
-    element.style.left = x + "px";
-    element.style.top = y + "px";
-    element.style.width = width + "px";
-    element.style.height = height + "px";
-    if (c === "grid") {
-      grid.append(element);
-    } else {
-      container.append(element);
-    }
-  }
   display() {
-    container.innerHTML = "";//delete to see another snake
     for (let i = 0; i < this.segments.length; i++) {
-      if (i) {
-        this.segment(
-          this.segments[i].x,
-          this.segments[i].y,
-          SNAKE.size,
-          SNAKE.size,
-          "blocks"
-        );
-      } else {
-        this.segment(
-          this.segments[i].x,
-          this.segments[i].y,
-          SNAKE.size,
-          SNAKE.size,
-          "head"
-        );
-      }
+      g.segment(
+        this.segments[i].x,
+        this.segments[i].y,
+        SNAKE.size,
+        SNAKE.size,
+        i ? this.segmentC : this.headC
+      );
     }
-    this.segment(food.x, food.y, SNAKE.size, SNAKE.size, "food");
+
     this.move();
   }
   growTail() {
@@ -266,11 +264,13 @@ class Snake {
           : oldHead.y + this.vel[1],
       vel: this.vel,
     };
-    this.segments.unshift({
-      x: newHead.x,
-      y: newHead.y,
-      vel: newHead.vel,
-    });
+    this.segments.unshift(
+      toGrid({
+        x: newHead.x,
+        y: newHead.y,
+        vel: newHead.vel,
+      })
+    );
   }
   collideSegments() {
     let head = this.segments[0];
@@ -279,28 +279,41 @@ class Snake {
       if (seg.x === head.x && seg.y === head.y) {
         gameOver = true;
         console.log("Game Over");
-        this.handleGameOver();
+        SNAKE.gameOver = true;
       }
     }
   }
-  handleGameOver() {
-    document.querySelectorAll(".blocks").forEach((e) => {
-      e.style.backgroundColor = "white";
-    });
-    console.log(this.segments.length, Number(Hscore.innerHTML));
-  }
 }
 
-let s = new Snake([SNAKE.size, 0]);
-
-let s2 = new Snake([0, SNAKE.size]);
+let snakes = [
+  new Snake({
+    x: SNAKE.size * 6,
+    y: SNAKE.size * 2,
+    vel: [SNAKE.size, 0],
+    segmentC: "rgb(0,0,255)",
+    headC: "rgb(100,100,255)",
+  }),
+  // new Snake({
+  //   x: SNAKE.size * 6,
+  //   y: SNAKE.size * 16,
+  //   vel: [SNAKE.size, 0],
+  //   segmentC: "rgb(255,0,0)",
+  //   headC: "rgb(255,100,100)",
+  // }),
+];
 
 let frameCount = 0;
 function animate() {
   frameCount += 1;
   if (frameCount % 5 === 0 && !gameOver) {
-    s.display();
-    // s2.display();
+    container.innerHTML = "";
+    for (let i = 0; i < snakes.length; i++) {
+      snakes[i].display();
+    }
+    g.segment(food.x, food.y, SNAKE.size, SNAKE.size, SNAKE.foodC);
+    if (SNAKE.gameOver) {
+      g.handleGameOver();
+    }
   }
   requestAnimationFrame(animate);
 }
@@ -309,24 +322,40 @@ animate();
 document.addEventListener("keydown", (e) => {
   let ct = window.getComputedStyle(grid);
 
-  console.log(s.segments, s2.segments);
   if (e.key === "ArrowLeft") {
     e.preventDefault();
-    s.vel = [-SNAKE.size, 0];
+    snakes[0].vel = [-SNAKE.size, 0];
   }
   if (e.key === "ArrowRight") {
     e.preventDefault();
-    s.vel = [SNAKE.size, 0];
+    snakes[0].vel = [SNAKE.size, 0];
   }
   if (e.key === "ArrowUp") {
     e.preventDefault();
-    s.vel = [0, -SNAKE.size];
+    snakes[0].vel = [0, -SNAKE.size];
   }
   if (e.key === "ArrowDown") {
     e.preventDefault();
-    s.vel = [0, SNAKE.size];
+    snakes[0].vel = [0, SNAKE.size];
   }
-  console.log(document.querySelectorAll("div").length);
+  if (snakes.length === 2) {
+    if (e.key === "a") {
+      e.preventDefault();
+      snakes[1].vel = [-SNAKE.size, 0];
+    }
+    if (e.key === "d") {
+      e.preventDefault();
+      snakes[1].vel = [SNAKE.size, 0];
+    }
+    if (e.key === "w") {
+      e.preventDefault();
+      snakes[1].vel = [0, -SNAKE.size];
+    }
+    if (e.key === "s") {
+      e.preventDefault();
+      snakes[1].vel = [0, SNAKE.size];
+    }
+  }
 });
 
 left.addEventListener("click", () => {
