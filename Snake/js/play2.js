@@ -13,7 +13,7 @@ Object.defineProperty(HTMLDivElement.prototype, "getPos", {
   writable: true,
   configurable: true,
 });
-Object.defineProperty(HTMLSpanElement.prototype, "getPos", {
+Object.defineProperty(HTMLButtonElement.prototype, "getPos", {
   value: function getPos() {
     function readPx(n) {
       return Number(n.replace(/px/g, ""));
@@ -114,7 +114,7 @@ class SnakeGame {
 
     //buttons
     console.log(canvasSize);
-    document.querySelectorAll('.btn').forEach((btn) => {
+    document.querySelectorAll('button').forEach((btn) => {
       btn.style.width = Map(80, 0, 490, 0, canvasSize) + "px";
       btn.style.height = Map(80, 0, 490, 0, canvasSize) + "px";
       btn.style.backgroundSize = `${btn.style.width} ${btn.style.height}`;

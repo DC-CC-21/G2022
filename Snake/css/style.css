@@ -6,8 +6,6 @@
   --weight: normal;
   --c: black;
 }
-/* #region collapse*/
-/* #endregion collapse*/
 
 #grid {
   /* background-color: black; */
@@ -32,17 +30,11 @@ h3 {
   position: absolute;
 }
 
-/* 
-button {
-  background-color: rgba(36, 36, 36, 0.767);
-  color: rgb(255, 255, 255);
-  font-size: 200%;
-  text-align: center;
-  width: 50px;
-  height: 50px;
-} */
+
 .btn {
   position: absolute;
+  left:0px;
+  top:0px;
   width: 50px;
   height: 50px;
   background-size: cover;
