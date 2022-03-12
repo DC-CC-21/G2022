@@ -114,7 +114,7 @@ class SnakeGame {
 
     //buttons
     console.log(canvasSize);
-    document.querySelectorAll("button").forEach((btn) => {
+    document.querySelectorAll('.btn').forEach((btn) => {
       btn.style.width = Map(80, 0, 490, 0, canvasSize) + "px";
       btn.style.height = Map(80, 0, 490, 0, canvasSize) + "px";
       btn.style.backgroundSize = `${btn.style.width} ${btn.style.height}`;
@@ -359,14 +359,14 @@ document.addEventListener("keydown", (e) => {
 });
 
 left.addEventListener("click", () => {
-  s.vel = [-SNAKE.size, 0];
+  snakes[0].vel = [-SNAKE.size, 0];
 });
 right.addEventListener("click", () => {
-  s.vel = [SNAKE.size, 0];
+  snakes[0].vel = [SNAKE.size, 0];
 });
 up.addEventListener("click", () => {
-  s.vel = [0, -SNAKE.size];
+  snakes[0].vel = [0, -SNAKE.size];
 });
 down.addEventListener("click", () => {
-  s.vel = [0, SNAKE.size];
+  snakes[0].vel = [0, SNAKE.size];
 });
