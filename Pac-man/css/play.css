@@ -1,0 +1,54 @@
+*{
+  padding:0px;
+  margin:0px;
+}
+body {
+  margin: 0;
+  text-align: center;
+  overflow: hidden;
+}
+#container {
+  position: relative;
+  /* margin: auto; */
+  background-color: black;
+
+}
+.player,
+.block,
+.coin,
+.ghost {
+  border-radius:2px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+.block {
+  background-color: blue;
+}
+.player {
+  background-color: red;
+}
+.coin {
+  background-color: yellow;
+}
+.ghost {
+  background-color: green;
+  z-index:1;
+}
+
+#cCount{
+  display:block;
+  position:absolute;
+  background-color: white;
+  top:0px;
+  text-align:left;
+  min-width:50px;
+  z-index:2;
+  padding:0px 5px;
+}
+#testX, #testY {
+  display:none;
+}

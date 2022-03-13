@@ -1,27 +1,38 @@
 <!DOCTYPE html>
-<html  lang="en">
+<html lang="en">
   <head>
     <title>Title name</title>
     <!-- meta -->
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Put your description here." />
 
     <!-- apple app setup-->
+    <!-- <link rel="manifest" href="./manifest.json"> -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, fullscreen"
+    />
+    <meta name="apple-touch-fullscreen" content="yes" />
     <link rel="apple-touch-icon" href="your touch icon.png" />
-    <link rel="apple-touch-startup-image" href="apple startup image.png">
+    <link rel="apple-touch-startup-image" href="apple startup image.png" />
 
     <!-- link to css page -->
-    <link rel="stylesheet" type="text/css" href="./css/style.css" />
-  
+    <link rel="stylesheet" type="text/css" href="./css/play.css" />
+
     <!-- Import javascript file -->
-    <script src="./js/main.js" defer></script>
+    <script src="./js/play.js" defer></script>
   </head>
   <body>
-      <div id="container"></div>
-      <span id="stats"></span>
-      <footer>
-        <span id="lm"></span>
+    <div id="container">
+      <p id="cCount">Coins: <span id="coinCount">0</span></p>
+    </div>
+
+    <span id="stats"></span>
+    <footer>
+      <span id="lm"></span>
     </footer>
   </body>
 </html>

@@ -1,0 +1,12 @@
+.customImgs{
+  background-color: blanchedalmond;
+  padding:5px;
+
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  overflow-x: scroll;
+}
+img{
+  margin-left:5px;
+}

@@ -1,0 +1,78 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select:none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select:none;
+}
+:root {
+  --weight: normal;
+  --c: black;
+}
+
+#grid {
+  /* background-color: black; */
+  background-image: linear-gradient(to right, black 1px, transparent 1px),
+    linear-gradient(to bottom, black 1px, gray 1px);
+}
+
+#scoreContainer {
+  background-color: rgba(255, 255, 255, 0.863);
+  padding: 3px;
+}
+h3 {
+  font-family: "IBM Plex Sans KR", sans-serif;
+  font-weight: var(--weight);
+  color: var(--c);
+  font-size: 80%;
+}
+
+#grid,
+#container,
+#scoreContainer {
+  position: absolute;
+}
+
+
+.btn {
+  position: absolute;
+  left:0px;
+  top:0px;
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  border: none;
+  background-color: rgba(141, 8, 8, 0);
+}
+#left {
+  background-image: url("../../Snake/assets/Left\ Arrow.svg");
+  background-size: cover;
+}
+#right {
+  background-image: url("../../Snake/assets/Right\ Arrow.svg");
+}
+#up {
+  background-image: url("../../Snake/assets/Up\ Arrow.svg");
+  background-size: cover;
+}
+#down {
+  background-image: url("../../Snake/assets/Down\ Arrow.svg");
+  background-size: cover;
+}
+body {
+  background-color: white;
+  max-width:100%;
+  max-height:100%;
+  overflow:hidden;
+}
+
+.obj {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: blue;
+  color: black;
+}
