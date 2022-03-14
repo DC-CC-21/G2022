@@ -25,7 +25,8 @@ function waterfallCode() {
     // imgs[i].src = `/G2022/Puzzle/assets/${folder}/${path}${i+1}.svg`
     let img = document.createElement("img");
     img.src = `/G2022/Puzzle/assets/${folder}/${path}${i+1}.svg`
-    
+    img.setAttribute('class', 'imgs')
+
     let div = document.createElement('div')
     div.append(img)
 
