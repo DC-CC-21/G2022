@@ -2,17 +2,6 @@ function waterfallCode() {
   const query = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
-  // let imgs = document.querySelectorAll('.imgs')
-  // for(let i = 0; i < imgs.length; i ++){
-  //   let folder = query.type
-  //   let path = folder
-  //   if(folder.slice(folder.length-1, folder.length) === 's'){
-  //     path = path.slice(0,folder.length-1)
-  //   }
-  //   console.log(folder)
-  //   console.log(path)
-  //   imgs[i].src = `/G2022/Puzzle/assets/${folder}/${path}${i+1}.svg`
-  // }
   let container = document.getElementById('imgContainer')
   for (let i = 0; i < 10; i++) {
     let folder = query.type;

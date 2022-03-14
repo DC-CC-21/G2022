@@ -52,7 +52,7 @@ nav img {
 }
 /*************************Medium Css**************************************/
 @media only screen and (min-width: 32.5em){
-  #imgContainer {
+  #imgContainer, main {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
@@ -60,7 +60,7 @@ nav img {
 }
 /*************************Large Css**************************************/
 @media only screen and (min-width: 64em){
- #imgContainer {
+ #imgContainer, main {
     grid-template-columns: 1fr 1fr 1fr;
   }
   
