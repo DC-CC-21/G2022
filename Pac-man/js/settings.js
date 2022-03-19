@@ -1,14 +1,13 @@
-var coll = document.getElementsByClassName("collapsible");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.maxHeight){
-      content.style.maxHeight = null;
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    } 
-  });
-}
+fetch("/G2022/Pac-man/imgs.json").then(function (response) {
+  return response.json();
+}).then(function (jsonObject) {
+  Object.keys(jsonObject).forEach(key=>{
+    let container = document.getElementById(key)
+    jsonObject[key].forEach(value=>{
+      let element = document.createElement('img')
+      element.src = value
+      container.append(element)
+    })
+  })
+  
+});

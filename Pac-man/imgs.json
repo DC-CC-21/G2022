@@ -1,0 +1,24 @@
+{
+  "playerImgs": [
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg"
+  ],
+  "blockImgs": [
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg"
+  ],
+  "ghostImgs": [
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg"
+  ],
+  "coinImgs": [
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg",
+    "/G2022/Pac-man/assets/blueBlock.svg"
+  ]
+}

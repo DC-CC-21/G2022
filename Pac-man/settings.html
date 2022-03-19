@@ -1,35 +1,83 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="css/settings.css" />
-        <script src="js/settings.js" defer></script>
-    </head>
-    <body>
+  <head>
+    <link rel="stylesheet" type="text/css" href="css/settings.css" />
+    <script src="js/settings.js" defer></script>
+  </head>
+  <body>
+    <span class="checkboxes"
+      ><h2>Player</h2>
+      <input
+        type="checkbox"
+        name="blockType"
+        value="normal"
+        onclick="onlyOne(this)"
+      /><label for="normal">Normal</label>
+      <input
+        type="checkbox"
+        name="blockType"
+        value="custom"
+        onclick="onlyOne(this)"
+      /><label for="custom">Custom</label>
+    </span>
+    <div class="customImgs" id="playerImgs"></div>
+    <span class="checkboxes"
+      ><h2>Blocks</h2>
+      <input
+        type="checkbox"
+        name="blockType"
+        value="normal"
+        onclick="onlyOne(this)"
+      /><label for="normal">Normal</label>
+      <input
+        type="checkbox"
+        name="blockType"
+        value="custom"
+        onclick="onlyOne(this)"
+      /><label for="custom">Custom</label>
+    </span>
+    <div class="customImgs" id="blockImgs"></div>
 
-      <h2>Player</h2>
-      <div class="customImgs"  id="playerImgs">
-      </div>
+    <span class="checkboxes"
+      ><h2>Ghosts</h2>
+      <input
+        type="checkbox"
+        name="blockType"
+        value="normal"
+        onclick="onlyOne(this)"
+      /><label for="normal">Normal</label>
+      <input
+        type="checkbox"
+        name="blockType"
+        value="custom"
+        onclick="onlyOne(this)"
+      /><label for="custom">Custom</label>
+    </span>
+    <div class="customImgs" id="ghostImgs"></div>
 
-      <h2>Blocks</h2>
-      <div class="customImgs"  id="blockImgs">
-          <img src="./assets/blueBlock.svg" width="100", height="100">
-          <img src="./assets/blueBlock.svg" width="100", height="100">
-                    <img src="./assets/blueBlock.svg" width="100", height="100">
-          <img src="./assets/blueBlock.svg" width="100", height="100">
-                    <img src="./assets/blueBlock.svg" width="100", height="100">
-          <img src="./assets/blueBlock.svg" width="100", height="100">
-                    <img src="./assets/blueBlock.svg" width="100", height="100">
-          <img src="./assets/blueBlock.svg" width="100", height="100">
-                    <img src="./assets/blueBlock.svg" width="100", height="100">
-          <img src="./assets/blueBlock.svg" width="100", height="100">
-                    <img src="./assets/blueBlock.svg" width="100", height="100">
-      </div>
-
-      <h2>Custom blocks</h2>
-      <div class="customImgs"  id="ghostImgs"></div>
-
-      <h2>Coins</h2>
-      <div class="customImgs"  id="coinImgs"></div>
-
-    </body>
+    <span class="checkboxes"
+      ><h2>Coins</h2>
+      <input
+        type="checkbox"
+        name="blockType"
+        value="normal"
+        onclick="onlyOne(this)"
+      /><label for="normal">Normal</label>
+      <input
+        type="checkbox"
+        name="blockType"
+        value="custom"
+        onclick="onlyOne(this)"
+      /><label for="custom">Custom</label>
+    </span>
+    <div class="customImgs" id="coinImgs"></div>
+    <script>
+      function onlyOne(checkbox) {
+        var checkboxes = document.getElementsByName("blockType");
+        checkboxes.forEach((item) => {
+          if (item !== checkbox) item.checked = false;
+        });
+      }
+    </script>
+  </body>
 </html>

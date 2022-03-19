@@ -52,7 +52,7 @@ nav img {
 }
 /*************************Medium Css**************************************/
 @media only screen and (min-width: 32.5em){
-  #imgContainer, main {
+  #imgContaine{
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
