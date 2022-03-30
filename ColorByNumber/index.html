@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Physijs Example</title>
+    <style>
+      body {
+        background-color: #fff;
+        color: #111;
+        margin: 0px;
+        overflow: hidden;
+        font-family: Monospace;
+        position: absolute;
+        font-size: 20px;
+      }
+      #info {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+
+        padding: 5px;
+        text-align: center;
+        color: #00ffff;
+      }
+      a {
+        color: yellow;
+      }
+      strong {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="viewport"></div>
+
+    <script src="./js/three.min.js"></script>
+    <script src="./js/physi.js"></script>
+    <script type="module">
+      "use strict";
+      import { GLTFLoader } from "https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js";
+      import { OrbitControls } from "https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js";
+
+      var container, scene, renderer, camera, light, ball, plane, controls;
+      var WIDTH, HEIGHT, VIEW_ANGLE, ASPECT, NEAR, FAR;
+
+      var plane_geom, plane_mat;
+
+      var isPaused = false,
+        tiltAngle = 1.0,
+        sign = 1.0;
+
+      init();
+      render();
+
+      function modify() {
+        isPaused = !isPaused;
+        sign = isPaused ? -1 : 1;
+        console.log(isPaused);
+      }
+
+      function init() {
+        Physijs.scripts.worker = "./physijs_worker.js";
+        Physijs.scripts.ammo = "./ammo.js";
+
+        container = document.getElementById("viewport");
+
+        (WIDTH = window.innerWidth), (HEIGHT = window.innerHeight);
+        (VIEW_ANGLE = 45), (ASPECT = WIDTH / HEIGHT), (NEAR = 1), (FAR = 10000);
+
+        scene = new Physijs.Scene();
+        scene.setGravity(new THREE.Vector3(0, -80, 0));
+
+        scene.addEventListener("update", function () {
+          scene.simulate(undefined, 2);
+        });
+
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+
+        renderer.setSize(WIDTH, HEIGHT);
+        renderer.shadowMapEnabled = true;
+        renderer.shadowMapSoft = true;
+        renderer.shadowMapType = THREE.PCFShadowMap;
+        renderer.shadowMapAutoUpdate = true;
+
+        container.appendChild(renderer.domElement);
+
+        camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+
+        camera.position.set(-0, 40, 120);
+        camera.lookAt(scene.position);
+        controls = new OrbitControls(camera, container);
+        controls.target.set(0, 5, 0);
+        controls.update();
+        light = new THREE.DirectionalLight(0xffffff);
+
+        light.position.set(0, 100, 60);
+        light.castShadow = true;
+        light.shadowCameraLeft = -60;
+        light.shadowCameraTop = -60;
+        light.shadowCameraRight = 60;
+        light.shadowCameraBottom = 60;
+        light.shadowCameraNear = 1;
+        light.shadowCameraFar = 1000;
+        light.shadowBias = -0.0001;
+        light.shadowMapWidth = light.shadowMapHeight = 1024;
+        light.shadowDarkness = 0.7;
+
+        scene.add(light);
+
+        plane_geom = new THREE.BoxGeometry(100, 2, 100, 10, 10);
+        plane_mat = new THREE.MeshLambertMaterial({ color: 0xeeeeee });
+        plane = new Physijs.BoxMesh(
+          plane_geom,
+          Physijs.createMaterial(plane_mat, 0.4, 0.8),
+          0
+        );
+        plane.position.y = -1;
+        plane.receiveShadow = true;
+        scene.add(plane);
+
+        var geo1 = new THREE.BoxGeometry(5, 5, 5);
+        let mat1 = new THREE.MeshPhongMaterial({ color: 0x00aaff });
+        var cube1 = new Physijs.BoxMesh(
+          geo1,
+          Physijs.createMaterial(
+            mat1,
+            1, // friction
+            0.2 // bounce
+          ),
+          0.1
+        );
+        cube1.castShadow = true;
+        cube1.position.set(0, 10, 0);
+        cube1.rotation.set(13, 54, 20);
+        scene.add(cube1);
+
+        geo1 = new THREE.BoxGeometry(5, 5, 5);
+        mat1 = new THREE.MeshPhongMaterial({ color: 0x00aaff });
+        cube1 = new Physijs.BoxMesh(
+          geo1,
+          Physijs.createMaterial(
+            mat1,
+            1, // friction
+            0.2 // bounce
+          ),
+          0.1
+        );
+        cube1.position.set(0, 20, 0);
+        scene.add(cube1);
+
+        const loader = new GLTFLoader();
+
+        loader.load(
+          "./assets/terrain2.glb",
+          function (gltf) {
+			  console.log(cube1)
+			  console.log(gltf.scene.children)
+            scene.add(gltf.scene.children[0]);
+          },
+          undefined,
+          function (error) {
+            console.error(error);
+          }
+        );
+
+        window.addEventListener("resize", onWindowResize, false);
+        render();
+        scene.simulate();
+        controls.update();
+      }
+
+      function render() {
+        for (var i = 5; i < scene.children.length - 5; i++) {
+          var obj = scene.children[i];
+
+          if (obj.position.y <= -50) {
+            scene.remove(obj);
+          }
+        }
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+      }
+
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+    </script>
+  </body>
+</html>

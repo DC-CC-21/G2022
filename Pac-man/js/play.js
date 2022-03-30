@@ -86,7 +86,7 @@ let custom = {
     block: "../../../images/Platformer/rock4.svg",
     coin: "../../../images/Platformer/OneRing.svg",
     player: "../../../images/Platformer/Legolas.svg",
-    ghost:"../../../images/Platformer/Orc.svg"
+    ghost: "../../../images/Platformer/Orc.svg",
   },
 };
 localStorage.setItem("file1", JSON.stringify(custom));
@@ -169,7 +169,7 @@ class Ghost {
     this.testX.style.top = `${y + this.size / 2}px`;
     this.testX.setAttribute("class", "ghost");
     this.testX.style.backgroundColor = "white";
-    this.testX.setAttribute('id', 'testX')
+    this.testX.setAttribute("id", "testX");
     // thtestent.innerHTML = "block";
     container.append(this.testX);
 
@@ -179,7 +179,7 @@ class Ghost {
     this.testY.style.left = `${x + this.size / 2}px`;
     this.testY.style.top = `${y + this.size / 2}px`;
     this.testY.setAttribute("class", "ghost");
-    this.testY.setAttribute('id', 'testY')
+    this.testY.setAttribute("id", "testY");
     this.testY.style.backgroundColor = "red";
     // this.testent.innerHTML = "block";
     container.append(this.testY);
@@ -281,36 +281,39 @@ class Ghost {
       }
     }
 
-    {
-      this.testX.style.left =
-        this.element.getPos().x -
-        this.testX.getPos().width / 2 +
-        this.element.getPos().width / 2 +
-        "px";
-      this.testX.style.top =
-        this.element.getPos().y -
-        this.testX.getPos().height / 2 +
-        this.element.getPos().height / 2 +
-        "px";
-
-      this.testY.style.left =
-        this.element.getPos().x -
-        this.testY.getPos().width / 2 +
-        this.element.getPos().width / 2 +
-        "px";
-      this.testY.style.top =
-        this.element.getPos().y -
-        this.testY.getPos().height / 2 +
-        this.element.getPos().height / 2 +
-        "px";
+    if (collide(player.element.getPos(), this.element.getPos())) {
+      gameOver = true;
     }
-
     this.checkSides();
-    if(collide(player.element.getPos(),this.element.getPos())){
-      window.location = 'gameover.html'
+    this.repositionGhosts()
+    if (collide(player.element.getPos(), this.element.getPos())) {
+      gameOver = true;
     }
-  }
 
+  }
+  repositionGhosts() {
+    this.testX.style.left =
+      this.element.getPos().x -
+      this.testX.getPos().width / 2 +
+      this.element.getPos().width / 2 +
+      "px";
+    this.testX.style.top =
+      this.element.getPos().y -
+      this.testX.getPos().height / 2 +
+      this.element.getPos().height / 2 +
+      "px";
+
+    this.testY.style.left =
+      this.element.getPos().x -
+      this.testY.getPos().width / 2 +
+      this.element.getPos().width / 2 +
+      "px";
+    this.testY.style.top =
+      this.element.getPos().y -
+      this.testY.getPos().height / 2 +
+      this.element.getPos().height / 2 +
+      "px";
+  }
   changeVel() {
     let r = Math.random();
     if (r > 0.5) {
@@ -424,7 +427,7 @@ class Player {
             arr[i].element.remove();
             arr.splice(i, 1);
 
-            if(Number(coinCount.innerHTML) >= numberOfCoins){
+            if (Number(coinCount.innerHTML) >= numberOfCoins) {
               drawOnce = 0;
             }
 
@@ -477,14 +480,12 @@ class Game {
   }
 
   create() {
-    container.innerHTML = ''
-    coinCount.innerHTML = ''
-    ghosts = []
-    blocks = []
-    coins = []
+    container.innerHTML = "";
+    coinCount.innerHTML = "";
+    ghosts = [];
+    blocks = [];
+    coins = [];
     player = undefined;
-
-
 
     for (let i = 0; i < levels[lvl].length; i++) {
       for (let j = 0; j < levels[lvl][i].length; j++) {
@@ -509,7 +510,7 @@ class Game {
         }
       }
     }
-    numberOfCoins = coins.length
+    numberOfCoins = coins.length;
 
     container.style.width = this.width + bSize + "px";
     container.style.height = this.height + bSize + "px";
@@ -534,6 +535,7 @@ class Game {
   }
 }
 const game = new Game();
+let gameOver = false;
 
 function draw() {
   if (!drawOnce) {
@@ -542,6 +544,7 @@ function draw() {
   } else {
     game.update();
   }
+  if(gameOver){ container.innerHTML = ''; window.location = 'gameover.html'}
   requestAnimationFrame(draw);
 }
 draw();

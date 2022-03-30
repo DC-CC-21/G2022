@@ -1,6 +1,6 @@
 {
   "playerImgs": [
-    "/G2022/Pac-man/assets/blueBlock.svg",
+    "../../../images/pooh.jpg",
     "/G2022/Pac-man/assets/blueBlock.svg"
   ],
   "blockImgs": [
