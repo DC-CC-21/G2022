@@ -130,12 +130,13 @@
       // Instantiate a loader
       const loader = new GLTFLoader();
       loader.load(
-        "./assets/terrain3.glb",
+        "./assets/terrain4.glb",
         function (gltf) {
           gltf.scene.traverse(function (node) {
             if (node.isMesh) {
               node.receive = true;
               node.receiveShadow = true;
+              node.material.side = THREE.SingleSide
               sceneMeshes.push(node);
             }
           });
@@ -172,7 +173,7 @@
         let x = cube1.position.x - camera.position.x
         let z = cube1.position.z - camera.position.z
         let angle = Math.atan2(x,z)*(180/Math.PI)
-
+        cube1.rotation.z = angle/(180/Math.PI)
         let n = 100
         if(keys['a']) {
           player.z+=ct.cos(angle+90)/n;
@@ -229,17 +230,19 @@
             let normal = ct.getNormalRotation(intersects[1]);
             normalHelper.position.copy(normal[0]);
             normalHelper.lookAt(normal[1]);
-            normalHelper.visible = true;
+            normalHelper.visible = false//true;
             // cube1.position.set(cubePrev.x, cubePrev.y, cubePrev.z);
             cube1.position.copy(normal[0]);
+            cube1.position.y += 0.05
             // cube1.position.y += intersects[0].distance
             cube1.rotation.x = normalHelper.rotation.x;
             cube1.rotation.y = normalHelper.rotation.y;
-            cube1.rotation.z = normalHelper.rotation.z;
+            // cube1.rotation.z = normalHelper.rotation.z;
+            camera.position.y += (cube1.position.y - cubePrev.y)
           }
-          
-        }
 
+        }
+        
         renderer.render(scene, camera);
       }
 
