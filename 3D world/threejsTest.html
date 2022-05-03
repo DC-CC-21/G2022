@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>My first three.js app</title>
+
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  </head>
+  <body>
+    <div id="canvas"></div>
+    <div id="movement">hihihihihihihi
+      <div id="movmentC"></div>
+    </div>
+    <script type="module">
+      //imports
+      import * as THREE from "./three/src/Three.js";
+      import { OrbitControls } from "./three/examples/jsm/controls/OrbitControls.js";
+      import { GLTFLoader } from "./three/examples/jsm/loaders/GLTFLoader.js";
+      import { DRACOLoader } from "./three/examples/jsm/loaders/DRACOLoader.js";
+      import * as ct from "./js/constant.js";
+      import { cube, plane } from "./js/constant.js";
+      import {MovementControls} from './js/movementControls.js'
+      // const THREE = {
+      //   //Setup
+      //   Scene: Scene,
+      //   PerspectiveCamera,
+      //   WebGLRenderer: WebGLRenderer,
+
+      //   //Lights
+      //   DirectionalLight: DirectionalLight,
+      //   AmbientLight: AmbientLight,
+      //   DirectionalLightHelper: DirectionalLightHelper,
+
+      //   //Geometry
+      //   BoxGeometry: BoxGeometry,
+      //   PlaneGeometry: PlaneGeometry,
+
+      //   //Mesh
+      //   MeshPhongMaterial: MeshPhongMaterial,
+      //   Mesh: Mesh,
+      // }
+      console.clear();
+      const max = 1.7976931348623157e308;
+      const scene = new THREE.Scene();
+      const container = document.getElementById("canvas");
+      const camera = ct.createCamera();
+      const renderer = ct.createRenderer(container);
+
+      ct.loadEquirectangular(scene, "./assets/background.JPG");
+      //LIGHTS
+
+      const light = ct.directionLight(scene);
+      const helper = new THREE.DirectionalLightHelper(light, 5);
+      scene.add(helper);
+      const ambientLight = new THREE.AmbientLight(0x404040, 3); // soft white light
+      scene.add(ambientLight);
+
+      const controls = new OrbitControls(camera, container);
+
+      let plane1 = plane(
+        scene,
+        { x: 0, y: -0.5, z: 0 },
+        [10, 10],
+        0x00aaff,
+        false,
+        false
+      );
+
+      camera.position.z = 5;
+      camera.position.y = 5;
+
+      let sceneMeshes = [];
+      let cube1 = cube(
+        scene,
+        { x: 0, y: 10, z: 2 },
+        [0.1, 0.1, 0.1],
+        0x00aaff,
+        true,
+        true
+      );
+      sceneMeshes.push(cube1);
+
+      // Instantiate a loader
+      const loader = new GLTFLoader();
+      loader.load(
+        "./assets/terrain3.glb",
+        function (gltf) {
+          gltf.scene.traverse(function (node) {
+            if (node.isMesh) {
+              node.receive = true;
+              node.receiveShadow = true;
+              // console.log(node)
+              
+              if(node.name.slice(0,4) == 'tree'){
+                node.material.side = THREE.DoubleSide
+              }
+              else{
+              node.material.side = THREE.SingleSide;
+              }
+              sceneMeshes.push(node);
+            }
+          });
+          scene.add(gltf.scene);
+          animate();
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+
+      ////////////////////////////////
+      const raycaster = new THREE.Raycaster();
+      var normalHelperGeom = new THREE.ConeBufferGeometry(0.05, 1);
+      normalHelperGeom.translate(0, 0.5, 0);
+      normalHelperGeom.rotateX(Math.PI * 0.5);
+      var normalHelper = new THREE.Mesh(
+        normalHelperGeom,
+        new THREE.MeshNormalMaterial()
+      );
+      normalHelper.visible = false;
+      scene.add(normalHelper);
+
+      ///////////////////////////////
+      raycaster.set(new THREE.Vector3(0, 200, 0), new THREE.Vector3(0, -1, 0));
+
+      let cubePrev = 0;
+      let intersects;
+      let keys = [];
+
+      function keyMovement(player) {
+        let x = cube1.position.x - camera.position.x;
+        let z = cube1.position.z - camera.position.z;
+        let angle = Math.atan2(x, z) * (180 / Math.PI);
+        cube1.rotation.z = angle / (180 / Math.PI);
+        let n = 50;
+        if (keys["a"]) {
+          player.z += ct.cos(angle + 90) / n;
+          player.x += ct.sin(angle + 90) / n;
+          // camera.position.z+=ct.cos(angle+90)/n;
+          // camera.position.x+=ct.sin(angle+90)/n;
+        }
+        if (keys["d"]) {
+          player.z -= ct.cos(angle + 90) / n;
+          player.x -= ct.sin(angle + 90) / n;
+          // camera.position.z-=ct.cos(angle+90)/n;
+          // camera.position.x-=ct.sin(angle+90)/n;
+        }
+        if (keys["w"]) {
+          player.z += ct.cos(angle) / n;
+          player.x += ct.sin(angle) / n;
+          camera.position.z += ct.cos(angle) / n;
+          camera.position.x += ct.sin(angle) / n;
+        }
+        if (keys["s"]) {
+          player.z -= ct.cos(angle) / n;
+          player.x -= ct.sin(angle) / n;
+          camera.position.z -= ct.cos(angle) / n;
+          camera.position.x -= ct.sin(angle) / n;
+        }
+      }
+
+      let camDist = 1;
+      // controls.maxDistance = camDist;
+      // controls.minDistance = camDist
+      
+      const movementControls = new MovementControls(
+        document.getElementById('movement'),
+        document.getElementById('movementC')
+      )
+      
+      
+      function animate() {
+        controls.update();
+
+        requestAnimationFrame(animate);
+        cubePrev = new THREE.Vector3(
+          cube1.position.x,
+          cube1.position.y,
+          cube1.position.z
+        );
+
+        cube1.position.y -= 0.15;
+        keyMovement(cube1.position);
+        controls.target = cube1.position; 
+        raycaster.set(
+          new THREE.Vector3(cube1.position.x, 100, cube1.position.z),
+          new THREE.Vector3(0, -1, 0)
+        );
+        intersects = raycaster.intersectObjects(sceneMeshes, false);
+        if (intersects.length > 1) {
+          // if (intersects[0].distance < 0.1) {
+
+          if (ct.dist(intersects[1].point, cube1.position) < 0.3) {
+            let normal = ct.getNormalRotation(intersects[1]);
+            normalHelper.position.copy(normal[0]);
+            normalHelper.lookAt(normal[1]);
+            normalHelper.visible = false; //true;
+            // cube1.position.set(cubePrev.x, cubePrev.y, cubePrev.z);
+            cube1.position.copy(normal[0]);
+            cube1.position.y += 0.05;
+            // cube1.position.y += intersects[0].distance
+            cube1.rotation.x = normalHelper.rotation.x;
+            cube1.rotation.y = normalHelper.rotation.y;
+            // cube1.rotation.z = normalHelper.rotation.z;
+            camera.position.y += cube1.position.y - cubePrev.y;
+          }
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      document.addEventListener("dblclick", () => {
+        console.log(intersects);
+
+        let x = cube1.position.x - camera.position.x;
+        let z = cube1.position.z - camera.position.z;
+        console.log(Math.atan2(x, z) * (180 / Math.PI));
+      });
+      document.addEventListener("keydown", (e) => {
+        console.log(e.key);
+        keys[e.key] = true;
+      });
+      document.addEventListener("keyup", (e) => {
+        keys[e.key] = false;
+      });
+    </script>
+  </body>
+</html>

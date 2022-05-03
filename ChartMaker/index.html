@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
+    <script src="main.js" defer></script>
+    <script src="plotly.js" defer></script>
+  </head>
+  <body>
+    <header><h1>Chart Creator</h1></header>
+    <main>
+      <div id="addNodeDisplay">
+        <span>
+          <label>Start Name: <input name="start" type="text" /></label>
+        </span>
+        <span>
+          <label>End Name: <input name="end" type="text" /></label>
+        </span>
+        <span>
+          <label>Value: <input name="value" type="text" /></label>
+        </span>
+        <span>
+          <label>Color: <input name="color" type="color" /></label> </span
+        ><button id="addNode">Add Node</button>
+      </div>
+      <div id="layout">
+        <span>
+          <label>Background Color: <input name="bg" type="color" /></label>
+        </span>
+        <span>
+          <label>Spacing: <input name="spacing" type="range" min="0" max="20" value="15" step="1" /></label>
+        </span>
+        <span>
+          <label>Width: <input name="width" type="number" value='400'/></label>
+        </span>
+        <span>
+          <label>Height: <input name="height" type="number" value='400' /></label> </span>
+      </div>
+
+      <div id="displayNodes"></div>
+      <div id="myDiv">
+        <!-- Plotly chart will be drawn inside this DIV -->
+      </div>
+    </main>
+    <footer><p>&copy; 2022 Chart Creator -- DC-CC-21 & Tauriel1202</p></footer>
+  </body>
+</html>
