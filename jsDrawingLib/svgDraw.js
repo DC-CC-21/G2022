@@ -59,6 +59,19 @@ class Canvas {
     el.setAttribute("stroke-width", this.#strokeWeightSize);
     this.#canvas.append(el);
   }
+  
+  text(txt, x, y) {
+    let el = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    el.setAttribute("x", x);
+    el.setAttribute("y", y);
+    el.innerHTML = txt
+    el.setAttribute("rx", this.#strokeWeightSize);
+    el.setAttribute("ry", this.#strokeWeightSize);
+    el.setAttribute("fill", this.#fillColor);
+    el.setAttribute("stroke", this.#strokeColor);
+    el.setAttribute("stroke-width", this.#strokeWeightSize);
+    this.#canvas.append(el);
+  }
 
   line(x, y, x2, y2) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -126,8 +139,19 @@ class Canvas {
     var m = Y/X;//                var slope = y/x;
     var b = a.y;//a.y-(m*mouseX);// var b = points[i].y-(slope*mouseX);
     var y = m*(x-a.x) + b;
-    return y;
-}
+    return [y, m];
+  }
+  slope2(a, b, y){
+    var X = (b.x - a.x);//        var x = (points[i+1].x - points[i].x);
+    var Y = (b.y - a.y);//        var y = (points[i+1].y - points[i].y);
+    var m = X/Y;//                var slope = y/x;
+    var b = a.x;//a.y-(m*mouseX);// var b = points[i].y-(slope*mouseX);
+    var x = m*(y-a.y)+b;
+    return [x, m];
+  }
+  getAngle(a, b){
+    return Math.atan2((b.y-a.y), (b.x - a.x))
+  }
 
 }
 function recursive(frame) {
