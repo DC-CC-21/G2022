@@ -2,13 +2,16 @@
 
 //Constants
 const canvas = document.getElementById("svgCanvas");
-canvas.style.margin = 'auto'
+canvas.style.margin = "auto";
 
 const c = new Canvas(canvas, window.innerWidth, window.innerHeight);
 const pointSize = document.getElementById("pointSize");
 const dispPSize = document.getElementById("currentPSize");
 const CWidth = document.getElementById("CWidth");
 const CHeight = document.getElementById("CHeight");
+
+let mouseX = 0;
+let mouseY = 0;
 
 class Point {
   constructor(x, y) {
@@ -42,7 +45,7 @@ class Point {
       return;
     }
     this.isHovered = false;
-    return;
+    // return;
   }
 
   press(e) {
@@ -69,6 +72,11 @@ draw = function () {
     points[i].display();
     if (i < points.length - 1) {
       c.line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+
+      if (mouseX > points[i].x && mouseX < points[i + 1].x) {
+        let y = c.slope(points[i], points[i + 1], mouseX);
+        c.ellipse(mouseX, y, 20, 20);
+      }
     }
   }
 };
@@ -79,8 +87,8 @@ function updatePsize() {
   dispPSize.innerHTML = pointSize.value;
 }
 function updateCSize() {
-    canvas.style.width = CWidth.value + 'px'
-    canvas.style.height = CHeight.value + 'px'
+  canvas.style.width = CWidth.value + "px";
+  canvas.style.height = CHeight.value + "px";
 }
 
 //Listeners
@@ -88,6 +96,9 @@ document.addEventListener("dblclick", (e) => {
   points.push(new Point(e.offsetX, e.offsetY));
 });
 document.addEventListener("mousemove", (e) => {
+  mouseX = e.offsetX;
+  mouseY = e.offsetY;
+
   for (let i = 0; i < points.length; i++) {
     points[i].hover(e);
   }
@@ -105,4 +116,10 @@ document.addEventListener("mouseup", () => {
   });
 });
 
-
+document.addEventListener("keydown", () => {
+  for (let i = 0; i < points.length-1; i++) {
+    if (mouseX > points[i].x && mouseX < points[i + 1].x) {
+      points.splice(i+1, 0, new Point(mouseX, mouseY));
+    }
+  }
+});

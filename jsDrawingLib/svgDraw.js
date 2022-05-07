@@ -119,6 +119,15 @@ class Canvas {
     let Y = y - y2;
     return Math.sqrt(X*X + Y*Y)
   }
+  
+  slope(a,b ,x){
+    var X = (b.x - a.x);//        var x = (points[i+1].x - points[i].x);
+    var Y = (b.y - a.y);//        var y = (points[i+1].y - points[i].y);
+    var m = Y/X;//                var slope = y/x;
+    var b = a.y;//a.y-(m*mouseX);// var b = points[i].y-(slope*mouseX);
+    var y = m*(x-a.x) + b;
+    return y;
+}
 
 }
 function recursive(frame) {
