@@ -1,0 +1,8 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+span {
+    display:flex;
+    flex-direction: row;
+}
