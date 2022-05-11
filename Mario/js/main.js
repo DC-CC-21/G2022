@@ -9,6 +9,11 @@ const pointSize = document.getElementById("pointSize");
 const dispPSize = document.getElementById("currentPSize");
 const CWidth = document.getElementById("CWidth");
 const CHeight = document.getElementById("CHeight");
+const maxAValue = document.getElementById('maxAValue')
+
+let MAX_ANGLE = 60;
+
+
 
 let mouseX = 0;
 let mouseY = 0;
@@ -77,7 +82,7 @@ class Player {
   }
   display() {
     c.fill(255, 0, 0);
-    c.ellipse(this.x, this.y, this.w, this.h);
+    c.rect(this.x, this.y, this.w, this.h);
   }
   move() {
     this.prevX = this.x;
@@ -86,31 +91,29 @@ class Player {
     this.y += this.grav;
     this.canJump = false;
 
-    for (let i = 0; i < points.length - 1; i++) {
-      if (this.x >= points[i].x && this.x <= points[i + 1].x) {
-        let angle = c.getAngle(points[i], points[i + 1]) * (180 / Math.PI);
-        if (angle > -45 && angle < 45) {
-          let y = c.slope(points[i], points[i + 1], this.x - ~~(this.w / 2));
-          if (this.prevY < y[0]) {
-            if (this.y + this.h > y[0] && this.y + this.h < y[0] + this.h) {
-              this.y = y[0] - this.h;
-              this.grav = 0;
-              this.canJump = true;
-            }
-          }
+    for(let i = 0; i < points.length-1; i ++){
+      if(c.lineCollide(this, points[i], points[i+1])){
+        let slope = c.slope(points[i], points[i+1], this.x, this.h)
+        // console.log(slope)
+        if(c.dist(this.x, this.y, this.x, slope[0]) < this.h){
+          this.grav = 0;
+          this.y = slope[0] - this.h
         }
-      } else if (this.x >= points[i + 1].x && this.x <= points[i].x) {
-        let angle = c.getAngle(points[i], points[i + 1]) * (180 / Math.PI);
-        if (angle > -45 && angle < 45) {
-          if (this.prevY > y[0]) {
-            if (this.y - this.h < y[0] && this.y - this.h > y[0] - this.h) {
-              this.y = y[0] + this.h;
-              this.grav = 0;
-            }
-          }
-        }
+        // switch(slope[1]){
+        //   case 0:
+        //     if(this.y + this.h > points[i].y){
+        //       // this.grav = 0;
+        //       // this.y = points[i].y - this.h
+        //     }
+        //     break;
+        //   case 1:
+        //     break;
+        // }
+
       }
+
     }
+
 
     if (keys["ArrowLeft"]) {
       this.x -= this.speed;
@@ -119,38 +122,7 @@ class Player {
       this.x += this.speed;
     }
 
-    for (let i = 0; i < points.length - 1; i++) {
-      if (this.y >= points[i].y && this.y <= points[i + 1].y) {
-        let angle =
-          c.getAngle(points[i], points[i + 1], this.x) * (180 / Math.PI);
 
-        if (angle >= 45) {
-          let x = c.slope2(points[i], points[i + 1], this.y);
-          if (
-            this.x - this.w > x[0] - this.speed * 1.5 &&
-            this.x - this.w < x[0]
-          ) {
-            this.x = x[0] + this.w;
-            // this.y = this.prevY;
-            this.grav -= 0.05;
-          }
-        }
-      } else if (this.y > points[i + 1].y && this.y < points[i].y) {
-        let angle =
-          c.getAngle(points[i], points[i + 1], this.x) * (180 / Math.PI);
-
-        if (angle <= -45) {
-          let x = c.slope2(points[i], points[i + 1], this.y);
-          if (
-            this.x + this.w > x[0] &&
-            this.x + this.w < x[0] + this.speed * 1.5
-          ) {
-            this.x = x[0] - this.w;
-            this.grav -= 0.05;
-          }
-        }
-      }
-    }
 
     if (keys["ArrowUp"] && this.canJump) {
       this.grav -= this.h * 0.2;
@@ -186,8 +158,10 @@ draw = function () {
       c.strokeWeight(1);
       if (mouseX > points[i].x && mouseX < points[i + 1].x) {
         let y = c.slope(points[i], points[i + 1], mouseX);
+        if(c.dist(mouseX, mouseY, mouseX, y[0]) < 50){
         c.fill(255, 255);
         c.ellipse(mouseX, y[0], 10, 10);
+        }
       }
       if (mouseY > points[i].y && mouseY < points[i + 1].y) {
         let x = c.slope2(points[i], points[i + 1], mouseY);
@@ -212,6 +186,10 @@ function updatePsize() {
 function updateCSize() {
   canvas.style.width = CWidth.value + "px";
   canvas.style.height = CHeight.value + "px";
+}
+
+function updateAngle(){
+  MAX_ANGLE = Number(maxAValue.value)
 }
 
 //Listeners

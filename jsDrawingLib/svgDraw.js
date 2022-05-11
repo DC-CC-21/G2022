@@ -152,6 +152,16 @@ class Canvas {
   getAngle(a, b){
     return Math.atan2((b.y-a.y), (b.x - a.x))
   }
+  lineCollide(p, l1, l2, offsetY){
+      let x = l1.x > l2.x ? l2.x : l1.x;
+      let x2 = l1.x > l2.x ? l1.x : l2.x;
+      let y = l1.y > l2.y ? l2.y : l1.y;
+      let y2 = l1.y > l2.y ? l1.y : l2.y;
+      if(y === y2){y-=500; y2 += 500}
+
+    return p.x > x && p.x < x2 && p.y > y && p.y < y2;
+
+  }
 
 }
 function recursive(frame) {
