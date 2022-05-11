@@ -1,0 +1,70 @@
+/*#region SETUP*/
+:root {
+  --bground: #69008f;
+  --color: #fff700;
+  --splash: #ff006f;
+  --bitOblue: #0ac6ff;
+  --link: #221f7b;
+}
+* {
+  text-align: center;
+  margin: 0;
+}
+img {
+  width: 100%;
+}
+/*#endregion SETUP*/
+/*#region SMALL CSS*/
+header,
+footer {
+  background-color: var(--bground);
+  color: var(--color);
+  padding: 0.5em;
+}
+main {
+  display: grid;
+}
+div {
+  margin: 1em auto 0;
+  width: 15em;
+  height: 15em;
+  border: 3.5px outset var(--splash);
+}
+a {
+  color: var(--link);
+}
+a:hover {
+  color: var(--bitOblue);
+}
+#updates {
+  border: 3.5px solid var(--splash);
+  margin: 1em 1.6em 0;
+}
+#updates h3 {
+  margin-top: 0.8em;
+  line-height: 1.8em;
+}
+footer {
+  margin-top: 1em;
+  padding: 1em;
+}
+/*#endregion SMALL CSS*/
+/*#region MEDIUM CSS*/
+@media only screen and (min-width: 32em) {
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column: 1em;
+  }
+  #updates {
+    grid-column: 1 / 3;
+  }
+}
+/*#endregion MEDIUM CSS*/
+/*region LARGE CSS*/
+@media only screen and (min-width: 64em) {
+  main {
+    background-color: #0ac6ff;
+  }
+}
+/*#endregion LARGE CSS*/
