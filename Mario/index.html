@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <script src="../jsDrawingLib/svgDraw.js" defer></script>
+    <script src="./js/main.js" defer></script>
+
+    <style>
+      svg {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <span>
+          Width: <input id="CWidth" type="number" placeholder="400" onchange="updateCSize()"/>
+          Height: <input id="CHeight" type="number" placeholder="400" onchange="updateCSize()"/>
+        </span>
+        <span
+          >PointSize:
+          <input
+            id="pointSize"
+            min="0"
+            max="20"
+            step="1"
+            type="range"
+            placeholder="10"
+            onchange="updatePsize()"
+          />
+          <p id="currentPSize">10</p></span
+        >
+      </nav>
+    </header>
+    <svg id="svgCanvas"></svg>
+    <!-- <svg>
+      <defs>
+        <pattern id="image" x="300" y="300" patternUnits="userSpaceOnUse" height="10" width="10">
+          <image xlink:href="./assets/googly.jpg"></image>
+        </pattern>
+      </defs>
+      <polyline points="0,20 200,20 200,500 0,500" fill="url(#image)"></polyline>
+    </svg> -->
+    <!-- <svg width="700" height="660">
+      <defs>
+        <pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="1" width="1">
+          <image x="0" y="0" xlink:href="./assets/googly.jpg"></image>
+        </pattern>
+      </defs>
+      <circle id='top' cx="180" cy="120" r="80" fill="url(#image)"/>
+    </svg> -->
+  </body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Physijs Example</title>
+    <style>
+      body {
+        padding: 0px;
+        margin: 0px;
+        max-width: 100vw;
+        max-height: 100vh;
+        background-color: blue;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="viewport"></div>
+
+    <script>
+      Object.defineProperty(HTMLDivElement.prototype, "getPos", {
+        value: function getPos() {
+          function readPx(n) {
+            return Number(n.replace(/px/g, ""));
+          }
+          return {
+            x: readPx(this.style.left),
+            y: readPx(this.style.top),
+            width: readPx(this.style.width),
+            height: readPx(this.style.height),
+          };
+        },
+        writable: true,
+        configurable: true,
+      });
+
+      class MovementControls {
+        constructor() {
+          this.setupElementContainer();
+          this.clicked = false;
+        }
+        setupElementContainer() {
+          this.container = document.createElement("div");
+
+          let offset = 50;
+          this.container.style.width = 120 + "px";
+          this.container.style.height = 120 + "px";
+          let current = this.container.getPos();
+          this.container.style.borderRadius = "50%";
+          this.container.style.backgroundColor = "rgba(100,100,100,0)";
+          this.container.style.border = "5px double rgba(100,100,100,255)";
+
+          this.container.style.position = "absolute";
+          this.container.style.top =
+            window.innerHeight - current.height - offset + "px";
+
+          this.container.style.left = offset + "px";
+          this.setupElement();
+          document.body.append(this.container);
+        }
+        setupElement(parent) {
+          this.element = document.createElement("div");
+
+          this.containerPos = this.container.getPos();
+          this.element.style.width = this.containerPos.width * 0.3 + "px";
+          this.element.style.height = this.containerPos.height * 0.3 + "px";
+          let current = this.element.getPos();
+          this.element.style.borderRadius = "50%";
+          this.element.style.backgroundColor = "rgba(200,200, 200,255)";
+          // this.element.style.border = '3px solid rgba(100,100,100,0.5)'
+
+          this.resetPos = (this.containerPos.width - current.width) / 2;
+          this.offset = current.width / 2;
+          this.element.style.position = "absolute";
+          this.element.style.top = this.resetPos + "px";
+          this.element.style.left = this.resetPos + "px";
+          this.container.appendChild(this.element);
+        }
+        isin(mX, mY) {
+          let element = this.element.getPos();
+          let pos = {
+            x: element.x + element.width / 2,
+            y: element.y + element.height / 2,
+          };
+
+          return this.dist(pos.x, pos.y, mX, mY) < element.width;
+        }
+        dist(x1, y1, x2, y2) {
+          let x = x1 - x2;
+          let y = y1 - y2;
+          return Math.sqrt(x * x + y * y);
+        }
+        move(mX, mY) {
+          let mx = mX - this.containerPos.x;
+          let my = mY - this.containerPos.y;
+          if (this.clicked) {
+            let element = this.element.getPos();
+            let pos = {
+              x: element.x + element.width / 2,
+              y: element.y + element.height / 2,
+            };
+            if (this.dist(pos.x, pos.y, mx, my) < this.containerPos.width/2){
+              this.element.style.left = mx - this.offset + "px";
+              this.element.style.top = my - this.offset + "px";
+            }
+          } else {
+            // this.element.style.left = this.resetPos + 'px'
+            // this.element.style.top = this.resetPos + 'px'
+          }
+          return;
+        }
+        click(mX, mY) {
+          let mx = mX - this.containerPos.x;
+          let my = mY - this.containerPos.y;
+          if (this.isin(mx, my)) {
+            this.clicked = true;
+          }
+        }
+        reset() {
+          this.clicked = false;
+          this.element.style.top = this.resetPos + "px";
+          this.element.style.left = this.resetPos + "px";
+        }
+      }
+      let movement = new MovementControls();
+
+      document.addEventListener("mousedown", (e) => {
+        movement.click(e.x, e.y);
+      });
+      document.addEventListener("mousemove", (e) => {
+        movement.move(e.x, e.y);
+      });
+      document.addEventListener("mouseup", (e) => {
+        movement.reset();
+      });
+    </script>
+  </body>
+</html>
