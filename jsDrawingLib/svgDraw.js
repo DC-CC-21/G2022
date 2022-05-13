@@ -1,5 +1,9 @@
 let draw;
 let _CANVAS_;
+let Width;
+let Height
+
+
 class Canvas {
   
   //make vars private
@@ -7,7 +11,9 @@ class Canvas {
   #fillColor = "#fff";
   #strokeColor = "#000";
   #strokeWeightSize = 1;
-  
+  #rotation = 90
+  #textSize = 18;
+
   constructor(canvas, width, height) {
     // SETUP this.#canvas
     this.#canvas = canvas;
@@ -16,6 +22,8 @@ class Canvas {
     this.#canvas.style.width = (width || 400) + "px";
     this.#canvas.style.height = (height || 400) + "px";
     this.#canvas.style.margin = "auto";
+    Width = width;
+    Height = height;
     recursive();
   }
 
@@ -29,6 +37,7 @@ class Canvas {
     el.setAttribute("fill", this.#fillColor);
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
+    // el.setAttribute("transform","rotate(-90 50 100)")
     if(radius){
       el.setAttribute('rx', radius)
       el.setAttribute('ry', radius)
@@ -60,18 +69,34 @@ class Canvas {
     this.#canvas.append(el);
   }
   
+  polygon(x, y, x2, y2, x3, y3, x4, y4) {
+    let el = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    el.setAttribute('points', `${x},${y} ${x2},${y2} ${x3},${y3} ${x4},${y4}`)    
+    el.setAttribute("fill", this.#fillColor);
+    el.setAttribute("stroke", this.#strokeColor);
+    el.setAttribute("stroke-width", this.#strokeWeightSize);
+
+    this.#canvas.append(el);
+  }
+  
   text(txt, x, y) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "text");
     el.setAttribute("x", x);
     el.setAttribute("y", y);
     el.innerHTML = txt
-    el.setAttribute("rx", this.#strokeWeightSize);
-    el.setAttribute("ry", this.#strokeWeightSize);
+    // el.setAttribute("rx", this.#strokeWeightSize);
+    // el.setAttribute("ry", this.#strokeWeightSize);
     el.setAttribute("fill", this.#fillColor);
     el.setAttribute("stroke", this.#strokeColor);
-    el.setAttribute("stroke-width", this.#strokeWeightSize);
+    // el.setAttribute("stroke-width", this.#strokeWeightSize);
+    el.setAttribute('font-size', this.#textSize)
     this.#canvas.append(el);
   }
+
+  textSize(size){
+    this.#textSize = size
+  }
+
 
   line(x, y, x2, y2) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -126,6 +151,9 @@ class Canvas {
     this.#strokeWeightSize = n;
   }
 
+  rotate(deg){
+    this.#rotation = deg;
+  }
   //math type functions
   dist(x, y, x2, y2){
     let X = x - x2
@@ -133,36 +161,25 @@ class Canvas {
     return Math.sqrt(X*X + Y*Y)
   }
   
-  slope(a,b ,x){
-    var X = (b.x - a.x);//        var x = (points[i+1].x - points[i].x);
-    var Y = (b.y - a.y);//        var y = (points[i+1].y - points[i].y);
-    var m = Y/X;//                var slope = y/x;
-    var b = a.y;//a.y-(m*mouseX);// var b = points[i].y-(slope*mouseX);
-    var y = m*(x-a.x) + b;
-    return [y, m];
-  }
-  slope2(a, b, y){
-    var X = (b.x - a.x);//        var x = (points[i+1].x - points[i].x);
-    var Y = (b.y - a.y);//        var y = (points[i+1].y - points[i].y);
-    var m = X/Y;//                var slope = y/x;
-    var b = a.x;//a.y-(m*mouseX);// var b = points[i].y-(slope*mouseX);
-    var x = m*(y-a.y)+b;
-    return [x, m];
-  }
-  getAngle(a, b){
-    return Math.atan2((b.y-a.y), (b.x - a.x))
-  }
-  lineCollide(p, l1, l2, offsetY){
-      let x = l1.x > l2.x ? l2.x : l1.x;
-      let x2 = l1.x > l2.x ? l1.x : l2.x;
-      let y = l1.y > l2.y ? l2.y : l1.y;
-      let y2 = l1.y > l2.y ? l1.y : l2.y;
-      if(y === y2){y-=500; y2 += 500}
-
-    return p.x > x && p.x < x2 && p.y > y && p.y < y2;
-
+  insideLineBounds(point1, point2, p){
+    let x = point1.x > point2.x ? point2.x : point1.x;
+    let y = point1.y > point2.y ? point2.y : point1.y;
+    let w = Math.abs(point2.x - point1.x);
+    let h = Math.abs(point2.y - point1.y);
+    return p.x - x < w && x - p.x < p.w &&
+           p.y - y < h && y - p.y < p.h;
   }
 
+  lineSlope(point1, point2, p){
+    let x = point2.x - point1.x;
+    let y = point2.y - point1.y;
+    let m = y/x;
+    let b = point1.y - (m*point1.x)
+    return {m:m, b:b}
+  }
+  collideLine(line, p){
+    return line.m*p.x + line.b
+  }
 }
 function recursive(frame) {
   if (frame > 100) {

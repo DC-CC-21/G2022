@@ -90,7 +90,7 @@ class Canvas {
   strokeWeight(n){
     this.strokeWeightSize = n
   }
-
+l\
 }
 function recursive(frame) {
   if (frame > 100) {
