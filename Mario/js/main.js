@@ -1,3 +1,5 @@
+console.log('Main is Loading...')
+
 //program for creating mario worlds
 
 //Constants
@@ -21,11 +23,11 @@ let keys = [];
 
 class Point {
   constructor(x, y) {
-    console.log(typeof x)
-    if(typeof x == "object"){
+    // console.ltypeof x);
+    if (typeof x == "object") {
       this.x = x.x;
       this.y = x.y;
-    } else{
+    } else {
       this.x = x;
       this.y = y;
     }
@@ -78,10 +80,19 @@ class Point {
 }
 function connectTheDots(points) {
   for (let i = 0; i < points.length - 1; i++) {
-    c.fill("#deac69")
-    c.stroke("#deac69")
+    c.fill("#deac69");
+    c.stroke("#deac69");
     c.strokeWeight(1);
-    c.polygon(points[i].x,points[i].y, points[i+1].x,points[i+1].y, points[i+1].x, Height,points[i].x, Height)
+    c.polygon(
+      points[i].x,
+      points[i].y,
+      points[i + 1].x,
+      points[i + 1].y,
+      points[i + 1].x,
+      Height,
+      points[i].x,
+      Height
+    );
 
     c.stroke(0, 255, 0);
     c.strokeWeight(10);
@@ -89,51 +100,11 @@ function connectTheDots(points) {
   }
 }
 
-class Player {
-  constructor() {
-    this.x = 50;
-    this.y = 40;
-    this.w = 10;
-    this.h = this.w * 1.5;
-    this.grav = 0;
-    this.speed = 2;
-  }
-  display() {
-    c.fill(255, 0, 0);
-    c.rect(this.x - this.w / 2, this.y - 2.5, this.w, this.h);
-  }
-  move() {
-    this.prevX = this.x;
-    this.prevY = this.y;
-    this.grav += 0.1;
-    this.y += this.grav;
-    this.canJump = false;
+class PowerUp {}
 
-    for (let i = 0; i < points.length - 1; i++) {
-      if (c.insideLineBounds(points[i], points[i + 1], this)) {
-        let line = c.lineSlope(points[i], points[i + 1], this);
-        let y = c.collideLine(line, this);
-        if (c.dist(this.x, this.y, this.x, y) < this.h * 1.1) {
-          this.grav = 0;
-          this.y = y - this.h;
-          this.canJump = true;
-        }
-        // break;
-      }
-    }
+class Coin {}
 
-    if (keys["ArrowLeft"]) {
-      this.x -= this.speed;
-    }
-    if (keys["ArrowRight"]) {
-      this.x += this.speed;
-    }
-    if (keys["ArrowUp"] && this.canJump) {
-      // this.grav -= 10;
-      this.grav -= this.h * 0.2;
-    }
-  }
-}
+class Enemey {}
 
 // let points = [new Point(0, 300), new Point(100, 300), new Point(220, 280)];
 let points = [
@@ -162,6 +133,14 @@ let points = [
   new Point({ x: 1230, y: 445 }),
   new Point({ x: 1405, y: 444 }),
 ];
+let blocks = [
+  new Block(60, 230),
+  new Block(80, 230),
+  new Block(100, 230),
+  new Block(180, 290),
+];
+
+// let b = new Block(100,100)
 let p = new Player();
 let x = 0;
 
@@ -172,12 +151,17 @@ draw = function () {
 
   connectTheDots(points);
   points.forEach((point) => point.display());
-
-  p.move();
+  p.move(points, blocks);
   p.display();
+
+  blocks.forEach((block) => block.display());
 
   c.textSize(500);
 
+  for (let i = 0; i < 6; i++) {
+    c.rect(p.x + p.w / 2, 291.0873786407767 - 2.5 - p.h * i, p.w, p.h * 0.95);
+  }
+  // console.log(p.y)
 };
 
 //Onchange events

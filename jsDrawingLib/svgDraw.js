@@ -6,13 +6,15 @@ let Height
 
 class Canvas {
   
-  //make vars private
+  //private variables
+  //#region
   #canvas;
   #fillColor = "#fff";
   #strokeColor = "#000";
   #strokeWeightSize = 1;
   #rotation = 90
   #textSize = 18;
+  //#endregion
 
   constructor(canvas, width, height) {
     // SETUP this.#canvas
@@ -57,7 +59,7 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  point(x, y, width, height) {
+  point(x, y) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
     el.setAttribute("cx", x);
     el.setAttribute("cy", y);
@@ -97,7 +99,6 @@ class Canvas {
     this.#textSize = size
   }
 
-
   line(x, y, x2, y2) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "line");
     // el.setAttribute('points', `${x},${y} ${x2},${y2} ${x2},${y2+this.#strokeWeightSize} ${x},${y+this.#strokeWeightSize} `)
@@ -135,6 +136,7 @@ class Canvas {
       this.#fillColor = r;
     }
   }
+
   stroke(r, g, b, a) {
     if (r != undefined && g != undefined && b != undefined && a != undefined) {
       this.#strokeColor = `rgba(${r}, ${g}, ${b}, ${a})`;
@@ -151,16 +153,23 @@ class Canvas {
     this.#strokeWeightSize = n;
   }
 
+  //transformations
   rotate(deg){
     this.#rotation = deg;
   }
+
   //math type functions
   dist(x, y, x2, y2){
     let X = x - x2
     let Y = y - y2;
     return Math.sqrt(X*X + Y*Y)
   }
+
+  map(value, istart, istop, ostart, ostop) {
+    return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+  }
   
+  //line collide
   insideLineBounds(point1, point2, p){
     let x = point1.x > point2.x ? point2.x : point1.x;
     let y = point1.y > point2.y ? point2.y : point1.y;
@@ -169,7 +178,6 @@ class Canvas {
     return p.x - x < w && x - p.x < p.w &&
            p.y - y < h && y - p.y < p.h;
   }
-
   lineSlope(point1, point2, p){
     let x = point2.x - point1.x;
     let y = point2.y - point1.y;
@@ -177,10 +185,17 @@ class Canvas {
     let b = point1.y - (m*point1.x)
     return {m:m, b:b}
   }
-  collideLine(line, p){
-    return line.m*p.x + line.b
+  collideLine(line, p, xOffset, yOffset){
+    return line.m*(p.x+xOffset) + line.b+yOffset
+  }
+
+  //rect collide
+  rectCollide(a,b){
+    return a.x - b.x < b.w && b.x - a.x < a.w &&
+           a.y - b.y < b.h && b.y - a.y < a.h;
   }
 }
+
 function recursive(frame) {
   if (frame > 100) {
     if (typeof draw == "function") {
