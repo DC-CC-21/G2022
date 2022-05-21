@@ -238,11 +238,11 @@ function mouse_touch_start(e){
   // mouseX = e.offsetX;
 
   // mouseY = e.offsetY;
-  for (let i = 0; i < points.length; i++) {
-    if (points[i].press(e)) {
-      return;
-    }
-  }
+  // for (let i = 0; i < points.length; i++) {
+  //   if (points[i].press(e)) {
+  //     return;
+  //   }
+  // }
   mouseIsPressed = true;
 }
 function mouse_touch_end(){
@@ -276,7 +276,7 @@ document.addEventListener("mouseup", () => {
 document.addEventListener('touchstart',(e)=>{
   mouseX = e.changedTouches[0].clientX
   mouseY = e.changedTouches[0].clientY
-  console.log(e.changedTouches[0].clientX)
+  document.querySelector("#mPos").innerHTML = `${mouseX},${mouseY}`
   mouse_touch_start(e)
 })
 document.addEventListener('touchend',(e)=>{
