@@ -234,6 +234,27 @@ function updateAngle() {
 }
 
 //Listeners
+function mouse_touch_start(e){
+  // mouseX = e.offsetX;
+
+  // mouseY = e.offsetY;
+  for (let i = 0; i < points.length; i++) {
+    if (points[i].press(e)) {
+      return;
+    }
+  }
+  mouseIsPressed = true;
+}
+function mouse_touch_end(){
+    points.forEach((point) => {
+    point.release();
+  });
+  mouseIsPressed = false;
+  // mouseX = -100;
+  // mouseY = -100;
+}
+
+
 document.addEventListener("dblclick", (e) => {
   points.push(new Point(e.offsetX, e.offsetY));
 });
@@ -246,19 +267,21 @@ document.addEventListener("mousemove", (e) => {
   }
 });
 document.addEventListener("mousedown", (e) => {
-  for (let i = 0; i < points.length; i++) {
-    if (points[i].press(e)) {
-      return;
-    }
-  }
-  mouseIsPressed = true;
+  mouse_touch_start(e)
 });
 document.addEventListener("mouseup", () => {
-  points.forEach((point) => {
-    point.release();
-  });
-  mouseIsPressed = false;
+  mouse_touch_end()
 });
+
+document.addEventListener('touchstart',(e)=>{
+  mouseX = e.changedTouches[0].clientX
+  mouseY = e.changedTouches[0].clientY
+  console.log(e.changedTouches[0].clientX)
+  mouse_touch_start(e)
+})
+document.addEventListener('touchend',(e)=>{
+  mouse_touch_end()
+})
 
 document.addEventListener("keydown", (e) => {
   e.preventDefault();
