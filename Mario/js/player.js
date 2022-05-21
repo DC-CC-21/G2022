@@ -1,22 +1,23 @@
-console.log("Player is Loading...")
+console.log("Player is Loading...");
 
 class Player {
-  constructor() {
-    this.x = 50;
-    this.y = 40;
-    this.w = 12;
-    this.h = this.w * 1.5;
+  constructor(size) {
+    this.x = c.map(50 , 0, 706, 0, Height);
+    this.y = c.map(450, 0, 706, 0, Height);
+    this.w = size;
+    this.h = ~~(this.w * 1.1);
     this.grav = 0;
-    this.speed = 2;
-    this.jumpHeight = 4.2;
+    this.speed = c.map(3, 0, 706, 0, Height);
+    this.jumpHeight = c.map(6, 0, 706, 0, Height);
 
     this.xOffset = this.w / 2;
     this.yOffset = 0;
   }
 
   display() {
-    c.fill(255, 0, 0);
-    c.rect(this.x, this.y, this.w, this.h);
+    // c.fill(255, 0, 0);
+    // c.rect(this.x, this.y, this.w, this.h);
+    c.image("assets/googly.jpg", this.x, this.y, this.w, this.h)
   }
 
   move(
@@ -25,7 +26,7 @@ class Player {
   ) {
     this.prevX = this.x;
     this.prevY = this.y;
-    this.grav += 0.1;
+    this.grav += c.map(0.1, 0, 706, 0, Height);
     this.y += this.grav;
     this.canJump = false;
 
@@ -33,7 +34,8 @@ class Player {
       if (c.insideLineBounds(land[i], land[i + 1], this)) {
         let line = c.lineSlope(land[i], land[i + 1], this);
         let y = c.collideLine(line, this, this.xOffset, this.yOffset);
-        if (c.dist(this.x + this.w / 2, this.y, this.x, y) < this.h * 1.1) {
+        let dist = c.dist(this.x + this.w / 2, this.y, this.x+this.w/2, y) 
+        if (dist < this.h) {
           this.grav = 0;
           this.y = y - this.h;
           this.canJump = true;
@@ -88,4 +90,3 @@ class Player {
     });
   }
 }
-

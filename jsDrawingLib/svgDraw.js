@@ -1,22 +1,20 @@
 let draw;
 let _CANVAS_;
 let Width;
-let Height
-
+let Height;
 
 class Canvas {
-  
   //private variables
   //#region
   #canvas;
   #fillColor = "#fff";
   #strokeColor = "#000";
   #strokeWeightSize = 1;
-  #rotation = 90
+  #rotation = 90;
   #textSize = 18;
   //#endregion
 
-  constructor(canvas, width, height) {
+  constructor(canvas, width, height, showCanvasDimensions) {
     // SETUP this.#canvas
     this.#canvas = canvas;
     this.#canvas.style.overflow = "hidden";
@@ -26,7 +24,20 @@ class Canvas {
     this.#canvas.style.margin = "auto";
     Width = width;
     Height = height;
+    //1536x754
+    console.log(`Your canvas is ${Width}x${Height}`)
     recursive();
+    if(showCanvasDimensions){
+      this.showCanvasDimensions()
+    }
+  }
+  showCanvasDimensions(){
+    let el = document.createElement("h1")
+    el.innerHTML = `${Width}x${Height}`;
+    el.style.position = 'absolute'
+    el.style.left = '10px'
+    el.style.top = '10px'
+    document.querySelector('body').append(el)
   }
 
   //SHAPES
@@ -37,12 +48,13 @@ class Canvas {
     el.setAttribute("width", width);
     el.setAttribute("height", height);
     el.setAttribute("fill", this.#fillColor);
+
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
     // el.setAttribute("transform","rotate(-90 50 100)")
-    if(radius){
-      el.setAttribute('rx', radius)
-      el.setAttribute('ry', radius)
+    if (radius) {
+      el.setAttribute("rx", radius);
+      el.setAttribute("ry", radius);
     }
     this.#canvas.append(el);
   }
@@ -51,8 +63,8 @@ class Canvas {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
     el.setAttribute("cx", x);
     el.setAttribute("cy", y);
-    el.setAttribute("rx", width/2);
-    el.setAttribute("ry", height/2);
+    el.setAttribute("rx", width / 2);
+    el.setAttribute("ry", height / 2);
     el.setAttribute("fill", this.#fillColor);
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
@@ -70,33 +82,33 @@ class Canvas {
     el.setAttribute("stroke-width", this.#strokeWeightSize);
     this.#canvas.append(el);
   }
-  
+
   polygon(x, y, x2, y2, x3, y3, x4, y4) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-    el.setAttribute('points', `${x},${y} ${x2},${y2} ${x3},${y3} ${x4},${y4}`)    
+    el.setAttribute("points", `${x},${y} ${x2},${y2} ${x3},${y3} ${x4},${y4}`);
     el.setAttribute("fill", this.#fillColor);
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
 
     this.#canvas.append(el);
   }
-  
+
   text(txt, x, y) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "text");
     el.setAttribute("x", x);
     el.setAttribute("y", y);
-    el.innerHTML = txt
+    el.innerHTML = txt;
     // el.setAttribute("rx", this.#strokeWeightSize);
     // el.setAttribute("ry", this.#strokeWeightSize);
     el.setAttribute("fill", this.#fillColor);
     el.setAttribute("stroke", this.#strokeColor);
     // el.setAttribute("stroke-width", this.#strokeWeightSize);
-    el.setAttribute('font-size', this.#textSize)
+    el.setAttribute("font-size", this.#textSize);
     this.#canvas.append(el);
   }
 
-  textSize(size){
-    this.#textSize = size
+  textSize(size) {
+    this.#textSize = size;
   }
 
   line(x, y, x2, y2) {
@@ -106,11 +118,23 @@ class Canvas {
     el.setAttribute("y1", y);
     el.setAttribute("x2", x2);
     el.setAttribute("y2", y2);
-    el.setAttribute('stroke', this.#strokeColor)
-    el.setAttribute('stroke-width', this.#strokeWeightSize)
+    el.setAttribute("stroke", this.#strokeColor);
+    el.setAttribute("stroke-width", this.#strokeWeightSize);
     this.#canvas.append(el);
   }
 
+  image(img, x, y, width, height) {
+    let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    el.setAttribute("preserveAspectRatio","none")
+    el.setAttribute("x", x);
+    el.setAttribute("y", y);
+    el.setAttribute("width", width)
+    el.setAttribute("height", height);
+    // el.style.width = 1000 + 'px'
+    // el.style.height = height + 'px'
+    el.setAttribute("href", img);
+    this.#canvas.append(el);
+  }
   //COLOR & STYLE
   background(r, g, b, a) {
     this.#canvas.innerHTML = "";
@@ -154,45 +178,45 @@ class Canvas {
   }
 
   //transformations
-  rotate(deg){
+  rotate(deg) {
     this.#rotation = deg;
   }
 
   //math type functions
-  dist(x, y, x2, y2){
-    let X = x - x2
+  dist(x, y, x2, y2) {
+    let X = x - x2;
     let Y = y - y2;
-    return Math.sqrt(X*X + Y*Y)
+    return Math.sqrt(X * X + Y * Y);
   }
 
   map(value, istart, istop, ostart, ostop) {
     return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
   }
-  
+
   //line collide
-  insideLineBounds(point1, point2, p){
+  insideLineBounds(point1, point2, p) {
     let x = point1.x > point2.x ? point2.x : point1.x;
     let y = point1.y > point2.y ? point2.y : point1.y;
     let w = Math.abs(point2.x - point1.x);
     let h = Math.abs(point2.y - point1.y);
-    return p.x - x < w && x - p.x < p.w &&
-           p.y - y < h && y - p.y < p.h;
+    return p.x - x < w && x - p.x < p.w && p.y - y < h && y - p.y < p.h;
   }
-  lineSlope(point1, point2, p){
+  lineSlope(point1, point2, p) {
     let x = point2.x - point1.x;
     let y = point2.y - point1.y;
-    let m = y/x;
-    let b = point1.y - (m*point1.x)
-    return {m:m, b:b}
+    let m = y / x;
+    let b = point1.y - m * point1.x;
+    return { m: m, b: b };
   }
-  collideLine(line, p, xOffset, yOffset){
-    return line.m*(p.x+xOffset) + line.b+yOffset
+  collideLine(line, p, xOffset, yOffset) {
+    return line.m * (p.x + xOffset) + line.b + yOffset;
   }
 
   //rect collide
-  rectCollide(a,b){
-    return a.x - b.x < b.w && b.x - a.x < a.w &&
-           a.y - b.y < b.h && b.y - a.y < a.h;
+  rectCollide(a, b) {
+    return (
+      a.x - b.x < b.w && b.x - a.x < a.w && a.y - b.y < b.h && b.y - a.y < a.h
+    );
   }
 }
 

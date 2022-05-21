@@ -1,25 +1,34 @@
-console.log('Main is Loading...')
+console.log("Main is Loading...");
 
 //program for creating mario worlds
 
-//Constants
+//#region Canvas
 const canvas = document.getElementById("svgCanvas");
 canvas.style.margin = "auto";
-
-const c = new Canvas(canvas, window.innerWidth, window.innerHeight);
+const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
 const pointSize = document.getElementById("pointSize");
-pointSize.value = 1;
+//#endregion
 
+const mapWidth = 746;
+const mapHeight = 706;
+pointSize.value = 10;
+
+//#region document elements
 const dispPSize = document.getElementById("currentPSize");
 const CWidth = document.getElementById("CWidth");
 const CHeight = document.getElementById("CHeight");
 const maxAValue = document.getElementById("maxAValue");
+//#endregion
 
+//#region constants
+const blockSize = c.map(50, 0, 706, 0, Height);
+
+//junk
 let MAX_ANGLE = 60;
-
 let mouseX = 0;
 let mouseY = 0;
 let keys = [];
+//#endregion
 
 class Point {
   constructor(x, y) {
@@ -31,6 +40,8 @@ class Point {
       this.x = x;
       this.y = y;
     }
+    this.x = ~~c.map(this.x, 0, 706, 0, Height);
+    this.y = ~~c.map(this.y + 200, 0, 706, 0, Height);
     this.radius = Number(pointSize.value);
     this.isHovered = false;
   }
@@ -100,6 +111,27 @@ function connectTheDots(points) {
   }
 }
 
+class Controls {
+  constructor(dct) {
+    this.w = 50;
+    this.h = 50;
+    this.pos = dct;
+  }
+  drawControls() {
+    Object.keys(this.pos).forEach((key) => {
+      // console.log(key.x)
+      c.rect(this.pos[key].x, this.pos[key].y, this.w, this.h);
+    });
+  }
+}
+
+const controls = new Controls({
+  left: { x: 100, y: Height - 100 },
+  right: { x: 200, y: Height - 100 },
+  up: { x: Width - 100, y: 100 },
+  down: { x: Width - 100, y: 200 },
+});
+
 class PowerUp {}
 
 class Coin {}
@@ -134,14 +166,15 @@ let points = [
   new Point({ x: 1405, y: 444 }),
 ];
 let blocks = [
-  new Block(60, 230),
-  new Block(80, 230),
-  new Block(100, 230),
-  new Block(180, 290),
+  new Block(60,  350, blockSize),
+  new Block(108, 350, blockSize),
+  new Block(156, 350, blockSize),
+  new Block(180, 290, blockSize),
 ];
 
 // let b = new Block(100,100)
-let p = new Player();
+let p = new Player(blockSize);
+
 let x = 0;
 
 draw = function () {
@@ -150,6 +183,7 @@ draw = function () {
   c.rect(x, 100, 100, 100);
 
   connectTheDots(points);
+  // c.image("assets/Bground1.jpg", 0, 0, points.at(-1).x, Height*1.6);
   points.forEach((point) => point.display());
   p.move(points, blocks);
   p.display();
@@ -159,9 +193,10 @@ draw = function () {
   c.textSize(500);
 
   for (let i = 0; i < 6; i++) {
-    c.rect(p.x + p.w / 2, 291.0873786407767 - 2.5 - p.h * i, p.w, p.h * 0.95);
+    c.rect(p.x + p.w * 1.2, 455.0873786407767 - 2.5 - p.h * i, p.w, p.h * 0.95);
   }
   // console.log(p.y)
+  controls.drawControls();
 };
 
 //Onchange events

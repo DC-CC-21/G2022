@@ -2,16 +2,25 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    
+
     <script src="../jsDrawingLib/svgDraw.js" defer></script>
     <script src="js/player.js" defer></script>
     <script src="js/block.js" defer></script>
     <script src="js/main.js" defer></script>
-    
+
     <style>
+      body{
+        /* background-image/:url("assets/Bground1.jpg") */
+      }
       svg {
         width: 100vw;
         height: 100vh;
+      }
+      svg {
+        fill: url("#img1");
+      }
+      nav {
+        display: none;
       }
     </style>
   </head>
@@ -19,8 +28,20 @@
     <header>
       <nav>
         <span>
-          Width: <input id="CWidth" type="number" placeholder="400" onchange="updateCSize()"/>
-          Height: <input id="CHeight" type="number" placeholder="400" onchange="updateCSize()"/>
+          Width:
+          <input
+            id="CWidth"
+            type="number"
+            placeholder="400"
+            onchange="updateCSize()"
+          />
+          Height:
+          <input
+            id="CHeight"
+            type="number"
+            placeholder="400"
+            onchange="updateCSize()"
+          />
         </span>
         <span
           >PointSize:
@@ -34,11 +55,16 @@
             onchange="updatePsize()"
           />
           <p id="currentPSize">1</p>
-          Max Climb angle:<input id="maxAValue" type='number' placeholder="45" onchange="updateAngle()">
-          </span
-
-        >
-        <span>Show Character: <input type="checkbox" placeholder="true"></span>
+          Max Climb angle:<input
+            id="maxAValue"
+            type="number"
+            placeholder="45"
+            onchange="updateAngle()"
+          />
+        </span>
+        <span
+          >Show Character: <input type="checkbox" placeholder="true"
+        /></span>
       </nav>
     </header>
     <svg id="svgCanvas"></svg>
@@ -48,7 +74,7 @@
           <image xlink:href="./assets/googly.jpg"></image>
         </pattern>
       </defs>
-      <polyline points="0,20 200,20 200,500 0,500" fill="url(#image)"></polyline>
+      <polyline points="0,20 20,20 200,500 0,500" fill="url(#image)"></polyline>
     </svg> -->
     <!-- <svg width="700" height="660">
       <defs>
@@ -57,7 +83,6 @@
         </pattern>
       </defs>
       <circle id='top' cx="180" cy="120" r="80" fill="url(#image)"/>
-    </svg> -->
-    
+    </svg>-->
   </body>
 </html>
