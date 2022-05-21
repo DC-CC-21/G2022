@@ -52,14 +52,28 @@ class Player {
     if (keys["ArrowRight"]) {
       this.x += this.speed;
     }
+    if(mouseIsPressed){
+      if(left.isin(mouseX, mouseY)){
+        this.x -= this.speed;
+      }
+      else if(right.isin(mouseX, mouseY)){
+        this.x += this.speed;
+      }
+    }
 
     this.collideBlock(blocks, "x");
 
     if (keys["ArrowUp"] && this.canJump) {
       // this.grav -= 10;
       this.grav -= this.jumpHeight;
+    } else if(mouseIsPressed){
+      if(up.isin(mouseX, mouseY) && this.canJump){
+        this.grav -= this.jumpHeight;
+      }
     }
+
   }
+
   collideBlock(blocks, mode) {
     blocks.forEach((block) => {
       if (c.rectCollide(this, block)) {

@@ -27,6 +27,7 @@ const blockSize = c.map(50, 0, 706, 0, Height);
 let MAX_ANGLE = 60;
 let mouseX = 0;
 let mouseY = 0;
+let mouseIsPressed = false;
 let keys = [];
 //#endregion
 
@@ -112,25 +113,44 @@ function connectTheDots(points) {
 }
 
 class Controls {
-  constructor(dct) {
-    this.w = 50;
-    this.h = 50;
-    this.pos = dct;
+  constructor(x, y, type) {
+    this.x = x//c.map(x,0, 746,0,Width);
+    this.y = y;
+    this.w = c.map(60,0,706,0,Height);
+    this.h = c.map(60,0,706,0,Height);
+
+    this.pressed = false;
+    this.type = type
+    this.textSize = (this.w + this.h)/5
   }
   drawControls() {
-    Object.keys(this.pos).forEach((key) => {
-      // console.log(key.x)
-      c.rect(this.pos[key].x, this.pos[key].y, this.w, this.h);
-    });
+      if(this.isin(mouseX, mouseY)){c.fill(255,0,0)}
+      else {c.fill(0,255,0)}
+      c.rect(this.x, this.y, this.w, this.h);
+
+      c.fill('#000')
+
+      c.textSize(this.textSize)
+      c.textAlign('center')
+      c.text(this.type, this.x+this.w/2, this.y+this.h/1.5)
+  }
+  isin(mX, mY, ){
+    return mX > this.x && mX < this.x + this.w &&
+           mY > this.y && mY < this.y + this.h
+  }
+  pressed(){
+
   }
 }
-
-const controls = new Controls({
-  left: { x: 100, y: Height - 100 },
-  right: { x: 200, y: Height - 100 },
-  up: { x: Width - 100, y: 100 },
-  down: { x: Width - 100, y: 200 },
-});
+//#region Buttons
+const left = new Controls(c.map(50, 0,706,0,Height), c.map(600,0,706,0,Height), 'left')
+const right =new Controls(c.map(120,0,706,0,Height), c.map(600,0,706,0,Height), 'right')
+const up =   new Controls(Width-c.map(100,0,706,0,Height), c.map(530  ,0,706,0,Height), 'up')
+const down = new Controls(Width-c.map(100,0,706,0,Height), c.map(600,0,706,0,Height), 'down')
+const controlBtns = [
+  left, right, up, down
+]
+//#endregion 
 
 class PowerUp {}
 
@@ -166,10 +186,10 @@ let points = [
   new Point({ x: 1405, y: 444 }),
 ];
 let blocks = [
-  new Block(60,  350, blockSize),
-  new Block(108, 350, blockSize),
-  new Block(156, 350, blockSize),
-  new Block(180, 290, blockSize),
+  new Block(60,  350, {w:blockSize, h:blockSize}, ['regular']),
+  new Block(108, 350, {w:blockSize, h:blockSize}, ['regular']),
+  new Block(156, 350, {w:blockSize, h:blockSize}, ['regular']),
+  new Block(180, 290, {w:blockSize*3, h:blockSize/2}, ['moving', 'v']),
 ];
 
 // let b = new Block(100,100)
@@ -196,7 +216,7 @@ draw = function () {
     c.rect(p.x + p.w * 1.2, 455.0873786407767 - 2.5 - p.h * i, p.w, p.h * 0.95);
   }
   // console.log(p.y)
-  controls.drawControls();
+  controlBtns.forEach(btn => btn.drawControls())
 };
 
 //Onchange events
@@ -231,11 +251,13 @@ document.addEventListener("mousedown", (e) => {
       return;
     }
   }
+  mouseIsPressed = true;
 });
 document.addEventListener("mouseup", () => {
   points.forEach((point) => {
     point.release();
   });
+  mouseIsPressed = false;
 });
 
 document.addEventListener("keydown", (e) => {

@@ -12,6 +12,7 @@ class Canvas {
   #strokeWeightSize = 1;
   #rotation = 90;
   #textSize = 18;
+  #textAlign = 'left'
   //#endregion
 
   constructor(canvas, width, height, showCanvasDimensions) {
@@ -104,7 +105,15 @@ class Canvas {
     el.setAttribute("stroke", this.#strokeColor);
     // el.setAttribute("stroke-width", this.#strokeWeightSize);
     el.setAttribute("font-size", this.#textSize);
+    el.setAttribute('text-anchor','middle')
     this.#canvas.append(el);
+  }
+
+  textAlign(mode){
+    if(mode == 'left'){mode = 'start'}
+    else if(mode == 'right'){mode = 'end'}
+    else if(mode == 'center'){mode = 'center'}
+    this.#textAlign = mode
   }
 
   textSize(size) {
