@@ -42,6 +42,8 @@ document.addEventListener("touchmove", (e) => {
   mouseT = e.touches;
 });
 document.addEventListener("touchend", (e) => {
+  e.preventDefault();
+  e.stopImmediatePropagation();
   mouseT = e.touches;
 });
 document.addEventListener("touchcancel", (e) => {});
