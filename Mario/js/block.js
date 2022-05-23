@@ -1,7 +1,7 @@
 console.log('Blocks are Loading')
 
 class Block {
-    constructor(x, y, size, type) {
+    constructor(x, y, size, type, offset) {
       this.x = c.map(x, 0, 706, 0, Height);
       this.y = c.map(y, 0, 706, 0, Height);
       this.w = size.w;
@@ -12,6 +12,9 @@ class Block {
       this.type = type
       this.theta = 0;
       this.origY = this.y;
+
+      this.offsetX = offset.x
+      this.offsetY = offset.y
     }
   
     display() {

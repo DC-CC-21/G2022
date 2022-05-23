@@ -60,9 +60,10 @@ class Player {
             this.canJump = false;
             this.grav = 0;
             this.grav += 0.1;
-            this.y = block.y + block.h;
+            this.y = block.y + block.h + block.offsetY;
             block.y -= block.jumpHeight;
-          } else if (this.prevY < block.y) {
+          } // under block
+          else if (this.prevY < block.y) {
             this.y = block.y - this.h;
             this.grav = 0;
             this.canJump = true;

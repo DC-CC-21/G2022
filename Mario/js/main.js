@@ -196,10 +196,10 @@ let points = [
   new Point({ x: 1405, y: 444 }),
 ];
 let blocks = [
-  new Block(60, 350, { w: blockSize, h: blockSize }, ["regular"]),
-  new Block(108, 350, { w: blockSize, h: blockSize }, ["regular"]),
-  new Block(156, 350, { w: blockSize, h: blockSize }, ["regular"]),
-  new Block(180, 290, { w: blockSize * 3, h: blockSize / 2 }, ["moving", "v"]),
+  new Block(60, 350, { w: blockSize, h: blockSize }, ["regular"] , {x: 0, y: 0}),
+  new Block(108, 350, { w: blockSize, h: blockSize }, ["regular"], {x: 0, y: 0}),
+  new Block(156, 350, { w: blockSize, h: blockSize }, ["regular"], {x: 0, y: 0}),
+  new Block(180, 290, { w: blockSize * 3, h: blockSize / 2 }, ["moving", "v"], {x:0, y:1}),
 ];
 
 // let b = new Block(100,100)
