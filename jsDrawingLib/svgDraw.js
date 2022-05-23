@@ -31,14 +31,28 @@ class Canvas {
     if(showCanvasDimensions){
       this.showCanvasDimensions()
     }
+    this.createTouchContainer()
   }
   showCanvasDimensions(){
     let el = document.createElement("h1")
     el.innerHTML = `${Width}x${Height}`;
     el.style.position = 'absolute'
-    el.style.left = '10px'
-    el.style.top = '10px'
+    el.style.left = '20px'
+    el.style.top = '20px'
     document.querySelector('body').append(el)
+  }
+  createTouchContainer(){
+    let el = document.createElement("div")
+    el.style.backgroundColor = ''
+    el.style.position = 'absolute'
+    el.style.left = '0'
+    el.style.top = '0'
+    el.style.width = Width + 'px'
+    el.style.height = Height + 'px'
+
+    el.setAttribute('id', 'touchContainer')
+    document.querySelector('body').append(el)
+
   }
 
   //SHAPES

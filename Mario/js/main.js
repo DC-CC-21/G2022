@@ -27,7 +27,7 @@ const blockSize = c.map(50, 0, 706, 0, Height);
 let MAX_ANGLE = 60;
 let mouseX = 0;
 let mouseY = 0;
-let mouseT = []
+let mouseT = [];
 let mouseIsPressed = false;
 let keys = [];
 //#endregion
@@ -49,10 +49,12 @@ class Point {
   }
 
   display() {
-    if (this.isHovered) {
-      c.fill(0, 255, 0);
+    if (this.clicked) {
+      c.fill(255, 0, 0);
+    } else if (this.isHovered) {
+      c.fill(0, 0, 255);
     } else {
-      c.fill(255);
+      c.fill(0, 255, 0);
     }
 
     c.strokeWeight(1);
@@ -115,43 +117,50 @@ function connectTheDots(points) {
 
 class Controls {
   constructor(x, y, type) {
-    this.x = x//c.map(x,0, 746,0,Width);
+    this.x = x; //c.map(x,0, 746,0,Width);
     this.y = y;
-    this.w = c.map(60,0,706,0,Height);
-    this.h = c.map(60,0,706,0,Height);
+    this.w = c.map(70, 0, 706, 0, Height);
+    this.h = c.map(70, 0, 706, 0, Height);
 
     this.pressed = false;
-    this.type = type
-    this.textSize = (this.w + this.h)/5
+    this.type = type;
+    this.textSize = (this.w + this.h) / 5;
   }
   drawControls() {
-      if(this.isin(mouseX, mouseY)){c.fill(255,0,0)}
-      else {c.fill(0,255,0)}
-      c.rect(this.x, this.y, this.w, this.h);
+    // c.fill(0, 255, 0,0);
+    // c.rect(this.x, this.y, this.w, this.h);
 
-      c.fill('#000')
-
-      c.textSize(this.textSize)
-      c.textAlign('center')
-      c.text(this.type, this.x+this.w/2, this.y+this.h/1.5)
+    c.image(`assets/${this.type} Arrow.svg`, this.x, this.y, this.w, this.h)
   }
-  isin(mX, mY, ){
-    return mX > this.x && mX < this.x + this.w &&
-           mY > this.y && mY < this.y + this.h
-  }
-  pressed(){
-
+  isin(mX, mY) {
+    return (
+      mX > this.x && mX < this.x + this.w && mY > this.y && mY < this.y + this.h
+    );
   }
 }
 //#region Buttons
-const left = new Controls(c.map(50, 0,706,0,Height), c.map(600,0,706,0,Height), 'left')
-const right =new Controls(c.map(120,0,706,0,Height), c.map(600,0,706,0,Height), 'right')
-const up =   new Controls(Width-c.map(100,0,706,0,Height), c.map(530  ,0,706,0,Height), 'up')
-const down = new Controls(Width-c.map(100,0,706,0,Height), c.map(600,0,706,0,Height), 'down')
-const controlBtns = [
-  left, right, up, down
-]
-//#endregion 
+const left = new Controls(
+  c.map(30, 0, 706, 0, Height),
+  c.map(600, 0, 706, 0, Height),
+  "left"
+);
+const right = new Controls(
+  c.map(120, 0, 706, 0, Height),
+  c.map(600, 0, 706, 0, Height),
+  "right"
+);
+const up = new Controls(
+  Width - c.map(100, 0, 706, 0, Height),
+  c.map(520, 0, 706, 0, Height),
+  "up"
+);
+const down = new Controls(
+  Width - c.map(100, 0, 706, 0, Height),
+  c.map(600, 0, 706, 0, Height),
+  "down"
+);
+const controlBtns = [left, right, up, down];
+//#endregion
 
 class PowerUp {}
 
@@ -187,10 +196,10 @@ let points = [
   new Point({ x: 1405, y: 444 }),
 ];
 let blocks = [
-  new Block(60,  350, {w:blockSize, h:blockSize}, ['regular']),
-  new Block(108, 350, {w:blockSize, h:blockSize}, ['regular']),
-  new Block(156, 350, {w:blockSize, h:blockSize}, ['regular']),
-  new Block(180, 290, {w:blockSize*3, h:blockSize/2}, ['moving', 'v']),
+  new Block(60, 350, { w: blockSize, h: blockSize }, ["regular"]),
+  new Block(108, 350, { w: blockSize, h: blockSize }, ["regular"]),
+  new Block(156, 350, { w: blockSize, h: blockSize }, ["regular"]),
+  new Block(180, 290, { w: blockSize * 3, h: blockSize / 2 }, ["moving", "v"]),
 ];
 
 // let b = new Block(100,100)
@@ -217,7 +226,11 @@ draw = function () {
     c.rect(p.x + p.w * 1.2, 455.0873786407767 - 2.5 - p.h * i, p.w, p.h * 0.95);
   }
   // console.log(p.y)
-  controlBtns.forEach(btn => btn.drawControls())
+  controlBtns.forEach((btn) => btn.drawControls());
+
+  if (mouseIsPressed) {
+    c.rect(100, 100, 100, 100);
+  }
 };
 
 //Onchange events
@@ -233,86 +246,3 @@ function updateCSize() {
 function updateAngle() {
   MAX_ANGLE = Number(maxAValue.value);
 }
-
-//Listeners
-function mouse_touch_start(e){
-  // mouseX = e.offsetX;
-
-  // mouseY = e.offsetY;
-  // for (let i = 0; i < points.length; i++) {
-  //   if (points[i].press(e)) {
-  //     return;
-  //   }
-  // }
-  mouseIsPressed = true;
-}
-function mouse_touch_end(){
-    points.forEach((point) => {
-    point.release();
-  });
-  mouseIsPressed = false;
-  // mouseX = -100;
-  // mouseY = -100;
-}
-
-
-document.addEventListener("dblclick", (e) => {
-  points.push(new Point(e.offsetX, e.offsetY));
-});
-document.addEventListener("mousemove", (e) => {
-  mouseX = e.offsetX;
-  mouseY = e.offsetY;
-
-  for (let i = 0; i < points.length; i++) {
-    points[i].hover(e);
-  }
-});
-document.addEventListener("mousedown", (e) => {
-  mouse_touch_start(e)
-});
-document.addEventListener("mouseup", () => {
-  mouse_touch_end()
-});
-
-document.addEventListener('touchstart',(e)=>{
-  mouseT = e.targetTouches
-  console.log(mouseT)
-  document.querySelector("#mPos").innerHTML = `${mouseX},${mouseY}`
-  mouse_touch_start(e)
-})
-document.addEventListener('touchend',(e)=>{
-  mouse_touch_end()
-})
-document.addEventListener('touchcancel',(e)=>{
-  mouse_touch_end()
-})
-
-document.addEventListener("keydown", (e) => {
-  e.preventDefault();
-  console.log(e.key);
-  if (e.key == "a") {
-    let a = [];
-    points.forEach((point) => a.push({ x: point.x, y: point.y }));
-    console.log(JSON.stringify(a));
-  }
-  if (e.key == " ") {
-    for (let i = 0; i < points.length - 1; i++) {
-      if (mouseX > points[i].x && mouseX < points[i + 1].x) {
-        points.splice(i + 1, 0, new Point(mouseX, mouseY));
-      }
-    }
-  }
-  if (e.key == "Delete") {
-    for (let i = 0; i < points.length - 1; i++) {
-      if (mouseX > points[i].x && mouseX < points[i + 1].x) {
-        points.splice(i + 1, 1);
-      }
-    }
-  }
-
-  keys[e.key] = true;
-});
-
-document.addEventListener("keyup", (e) => {
-  keys[e.key] = false;
-});

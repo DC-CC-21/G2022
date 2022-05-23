@@ -2,7 +2,7 @@ console.log("Player is Loading...");
 
 class Player {
   constructor(size) {
-    this.x = c.map(50 , 0, 706, 0, Height);
+    this.x = c.map(50, 0, 706, 0, Height);
     this.y = c.map(450, 0, 706, 0, Height);
     this.w = size;
     this.h = ~~(this.w * 1.1);
@@ -17,7 +17,7 @@ class Player {
   display() {
     // c.fill(255, 0, 0);
     // c.rect(this.x, this.y, this.w, this.h);
-    c.image("assets/googly.jpg", this.x, this.y, this.w, this.h)
+    c.image("assets/googly.jpg", this.x, this.y, this.w, this.h);
   }
 
   move(
@@ -34,7 +34,7 @@ class Player {
       if (c.insideLineBounds(land[i], land[i + 1], this)) {
         let line = c.lineSlope(land[i], land[i + 1], this);
         let y = c.collideLine(line, this, this.xOffset, this.yOffset);
-        let dist = c.dist(this.x + this.w / 2, this.y, this.x+this.w/2, y) 
+        let dist = c.dist(this.x + this.w / 2, this.y, this.x + this.w / 2, y);
         if (dist < this.h) {
           this.grav = 0;
           this.y = y - this.h;
@@ -46,42 +46,10 @@ class Player {
 
     this.collideBlock(blocks, "y");
 
-    if (keys["ArrowLeft"]) {
-      this.x -= this.speed;
-    }
-    if (keys["ArrowRight"]) {
-      this.x += this.speed;
-    }
-    if(mouseIsPressed){
-      if(left.isin(mouseX, mouseY)){
-        this.x -= this.speed;
-      }
-      else if(right.isin(mouseX, mouseY)){
-        this.x += this.speed;
-      } else {
-        for(let i = 0; i < mouseT.length; i ++){
-          if(left.isin(mouseT[i].clientX, mouseT[i].clientY)){
-            this.x -= this.speed;
-          }
-          else if(right.isin(mouseT[i].clientX, mouseT[i].clientY)){
-            this.x += this.speed;
-          }
-        }
-      }
-
-    }
+    this.moveX();
 
     this.collideBlock(blocks, "x");
-
-    if (keys["ArrowUp"] && this.canJump) {
-      // this.grav -= 10;
-      this.grav -= this.jumpHeight;
-    } else if(mouseIsPressed){
-      if(up.isin(mouseX, mouseY) && this.canJump){
-        this.grav -= this.jumpHeight;
-      }
-    }
-
+    this.jump();
   }
 
   collideBlock(blocks, mode) {
@@ -112,5 +80,38 @@ class Player {
         }
       }
     });
+  }
+
+  moveX() {
+    //key pressed
+    if (keys["ArrowLeft"]) {
+      this.x -= this.speed;
+    }
+    if (keys["ArrowRight"]) {
+      this.x += this.speed;
+    }
+
+    //touchscreen
+    if (mouseIsPressed) {
+      for (let i = 0; i < mouseT.length; i++) {
+        if (left.isin(mouseT[i].clientX, mouseT[i].clientY)) {
+          this.x -= this.speed;
+        } else if (right.isin(mouseT[i].clientX, mouseT[i].clientY)) {
+          this.x += this.speed;
+        }
+      }
+    }
+  }
+  jump() {
+    if (keys["ArrowUp"] && this.canJump) {
+      // this.grav -= 10;
+      this.grav -= this.jumpHeight;
+    } else if (mouseIsPressed) {
+      for (let i = 0; i < mouseT.length; i++) {
+        if (up.isin(mouseT[i].clientX, mouseT[i].clientY) && this.canJump) {
+          this.grav -= this.jumpHeight;
+        }
+      }
+    }
   }
 }

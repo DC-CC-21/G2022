@@ -7,16 +7,16 @@
     <script src="js/player.js" defer></script>
     <script src="js/block.js" defer></script>
     <script src="js/main.js" defer></script>
+    <script src="js/listener.js" defer></script>
 
     <style>
       body{
+        overflow: hidden;
         /* background-image/:url("assets/Bground1.jpg") */
       }
       svg {
         width: 100vw;
         height: 100vh;
-      }
-      svg {
         fill: url("#img1");
       }
       nav {
@@ -68,7 +68,8 @@
       </nav>
     </header>
     <svg id="svgCanvas"></svg>
-    <h1 id="mPos" style="position:absolute; left:10px; top:100px;">hi</h1>
+    <h1 id="mPos" style="position:absolute; left:20px; top:100px;">hi</h1>
+
     <!-- <svg>
       <defs>
         <pattern id="image" x="300" y="300" patternUnits="userSpaceOnUse" height="10" width="10">
