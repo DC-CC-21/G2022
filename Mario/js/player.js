@@ -58,7 +58,17 @@ class Player {
       }
       else if(right.isin(mouseX, mouseY)){
         this.x += this.speed;
+      } else {
+        for(let i = 0; i < mouseT.length; i ++){
+          if(left.isin(mouseT[i].clientX, mouseT[i].clientY)){
+            this.x -= this.speed;
+          }
+          else if(right.isin(mouseT[i].clientX, mouseT[i].clientY)){
+            this.x += this.speed;
+          }
+        }
       }
+
     }
 
     this.collideBlock(blocks, "x");

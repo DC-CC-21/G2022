@@ -27,6 +27,7 @@ const blockSize = c.map(50, 0, 706, 0, Height);
 let MAX_ANGLE = 60;
 let mouseX = 0;
 let mouseY = 0;
+let mouseT = []
 let mouseIsPressed = false;
 let keys = [];
 //#endregion
@@ -274,12 +275,15 @@ document.addEventListener("mouseup", () => {
 });
 
 document.addEventListener('touchstart',(e)=>{
-  mouseX = e.changedTouches[0].clientX
-  mouseY = e.changedTouches[0].clientY
+  mouseT = e.targetTouches
+  console.log(mouseT)
   document.querySelector("#mPos").innerHTML = `${mouseX},${mouseY}`
   mouse_touch_start(e)
 })
 document.addEventListener('touchend',(e)=>{
+  mouse_touch_end()
+})
+document.addEventListener('touchcancel',(e)=>{
   mouse_touch_end()
 })
 
