@@ -33,6 +33,11 @@ class Canvas {
     }
     this.createTouchContainer()
   }
+  moveCamera(p){
+    this.#canvas.style.left = this.constrain(Width/2 - p.x,-1000, 0) + 'px'
+    this.textSize(20)
+    this.text(this.#canvas.style.left, 200, 100)
+  }
   showCanvasDimensions(){
     let el = document.createElement("h1")
     el.innerHTML = `${Width}x${Height}`;
@@ -56,7 +61,7 @@ class Canvas {
   }
 
   //SHAPES
-  rect(x, y, width, height, radius) {
+  rect(x, y, width, height, radius, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     el.setAttribute("x", x);
     el.setAttribute("y", y);
@@ -66,7 +71,9 @@ class Canvas {
 
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
-    // el.setAttribute("transform","rotate(-90 50 100)")
+
+    // else{el.setAttribute('x', el.getAttribute('x')+this.#canvas.style.left) } 
+       // el.setAttribute("transform","rotate(-90 50 100)")
     if (radius) {
       el.setAttribute("rx", radius);
       el.setAttribute("ry", radius);
@@ -214,6 +221,14 @@ class Canvas {
 
   map(value, istart, istop, ostart, ostop) {
     return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+  }
+
+  constrain(value, min, max){
+    if(value < min){value = min}
+    else if(value > max){
+      value = max
+    }
+    return value
   }
 
   //line collide

@@ -50,6 +50,8 @@ class Player {
 
     this.collideBlock(blocks, "x");
     this.jump();
+
+    c.moveCamera(this)
   }
 
   collideBlock(blocks, mode) {
