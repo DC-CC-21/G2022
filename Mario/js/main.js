@@ -142,22 +142,22 @@ class Controls {
 const left = new Controls(
   c.map(30, 0, 706, 0, Height),
   c.map(600, 0, 706, 0, Height),
-  "left"
+  "Left"
 );
 const right = new Controls(
   c.map(120, 0, 706, 0, Height),
   c.map(600, 0, 706, 0, Height),
-  "right"
+  "Right"
 );
 const up = new Controls(
   Width - c.map(100, 0, 706, 0, Height),
   c.map(520, 0, 706, 0, Height),
-  "up"
+  "Up"
 );
 const down = new Controls(
   Width - c.map(100, 0, 706, 0, Height),
   c.map(600, 0, 706, 0, Height),
-  "down"
+  "Down"
 );
 const controlBtns = [left, right, up, down];
 //#endregion
