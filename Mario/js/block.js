@@ -79,8 +79,8 @@ class Block {
           y: this.y,
         },
         p2: {
-          x: this.pathway.at(this.idx)[0],
-          y: this.pathway.at(this.idx)[1],
+          x: this.pathway[this.idx][0],
+          y: this.pathway[this.idx][1],
         },
       };
     }
