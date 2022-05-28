@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width='device-width', initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width" initial-scale=1.0" />
     <title>Document</title>
 
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
@@ -14,21 +14,6 @@
     <script src="js/coin.js" defer></script>
     <script src="js/main.js" defer></script>
     <script src="js/listener.js" defer></script>
-
-    <style>
-      body {
-        overflow: hidden;
-        /* background-image/:url("assets/Bground1.jpg") */
-      }
-      svg {
-        width: 100vw;
-        height: 100vh;
-        fill: url("#img1");
-      }
-      nav {
-        display: none;
-      }
-    </style>
   </head>
   <body>
     <header>
@@ -74,6 +59,7 @@
       </nav>
     </header>
     <svg id="svgCanvas"></svg>
+    <ol id="errorContainer"></ol>
 
     <!-- <svg>
       <defs>

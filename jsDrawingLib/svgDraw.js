@@ -19,7 +19,7 @@ class Canvas {
   constructor(canvas, width, height) {
     // SETUP this.#canvas
     this.#canvas = canvas;
-    this.#canvas.style.overflow = "hidden";
+    this.#canvas.style.overflow = "show";
     this.#canvas.style.position = "relative";
     this.#canvas.style.width = (width || 400) + "px";
     this.#canvas.style.height = (height || 400) + "px";

@@ -1,4 +1,3 @@
-
 console.log("Main is Loading...");
 
 //program for creating mario worlds
@@ -9,6 +8,27 @@ canvas.style.margin = "auto";
 const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
 const pointSize = document.getElementById("pointSize");
 //#endregion
+
+const errorContainer = document.getElementById('errorContainer')
+window.onerror = function(error,source,lineno,colno, err){
+  let info = {
+    error: error,
+    source: source,
+    line:lineno,
+    column:colno,
+    err:err
+  }
+  let el = document.createElement('li')
+  Object.keys(info).forEach((key)=>{
+    let li = document.createElement('p')
+    li.innerHTML = `${key}: ${info[key]}`
+    el.append(li)
+  })
+  errorContainer.append(el)
+}
+
+
+
 
 const mapWidth = 746;
 const mapHeight = 706;
@@ -215,7 +235,7 @@ let blocks = [
   new Block(300, 300, { w: blockSize * 3, h: blockSize / 2 }, ['path',{
     pathway:[[100,300],[600,400],[300,200]],
     startIndex:0,
-    amount:0.01,
+    amount:0.05,
     error:10,
     speed:2,
   }], {
