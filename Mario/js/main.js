@@ -9,26 +9,23 @@ const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
 const pointSize = document.getElementById("pointSize");
 //#endregion
 
-const errorContainer = document.getElementById('errorContainer')
-window.onerror = function(error,source,lineno,colno, err){
+const errorContainer = document.getElementById("errorContainer");
+window.onerror = function (error, source, lineno, colno, err) {
   let info = {
     error: error,
     source: source,
-    line:lineno,
-    column:colno,
-    err:err
-  }
-  let el = document.createElement('li')
-  Object.keys(info).forEach((key)=>{
-    let li = document.createElement('p')
-    li.innerHTML = `${key}: ${info[key]}`
-    el.append(li)
-  })
-  errorContainer.append(el)
-}
-
-
-
+    line: lineno,
+    column: colno,
+    err: err,
+  };
+  let el = document.createElement("li");
+  Object.keys(info).forEach((key) => {
+    let li = document.createElement("p");
+    li.innerHTML = `${key}: ${info[key]}`;
+    el.append(li);
+  });
+  errorContainer.append(el);
+};
 
 const mapWidth = 746;
 const mapHeight = 706;
@@ -153,7 +150,14 @@ class Controls {
     // c.fill(0, 255, 0,0);
     // c.rect(this.x, this.y, this.w, this.h);
 
-    c.image(`assets/${this.type} Arrow.svg`, this.x, this.y, this.w, this.h, true);
+    c.image(
+      `assets/${this.type} Arrow.svg`,
+      this.x,
+      this.y,
+      this.w,
+      this.h,
+      true
+    );
   }
   isin(mX, mY) {
     return (
@@ -190,30 +194,30 @@ class Enemey {}
 
 // let points = [new Point(0, 300), new Point(100, 300), new Point(220, 280)];
 let points = [
-  new Point({ x: 3, y: 307 +174}),
-  new Point({ x: 106, y: 305 +174}),
-  new Point({ x: 212, y: 311 +174}),
-  new Point({ x: 263, y: 331 +174}),
-  new Point({ x: 307, y: 383 +174}),
-  new Point({ x: 353, y: 412 +174}),
-  new Point({ x: 412, y: 408 +174}),
-  new Point({ x: 445, y: 411 +174}),
-  new Point({ x: 470, y: 409 +174}),
-  new Point({ x: 754, y: 416 +174}),
-  new Point({ x: 790, y: 415 +174}),
-  new Point({ x: 819, y: 410 +174}),
-  new Point({ x: 850, y: 414 +174}),
-  new Point({ x: 873, y: 418 +174}),
-  new Point({ x: 905, y: 408 +174}),
-  new Point({ x: 928, y: 414 +174}),
-  new Point({ x: 947, y: 425 +174}),
-  new Point({ x: 995, y: 428 +174}),
-  new Point({ x: 1035, y: 423+174 }),
-  new Point({ x: 1074, y: 410+174 }),
-  new Point({ x: 1158, y: 408+174 }),
-  new Point({ x: 1197, y: 418+174 }),
-  new Point({ x: 1230, y: 445+174 }),
-  new Point({ x: 1405, y: 444+174 }),
+  new Point({ x: 3, y: 307 + 174 }),
+  new Point({ x: 106, y: 305 + 174 }),
+  new Point({ x: 212, y: 311 + 174 }),
+  new Point({ x: 263, y: 331 + 174 }),
+  new Point({ x: 307, y: 383 + 174 }),
+  new Point({ x: 353, y: 412 + 174 }),
+  new Point({ x: 412, y: 408 + 174 }),
+  new Point({ x: 445, y: 411 + 174 }),
+  new Point({ x: 470, y: 409 + 174 }),
+  new Point({ x: 754, y: 416 + 174 }),
+  new Point({ x: 790, y: 415 + 174 }),
+  new Point({ x: 819, y: 410 + 174 }),
+  new Point({ x: 850, y: 414 + 174 }),
+  new Point({ x: 873, y: 418 + 174 }),
+  new Point({ x: 905, y: 408 + 174 }),
+  new Point({ x: 928, y: 414 + 174 }),
+  new Point({ x: 947, y: 425 + 174 }),
+  new Point({ x: 995, y: 428 + 174 }),
+  new Point({ x: 1035, y: 423 + 174 }),
+  new Point({ x: 1074, y: 410 + 174 }),
+  new Point({ x: 1158, y: 408 + 174 }),
+  new Point({ x: 1197, y: 418 + 174 }),
+  new Point({ x: 1230, y: 445 + 174 }),
+  new Point({ x: 1405, y: 444 + 174 }),
 ];
 let blocks = [
   new Block(60, 350, { w: blockSize, h: blockSize }, ["regular"], {
@@ -232,20 +236,33 @@ let blocks = [
     x: 0,
     y: 1,
   }),
-  new Block(300, 300, { w: blockSize * 3, h: blockSize / 2 }, ['path',{
-    pathway:[[100,300],[600,400],[300,200]],
-    startIndex:0,
-    amount:0.05,
-    error:10,
-    speed:2,
-  }], {
-    x: 0,
-    y: 1,
-  }),
+  new Block(
+    300,
+    300,
+    { w: blockSize * 3, h: blockSize / 2 },
+    [
+      "path",
+      {
+        pathway: [
+          [400, 200],
+          [700, 200],
+          [550, 100],
+          [550, 400],
+          [800, 350]
+        ],
+        startIndex: 2,
+        amount: 0.01,
+        error: 10,
+        speed: 2,
+      },
+    ],
+    {
+      x: 0,
+      y: 1,
+    }
+  ),
 ];
-let coins = [
-  new Coin(200, 200, blockSize)
-];
+let coins = [new Coin(200, 200, blockSize)];
 
 let p = new Player(blockSize);
 let x = 0;
@@ -259,10 +276,10 @@ draw = function () {
   connectTheDots(points);
   points.forEach((point) => point.display());
   coins.forEach((coin) => coin.display());
+  blocks.forEach((block) => block.display());
   p.move(points, blocks, coins);
   p.display();
 
-  blocks.forEach((block) => block.display());
 
   controlBtns.forEach((btn) => btn.drawControls());
 

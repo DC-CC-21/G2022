@@ -49,21 +49,21 @@ class Block {
         y: this.pathway[this.idx][1],
       },
     };//points p1 and p2
-    this.x = this.vector.p1.x; //this.pathway[0][0];
-    this.y = this.vector.p1.y; //this.pathway[0][1];
+    this.x = this.vector.p1.x-this.w/2; //this.pathway[0][0];
+    this.y = this.vector.p1.y-this.h/2; //this.pathway[0][1];
     this.direction = 1;
-    this.amount = pathBlockInfo.amount
+    this.amount = c.map(pathBlockInfo.amount,0,706,0,Height)
   }
 
   path() {
-    c.ellipse(this.vector.p1.x, this.vector.p1.y, 10, 10);
-    c.ellipse(this.vector.p2.x, this.vector.p2.y, 10, 10);
+    // c.ellipse(this.vector.p1.x, this.vector.p1.y, 10, 10);
+    // c.ellipse(this.vector.p2.x, this.vector.p2.y, 10, 10);
 
-    this.x = c.lerp(this.x, this.vector.p2.x, this.amount); //solution but to fast(this.x * 0.9 + this.vector.p2.x * 0.1);
-    this.y = c.lerp(this.y, this.vector.p2.y, this.amount); //solution but to fast(this.y * 0.9 + this.vector.p2.y * 0.1);
+    this.x = c.lerp(this.x, this.vector.p2.x-this.w/2, this.amount); //solution but to fast(this.x * 0.9 + this.vector.p2.x * 0.1);
+    this.y = c.lerp(this.y, this.vector.p2.y-this.h/2, this.amount); //solution but to fast(this.y * 0.9 + this.vector.p2.y * 0.1);
 
     if (
-      c.dist(this.x, this.y, this.vector.p2.x, this.vector.p2.y) < this.error
+      c.dist(this.x+this.w/2, this.y+this.h/2, this.vector.p2.x, this.vector.p2.y) < this.error
     ) {
       this.idx += this.direction;
       if (this.idx > this.pathway.length - 1) {
@@ -100,8 +100,14 @@ class Block {
         c.fill(75, 75, 75);
         break;
     }
+    if(this.pathway){
+      for(let i = 1; i < this.pathway.length; i ++){
+        c.line(this.pathway[i-1][0], this.pathway[i-1][1], this.pathway[i][0], this.pathway[i][1])
+      }
+    }
     c.rect(this.x, this.y, this.w * 0.95, this.h, 2);
   }
+
   moving() {
     if (this.type[1] == "v") {
       this.theta += 0.01;
@@ -112,6 +118,7 @@ class Block {
   regular() {
     this.recenter();
   }
+
   recenter() {
     if (this.y < this.origY) {
       this.grav += 0.1;

@@ -13,6 +13,8 @@ class Player {
     this.xOffset = this.w / 2;
     this.yOffset = 0;
     this.bVec = 0;
+
+    this.landedPos = { x: this.x, y: this.y };
   }
 
   display() {
@@ -28,7 +30,7 @@ class Player {
   ) {
     this.prevX = this.x;
     this.prevY = this.y;
-    this.grav += G
+    this.grav += G;
     this.y += this.grav;
     this.canJump = false;
 
@@ -40,19 +42,26 @@ class Player {
         y = c.constrain(
           y,
           land[i].y < land[i + 1].y ? land[i].y : land[i + 1].y,
-          land[i].y < land[i + 1].y ? land[i+1].y : land[i].y
+          land[i].y < land[i + 1].y ? land[i + 1].y : land[i].y
         );
         let dist = c.dist(this.x + this.w / 2, this.y, this.x + this.w / 2, y);
         if (dist < this.h) {
           this.grav = 0;
           this.y = y - this.h;
           this.canJump = true;
+          this.landedPos = {
+            x: this.x,
+            y: this.y,
+          };
         }
         // break;
       }
     }
-
     this.collideBlock(blocks, "y");
+    if (this.y > Height + 10) {
+      this.x = this.landedPos.x;
+      this.y = this.landedPos.y;
+    }
 
     this.moveX();
     this.x = c.constrain(this.x, 0, Width * 10);
@@ -73,16 +82,15 @@ class Player {
             this.grav = 0;
             this.grav += 0.1;
             this.y = block.y + block.h + block.offsetY;
-            
-            if(block.type[0] == 'regular'){
-            block.y -= block.jumpHeight;
+
+            if (block.type[0] == "regular") {
+              block.y -= block.jumpHeight;
             }
           } // under block
           else if (this.prevY < block.y) {
             this.y = block.y - this.h;
             this.grav = 0;
             this.canJump = true;
-            
           }
         }
 
@@ -93,7 +101,6 @@ class Player {
           if (this.prevX > block.x) {
             this.x = block.x + block.w;
           }
-
         }
       }
     });
@@ -121,7 +128,6 @@ class Player {
     }
     if (keys["ArrowRight"]) {
       this.x += this.speed;
-      
     }
 
     //touchscreen
