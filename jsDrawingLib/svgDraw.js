@@ -12,10 +12,11 @@ class Canvas {
   #strokeWeightSize = 1;
   #rotation = 90;
   #textSize = 18;
-  #textAlign = 'left'
+  #textAlign = "left";
+  #cameraPos = { x: 0, y: 0 };
   //#endregion
 
-  constructor(canvas, width, height, showCanvasDimensions) {
+  constructor(canvas, width, height) {
     // SETUP this.#canvas
     this.#canvas = canvas;
     this.#canvas.style.overflow = "hidden";
@@ -23,48 +24,47 @@ class Canvas {
     this.#canvas.style.width = (width || 400) + "px";
     this.#canvas.style.height = (height || 400) + "px";
     this.#canvas.style.margin = "auto";
+    this.cameraPos = {x:0, y:0}
     Width = width;
     Height = height;
     //1536x754
-    console.log(`Your canvas is ${Width}x${Height}`)
+    console.log(`Your canvas is ${Width}x${Height}`);
     recursive();
-    if(showCanvasDimensions){
-      this.showCanvasDimensions()
-    }
-    this.createTouchContainer()
+    this.createTouchContainer();
   }
-  moveCamera(p){
-    this.#canvas.style.left = this.constrain(Width/2 - p.x,-1000, 0) + 'px'
-    this.textSize(20)
-    this.text(this.#canvas.style.left, 200, 100)
+  moveCamera(p) {
+    this.cameraPos = { x: this.constrain(Width / 2 - p.x, -Width, 0), y: 0 };
+    this.#cameraPos = this.cameraPos
+    // this.textSize(20);
+    // this.text(JSON.stringify(this.#cameraPos), 100, 100, true);
   }
-  showCanvasDimensions(){
-    let el = document.createElement("h1")
-    el.innerHTML = `${Width}x${Height}`;
-    el.style.position = 'absolute'
-    el.style.left = '20px'
-    el.style.top = '20px'
-    document.querySelector('body').append(el)
-  }
-  createTouchContainer(){
-    let el = document.createElement("div")
-    el.style.backgroundColor = ''
-    el.style.position = 'absolute'
-    el.style.left = '0'
-    el.style.top = '0'
-    el.style.width = Width + 'px'
-    el.style.height = Height + 'px'
+  displayStats(lst){
+    lst.forEach((stat, index)=>{
+      this.fill('#000')
+      this.textSize(20)
+      this.textAlign('left')
 
-    el.setAttribute('id', 'touchContainer')
-    document.querySelector('body').append(el)
-
+      this.text(stat, 10, 50+index*20,true)
+    })
   }
 
+  createTouchContainer() {
+    let el = document.createElement("div");
+    el.style.backgroundColor = "";
+    el.style.position = "absolute";
+    el.style.left = "0";
+    el.style.top = "0";
+    el.style.width = Width + "px";
+    el.style.height = Height + "px";
+
+    el.setAttribute("id", "touchContainer");
+    document.querySelector("body").append(el);
+  }
   //SHAPES
   rect(x, y, width, height, radius, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    el.setAttribute("x", x);
-    el.setAttribute("y", y);
+    el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
+    el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
     el.setAttribute("width", width);
     el.setAttribute("height", height);
     el.setAttribute("fill", this.#fillColor);
@@ -72,8 +72,8 @@ class Canvas {
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
 
-    // else{el.setAttribute('x', el.getAttribute('x')+this.#canvas.style.left) } 
-       // el.setAttribute("transform","rotate(-90 50 100)")
+    // else{el.setAttribute('x', el.getAttribute('x')+this.#canvas.style.left) }
+    // el.setAttribute("transform","rotate(-90 50 100)")
     if (radius) {
       el.setAttribute("rx", radius);
       el.setAttribute("ry", radius);
@@ -81,10 +81,10 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  ellipse(x, y, width, height) {
+  ellipse(x, y, width, height, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-    el.setAttribute("cx", x);
-    el.setAttribute("cy", y);
+    el.setAttribute("cx", fixed ? x : x + this.#cameraPos.x);
+    el.setAttribute("cy", fixed ? y : y + this.#cameraPos.y);
     el.setAttribute("rx", width / 2);
     el.setAttribute("ry", height / 2);
     el.setAttribute("fill", this.#fillColor);
@@ -93,10 +93,10 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  point(x, y) {
+  point(x, y, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
-    el.setAttribute("cx", x);
-    el.setAttribute("cy", y);
+    el.setAttribute("cx", fixed ? x : x + this.#cameraPos.x);
+    el.setAttribute("cy", fixed ? y : y + this.#cameraPos.y);
     el.setAttribute("rx", this.#strokeWeightSize);
     el.setAttribute("ry", this.#strokeWeightSize);
     el.setAttribute("fill", this.#fillColor);
@@ -105,9 +105,17 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  polygon(x, y, x2, y2, x3, y3, x4, y4) {
+  polygon(x, y, x2, y2, x3, y3, x4, y4, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-    el.setAttribute("points", `${x},${y} ${x2},${y2} ${x3},${y3} ${x4},${y4}`);
+    el.setAttribute("points", `
+    ${fixed ? x : x+this.#cameraPos.x},
+    ${fixed ? y : y+this.#cameraPos.y}
+    ${fixed ? x2 : x2+this.#cameraPos.x},
+    ${fixed ? y2 : y2+this.#cameraPos.y}
+    ${fixed ? x3 : x3+this.#cameraPos.x}, 
+    ${fixed ? y3 : y3+this.#cameraPos.y}
+    ${fixed ? x4 : x4+this.#cameraPos.x},
+    ${fixed ? y4 : y4+this.#cameraPos.y}`);
     el.setAttribute("fill", this.#fillColor);
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
@@ -115,10 +123,10 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  text(txt, x, y) {
+  text(txt, x, y, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    el.setAttribute("x", x);
-    el.setAttribute("y", y);
+    el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
+    el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
     el.innerHTML = txt;
     // el.setAttribute("rx", this.#strokeWeightSize);
     // el.setAttribute("ry", this.#strokeWeightSize);
@@ -126,39 +134,44 @@ class Canvas {
     el.setAttribute("stroke", this.#strokeColor);
     // el.setAttribute("stroke-width", this.#strokeWeightSize);
     el.setAttribute("font-size", this.#textSize);
-    el.setAttribute('text-anchor','middle')
+    el.setAttribute("text-anchor", this.#textAlign);
     this.#canvas.append(el);
   }
 
-  textAlign(mode){
-    if(mode == 'left'){mode = 'start'}
-    else if(mode == 'right'){mode = 'end'}
-    else if(mode == 'center'){mode = 'center'}
-    this.#textAlign = mode
+  textAlign(mode) {
+    if (mode == "left") {
+      mode = "start";
+    } else if (mode == "right") {
+      mode = "end";
+    } else if (mode == "center") {
+      mode = "center";
+    }
+    this.#textAlign = mode;
   }
 
   textSize(size) {
     this.#textSize = size;
   }
 
-  line(x, y, x2, y2) {
+  line(x, y, x2, y2, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "line");
     // el.setAttribute('points', `${x},${y} ${x2},${y2} ${x2},${y2+this.#strokeWeightSize} ${x},${y+this.#strokeWeightSize} `)
-    el.setAttribute("x1", x);
-    el.setAttribute("y1", y);
-    el.setAttribute("x2", x2);
-    el.setAttribute("y2", y2);
+    el.setAttribute("x1", fixed ? x : x + this.#cameraPos.x);
+    el.setAttribute("y1", fixed ? y : y + this.#cameraPos.y);
+    el.setAttribute("x2", fixed ? x2 : x2 + this.#cameraPos.x);
+    el.setAttribute("y2", fixed ? y2 : y2 + this.#cameraPos.y);
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
     this.#canvas.append(el);
   }
 
-  image(img, x, y, width, height) {
+  image(img, x, y, width, height, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
-    el.setAttribute("preserveAspectRatio","none")
-    el.setAttribute("x", x);
-    el.setAttribute("y", y);
-    el.setAttribute("width", width)
+    el.setAttribute("preserveAspectRatio", "none");
+
+    el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
+    el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
+    el.setAttribute("width", width);
     el.setAttribute("height", height);
     // el.style.width = 1000 + 'px'
     // el.style.height = height + 'px'
@@ -223,12 +236,16 @@ class Canvas {
     return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
   }
 
-  constrain(value, min, max){
-    if(value < min){value = min}
-    else if(value > max){
-      value = max
+  constrain(value, min, max) {
+    if (value < min) {
+      value = min;
+    } else if (value > max) {
+      value = max;
     }
-    return value
+    return value;
+  }
+  lerp(value1, value2, amt) {
+    return ((value2 - value1) * amt) + value1;
   }
 
   //line collide
@@ -244,7 +261,7 @@ class Canvas {
     let y = point2.y - point1.y;
     let m = y / x;
     let b = point1.y - m * point1.x;
-    return { m: m, b: b };
+    return { m: m, b: b, h: y, w:x };
   }
   collideLine(line, p, xOffset, yOffset) {
     return line.m * (p.x + xOffset) + line.b + yOffset;

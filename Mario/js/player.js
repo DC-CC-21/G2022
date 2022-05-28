@@ -8,10 +8,11 @@ class Player {
     this.h = ~~(this.w * 1.1);
     this.grav = 0;
     this.speed = c.map(3, 0, 706, 0, Height);
-    this.jumpHeight = c.map(6, 0, 706, 0, Height);
+    this.jumpHeight = c.map(11, 0, 706, 0, Height);
 
     this.xOffset = this.w / 2;
     this.yOffset = 0;
+    this.bVec = 0;
   }
 
   display() {
@@ -22,11 +23,12 @@ class Player {
 
   move(
     land,
-    blocks /* Dictionary of Junk to collide with ex. blocks, coinds, etc... */
+    blocks,
+    coins /* Dictionary of Junk to collide with ex. blocks, coinds, etc... */
   ) {
     this.prevX = this.x;
     this.prevY = this.y;
-    this.grav += c.map(0.1, 0, 706, 0, Height);
+    this.grav += G
     this.y += this.grav;
     this.canJump = false;
 
@@ -34,6 +36,12 @@ class Player {
       if (c.insideLineBounds(land[i], land[i + 1], this)) {
         let line = c.lineSlope(land[i], land[i + 1], this);
         let y = c.collideLine(line, this, this.xOffset, this.yOffset);
+
+        y = c.constrain(
+          y,
+          land[i].y < land[i + 1].y ? land[i].y : land[i + 1].y,
+          land[i].y < land[i + 1].y ? land[i+1].y : land[i].y
+        );
         let dist = c.dist(this.x + this.w / 2, this.y, this.x + this.w / 2, y);
         if (dist < this.h) {
           this.grav = 0;
@@ -47,11 +55,13 @@ class Player {
     this.collideBlock(blocks, "y");
 
     this.moveX();
+    this.x = c.constrain(this.x, 0, Width * 10);
 
     this.collideBlock(blocks, "x");
     this.jump();
 
-    c.moveCamera(this)
+    this.collideCoin(coins);
+    c.moveCamera(this);
   }
 
   collideBlock(blocks, mode) {
@@ -63,12 +73,16 @@ class Player {
             this.grav = 0;
             this.grav += 0.1;
             this.y = block.y + block.h + block.offsetY;
+            
+            if(block.type[0] == 'regular'){
             block.y -= block.jumpHeight;
+            }
           } // under block
           else if (this.prevY < block.y) {
             this.y = block.y - this.h;
             this.grav = 0;
             this.canJump = true;
+            
           }
         }
 
@@ -76,13 +90,28 @@ class Player {
           if (this.prevX < block.x) {
             this.x = block.x - this.w;
           }
-          console.log(this.prevX, block.x);
           if (this.prevX > block.x) {
             this.x = block.x + block.w;
           }
+
         }
       }
     });
+  }
+
+  collideCoin(coins) {
+    for (let i = 0; i < coins.length; i++) {
+      if (
+        c.dist(
+          this.x + this.w / 2,
+          this.y + this.h / 2,
+          coins[i].x,
+          coins[i].y
+        ) < coins[i].size
+      ) {
+        coins.pop(i);
+      }
+    }
   }
 
   moveX() {
@@ -92,6 +121,7 @@ class Player {
     }
     if (keys["ArrowRight"]) {
       this.x += this.speed;
+      
     }
 
     //touchscreen
@@ -105,6 +135,7 @@ class Player {
       }
     }
   }
+
   jump() {
     if (keys["ArrowUp"] && this.canJump) {
       // this.grav -= 10;

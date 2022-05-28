@@ -12,6 +12,7 @@ const pointSize = document.getElementById("pointSize");
 const mapWidth = 746;
 const mapHeight = 706;
 pointSize.value = 10;
+let collectedCoins = 0;
 
 //#region document elements
 const dispPSize = document.getElementById("currentPSize");
@@ -24,6 +25,7 @@ const maxAValue = document.getElementById("maxAValue");
 const blockSize = c.map(50, 0, 706, 0, Height);
 
 //junk
+let G = c.map(0.35, 0, 706, 0, Height);
 let MAX_ANGLE = 60;
 let mouseX = 0;
 let mouseY = 0;
@@ -43,7 +45,7 @@ class Point {
       this.y = y;
     }
     this.x = ~~c.map(this.x, 0, 706, 0, Height);
-    this.y = ~~c.map(this.y + 200, 0, 706, 0, Height);
+    this.y = ~~c.map(this.y, 0, 706, 0, Height);
     this.radius = Number(pointSize.value);
     this.isHovered = false;
   }
@@ -130,7 +132,7 @@ class Controls {
     // c.fill(0, 255, 0,0);
     // c.rect(this.x, this.y, this.w, this.h);
 
-    c.image(`assets/${this.type} Arrow.svg`, this.x, this.y, this.w, this.h)
+    c.image(`assets/${this.type} Arrow.svg`, this.x, this.y, this.w, this.h, true);
   }
   isin(mX, mY) {
     return (
@@ -163,63 +165,83 @@ const controlBtns = [left, right, up, down];
 //#endregion
 
 class PowerUp {}
-
-class Coin {}
-
 class Enemey {}
 
 // let points = [new Point(0, 300), new Point(100, 300), new Point(220, 280)];
 let points = [
-  new Point({ x: 3, y: 307 }),
-  new Point({ x: 106, y: 305 }),
-  new Point({ x: 212, y: 311 }),
-  new Point({ x: 263, y: 331 }),
-  new Point({ x: 307, y: 383 }),
-  new Point({ x: 353, y: 412 }),
-  new Point({ x: 412, y: 408 }),
-  new Point({ x: 445, y: 411 }),
-  new Point({ x: 470, y: 409 }),
-  new Point({ x: 754, y: 416 }),
-  new Point({ x: 790, y: 415 }),
-  new Point({ x: 819, y: 410 }),
-  new Point({ x: 850, y: 414 }),
-  new Point({ x: 873, y: 418 }),
-  new Point({ x: 905, y: 408 }),
-  new Point({ x: 928, y: 414 }),
-  new Point({ x: 947, y: 425 }),
-  new Point({ x: 995, y: 428 }),
-  new Point({ x: 1035, y: 423 }),
-  new Point({ x: 1074, y: 410 }),
-  new Point({ x: 1158, y: 408 }),
-  new Point({ x: 1197, y: 418 }),
-  new Point({ x: 1230, y: 445 }),
-  new Point({ x: 1405, y: 444 }),
+  new Point({ x: 3, y: 307 +174}),
+  new Point({ x: 106, y: 305 +174}),
+  new Point({ x: 212, y: 311 +174}),
+  new Point({ x: 263, y: 331 +174}),
+  new Point({ x: 307, y: 383 +174}),
+  new Point({ x: 353, y: 412 +174}),
+  new Point({ x: 412, y: 408 +174}),
+  new Point({ x: 445, y: 411 +174}),
+  new Point({ x: 470, y: 409 +174}),
+  new Point({ x: 754, y: 416 +174}),
+  new Point({ x: 790, y: 415 +174}),
+  new Point({ x: 819, y: 410 +174}),
+  new Point({ x: 850, y: 414 +174}),
+  new Point({ x: 873, y: 418 +174}),
+  new Point({ x: 905, y: 408 +174}),
+  new Point({ x: 928, y: 414 +174}),
+  new Point({ x: 947, y: 425 +174}),
+  new Point({ x: 995, y: 428 +174}),
+  new Point({ x: 1035, y: 423+174 }),
+  new Point({ x: 1074, y: 410+174 }),
+  new Point({ x: 1158, y: 408+174 }),
+  new Point({ x: 1197, y: 418+174 }),
+  new Point({ x: 1230, y: 445+174 }),
+  new Point({ x: 1405, y: 444+174 }),
 ];
 let blocks = [
-  new Block(60, 350, { w: blockSize, h: blockSize }, ["regular"] , {x: 0, y: 0}),
-  new Block(108, 350, { w: blockSize, h: blockSize }, ["regular"], {x: 0, y: 0}),
-  new Block(156, 350, { w: blockSize, h: blockSize }, ["regular"], {x: 0, y: 0}),
-  new Block(180, 290, { w: blockSize * 3, h: blockSize / 2 }, ["moving", "v"], {x:0, y:1}),
+  new Block(60, 350, { w: blockSize, h: blockSize }, ["regular"], {
+    x: 0,
+    y: 0,
+  }),
+  new Block(108, 350, { w: blockSize, h: blockSize }, ["regular"], {
+    x: 0,
+    y: 0,
+  }),
+  new Block(156, 350, { w: blockSize, h: blockSize }, ["regular"], {
+    x: 0,
+    y: 0,
+  }),
+  new Block(180, 290, { w: blockSize * 3, h: blockSize / 2 }, ["moving", "v"], {
+    x: 0,
+    y: 1,
+  }),
+  new Block(300, 300, { w: blockSize * 3, h: blockSize / 2 }, ['path',{
+    pathway:[[100,300],[600,400],[300,200]],
+    startIndex:0,
+    amount:0.01,
+    error:10,
+    speed:2,
+  }], {
+    x: 0,
+    y: 1,
+  }),
+];
+let coins = [
+  new Coin(200, 200, blockSize)
 ];
 
-// let b = new Block(100,100)
 let p = new Player(blockSize);
-
 let x = 0;
 
 draw = function () {
   c.background("#00aaff");
   x += 1;
-  c.rect(x, 100, 100, 100);
+  // c.rect(x, 100, 100, 100);
 
+  // c.image("assets/Bground1.jpg", 0, 0, points.at(-1).x,754);
   connectTheDots(points);
-  // c.image("assets/Bground1.jpg", 0, 0, points.at(-1).x, Height*1.6);
   points.forEach((point) => point.display());
-  p.move(points, blocks);
+  coins.forEach((coin) => coin.display());
+  p.move(points, blocks, coins);
   p.display();
 
   blocks.forEach((block) => block.display());
-
   c.textSize(500);
 
   for (let i = 0; i < 6; i++) {
@@ -231,6 +253,15 @@ draw = function () {
   if (mouseIsPressed) {
     c.rect(100, 100, 100, 100);
   }
+
+  c.displayStats([
+    JSON.stringify({width:Width, height:Height}),
+    JSON.stringify(c.cameraPos),
+    JSON.stringify(p),
+    JSON.stringify({mouseX: mouseX, mouseY:mouseY}),
+    JSON.stringify(mouseT),
+    JSON.stringify(points.at(-1))
+  ])
 };
 
 //Onchange events
