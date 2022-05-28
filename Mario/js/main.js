@@ -1,3 +1,4 @@
+
 console.log("Main is Loading...");
 
 //program for creating mario worlds
@@ -242,26 +243,21 @@ draw = function () {
   p.display();
 
   blocks.forEach((block) => block.display());
-  c.textSize(500);
 
-  for (let i = 0; i < 6; i++) {
-    c.rect(p.x + p.w * 1.2, 455.0873786407767 - 2.5 - p.h * i, p.w, p.h * 0.95);
-  }
-  // console.log(p.y)
   controlBtns.forEach((btn) => btn.drawControls());
 
   if (mouseIsPressed) {
     c.rect(100, 100, 100, 100);
   }
 
-  c.displayStats([
-    JSON.stringify({width:Width, height:Height}),
-    JSON.stringify(c.cameraPos),
-    JSON.stringify(p),
-    JSON.stringify({mouseX: mouseX, mouseY:mouseY}),
-    JSON.stringify(mouseT),
-    JSON.stringify(points.at(-1))
-  ])
+  // c.displayStats([
+  //   JSON.stringify({width:Width, height:Height}),
+  //   JSON.stringify(c.cameraPos),
+  //   JSON.stringify(p),
+  //   JSON.stringify({mouseX: mouseX, mouseY:mouseY}),
+  //   JSON.stringify(mouseT),
+  //   JSON.stringify(points.at(-1))
+  // ])
 };
 
 //Onchange events
