@@ -268,7 +268,8 @@ let p = new Player(blockSize);
 let x = 0;
 
 draw = function () {
-  c.background("#00aaff");
+  c.background();
+  c.image('assets/Bground1.jpg', 0,0, Width, Height-85, false, true)
   x += 1;
   // c.rect(x, 100, 100, 100);
 

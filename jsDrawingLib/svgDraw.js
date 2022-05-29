@@ -165,14 +165,14 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  image(img, x, y, width, height, fixed) {
+  image(img, x, y, width, height, fixed, aspect) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
-    el.setAttribute("preserveAspectRatio", "none");
+    if(!aspect){el.setAttribute("preserveAspectRatio", "none");}
 
     el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
     el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
-    el.setAttribute("width", width);
-    el.setAttribute("height", height);
+    if(!aspect){el.setAttribute("width", width || 100);}
+    el.setAttribute("height", height || 100);
     // el.style.width = 1000 + 'px'
     // el.style.height = height + 'px'
     el.setAttribute("href", img);
@@ -187,7 +187,7 @@ class Canvas {
       this.#canvas.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
     } else if (r != undefined && g != undefined) {
       this.#canvas.style.backgroundColor = `rgba(${r}, ${r}, ${r}, ${255})`;
-    } else {
+    } else if(r) {
       this.#canvas.style.backgroundColor = r;
     }
   }
