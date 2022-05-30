@@ -59,6 +59,7 @@ class Player {
     }
     this.collideBlock(blocks, "y");
     if (this.y > Height + 10) {
+      this.grav = 0;
       this.x = this.landedPos.x;
       this.y = this.landedPos.y;
     }

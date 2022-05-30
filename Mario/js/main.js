@@ -50,6 +50,8 @@ let mouseY = 0;
 let mouseT = [];
 let mouseIsPressed = false;
 let keys = [];
+let points = [];
+let level = 1;
 //#endregion
 
 class Point {
@@ -192,33 +194,72 @@ const controlBtns = [left, right, up, down];
 class PowerUp {}
 class Enemey {}
 
-// let points = [new Point(0, 300), new Point(100, 300), new Point(220, 280)];
-let points = [
-  new Point({ x: 3, y: 307 + 174 }),
-  new Point({ x: 106, y: 305 + 174 }),
-  new Point({ x: 212, y: 311 + 174 }),
-  new Point({ x: 263, y: 331 + 174 }),
-  new Point({ x: 307, y: 383 + 174 }),
-  new Point({ x: 353, y: 412 + 174 }),
-  new Point({ x: 412, y: 408 + 174 }),
-  new Point({ x: 445, y: 411 + 174 }),
-  new Point({ x: 470, y: 409 + 174 }),
-  new Point({ x: 754, y: 416 + 174 }),
-  new Point({ x: 790, y: 415 + 174 }),
-  new Point({ x: 819, y: 410 + 174 }),
-  new Point({ x: 850, y: 414 + 174 }),
-  new Point({ x: 873, y: 418 + 174 }),
-  new Point({ x: 905, y: 408 + 174 }),
-  new Point({ x: 928, y: 414 + 174 }),
-  new Point({ x: 947, y: 425 + 174 }),
-  new Point({ x: 995, y: 428 + 174 }),
-  new Point({ x: 1035, y: 423 + 174 }),
-  new Point({ x: 1074, y: 410 + 174 }),
-  new Point({ x: 1158, y: 408 + 174 }),
-  new Point({ x: 1197, y: 418 + 174 }),
-  new Point({ x: 1230, y: 445 + 174 }),
-  new Point({ x: 1405, y: 444 + 174 }),
+let worldPoints = [
+  [
+    { x: 3, y: 307 + 174 },
+    { x: 106, y: 305 + 174 },
+    { x: 212, y: 311 + 174 },
+    { x: 263, y: 331 + 174 },
+    { x: 307, y: 383 + 174 },
+    { x: 353, y: 412 + 174 },
+    { x: 412, y: 408 + 174 },
+    { x: 445, y: 411 + 174 },
+    { x: 470, y: 409 + 174 },
+    { x: 754, y: 416 + 174 },
+    { x: 790, y: 415 + 174 },
+    { x: 819, y: 410 + 174 },
+    { x: 850, y: 414 + 174 },
+    { x: 873, y: 418 + 174 },
+    { x: 905, y: 408 + 174 },
+    { x: 928, y: 414 + 174 },
+    { x: 947, y: 425 + 174 },
+    { x: 995, y: 428 + 174 },
+    { x: 1035, y: 423 + 174 },
+    { x: 1074, y: 410 + 174 },
+    { x: 1158, y: 408 + 174 },
+    { x: 1197, y: 418 + 174 },
+    { x: 1230, y: 445 + 174 },
+    { x: 1405, y: 444 + 174 },
+  ],
+  [
+    { x: 0, y: 605 },
+    { x: 56, y: 649 },
+    { x: 112, y: 647 },
+    { x: 168, y: 622 },
+    { x: 224, y: 605 },
+    { x: 280, y: 597 },
+    { x: 336, y: 607 },
+    { x: 392, y: 572 },
+    { x: 448, y: 538 },
+    { x: 504, y: 531 },
+    { x: 560, y: 504 },
+    { x: 616, y: 472 },
+    { x: 672, y: 443 },
+    { x: 728, y: 454 },
+    { x: 784, y: 471 },
+    { x: 840, y: 504 },
+    { x: 896, y: 504 },
+    { x: 952, y: 487 },
+    { x: 1008, y: 487 },
+    { x: 1064, y: 504 },
+    { x: 1120, y: 466 },
+    { x: 1176, y: 412 },
+    { x: 1232, y: 387 },
+    { x: 1288, y: 377 },
+    { x: 1344, y: 344 },
+    { x: 1400, y: 343 },
+    { x: 1456, y: 405 },
+    { x: 1512, y: 438 },
+    { x: 1568, y: 448 },
+    { x: 1624, y: 479 },
+  ],
 ];
+
+function createWorld(worldPoints) {
+  worldPoints.forEach((point) => points.push(new Point(point)));
+}
+
+//setup objects
 let blocks = [
   new Block(60, 350, { w: blockSize, h: blockSize }, ["regular"], {
     x: 0,
@@ -248,7 +289,7 @@ let blocks = [
           [700, 200],
           [550, 100],
           [550, 400],
-          [800, 350]
+          [800, 350],
         ],
         startIndex: 2,
         amount: 0.01,
@@ -263,24 +304,26 @@ let blocks = [
   ),
 ];
 let coins = [new Coin(200, 200, blockSize)];
-
 let p = new Player(blockSize);
+
 let x = 0;
 
+createWorld(worldPoints[level]);//create point list
+
 draw = function () {
+
   c.background();
-  c.image('assets/Bground1.jpg', 0,0, Width, Height-85, false, true)
+  c.image("assets/Bground1.jpg", 0, 0, 1680, Height, false, true);
   x += 1;
   // c.rect(x, 100, 100, 100);
 
   // c.image("assets/Bground1.jpg", 0, 0, points.at(-1).x,754);
-  connectTheDots(points);
-  points.forEach((point) => point.display());
+  // connectTheDots(points);
+  // points.forEach((point) => point.display());
   coins.forEach((coin) => coin.display());
   blocks.forEach((block) => block.display());
   p.move(points, blocks, coins);
   p.display();
-
 
   controlBtns.forEach((btn) => btn.drawControls());
 

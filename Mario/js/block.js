@@ -36,6 +36,10 @@ class Block {
 
   set_path(pathBlockInfo){
     this.pathway = pathBlockInfo.pathway;
+    this.pathway = this.pathway.map((value)=>{
+      return [c.map(value[0],0,706,0,Height),c.map(value[1],0,706,0,Height)]
+    })
+
 
     this.idx = pathBlockInfo.startIndex + 1;//current position inn this.pathway
     this.error = pathBlockInfo.error;// distance error threshold
