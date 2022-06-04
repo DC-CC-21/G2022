@@ -49,9 +49,9 @@ span {
 }
 
 #errorContainer {
-  /* position:absolute; */
+  position:absolute; */
   /* top:10px;
-    left:10px; */
+    left:10px;
   background-color: #fffa;
   padding: 5px;
   display: none;

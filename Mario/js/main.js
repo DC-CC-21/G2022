@@ -387,8 +387,8 @@ draw = function () {
   //   JSON.stringify(points.at(-1))
   // ])
 
-  c.rect(mouseX-c.cameraPos.x, mouseY, blockSize, blockSize)
-  c.text(mouseX-c.cameraPos.x+", "+mouseY, mouseX-c.cameraPos.x, mouseY)
+  // c.rect(mouseX-c.cameraPos.x, mouseY, blockSize, blockSize)
+  // c.text(mouseX-c.cameraPos.x+", "+mouseY, mouseX-c.cameraPos.x, mouseY)
 };
 
 //Onchange events
