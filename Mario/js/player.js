@@ -2,8 +2,8 @@ console.log("Player is Loading...");
 
 class Player {
   constructor(size) {
-    this.x = c.map(50, 0, 706, 0, Height);
-    this.y = c.map(450, 0, 706, 0, Height);
+    this.x = c.map(100, 0, 706, 0, Height);
+    this.y = c.map(530, 0, 706, 0, Height);
     this.w = size;
     this.h = ~~(this.w * 1.1);
     this.grav = 0;
@@ -26,7 +26,7 @@ class Player {
   move(
     land,
     blocks,
-    coins /* Dictionary of Junk to collide with ex. blocks, coinds, etc... */
+    coins /* Dictionary of Junk to collide with ex. blocks, coins, etc... */
   ) {
     this.prevX = this.x;
     this.prevY = this.y;
@@ -65,13 +65,13 @@ class Player {
     }
 
     this.moveX();
-    this.x = c.constrain(this.x, 0, Width * 10);
+    this.x = c.constrain(this.x, 0, Width * 30);
 
     this.collideBlock(blocks, "x");
     this.jump();
 
     this.collideCoin(coins);
-    c.moveCamera(this);
+    c.moveCamera(this, WorldWidth);
   }
 
   collideBlock(blocks, mode) {

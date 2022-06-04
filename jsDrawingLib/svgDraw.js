@@ -32,8 +32,8 @@ class Canvas {
     recursive();
     this.createTouchContainer();
   }
-  moveCamera(p) {
-    this.cameraPos = { x: this.constrain(Width / 2 - p.x, -Width, 0), y: 0 };
+  moveCamera(p, w) {
+    this.cameraPos = { x: this.constrain(Width/2 - p.x, -w+Width*1.4,0 ), y: 0 };
     this.#cameraPos = this.cameraPos
     // this.textSize(20);
     // this.text(JSON.stringify(this.#cameraPos), 100, 100, true);
@@ -236,13 +236,9 @@ class Canvas {
     return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
   }
 
-  constrain(value, min, max) {
-    if (value < min) {
-      value = min;
-    } else if (value > max) {
-      value = max;
-    }
-    return value;
+  constrain(aNumber, aMin, aMax) {
+    return aNumber > aMax ? aMax : aNumber < aMin ? aMin : aNumber;
+
   }
   lerp(value1, value2, amt) {
     return ((value2 - value1) * amt) + value1;

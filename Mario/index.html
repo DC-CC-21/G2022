@@ -14,19 +14,24 @@
     <script src="js/coin.js" defer></script>
     <script src="js/main.js" defer></script>
     <script src="js/listener.js" defer></script>
+    <!-- load instead of listener js when creating worlds -->
+    <!-- <script src="js/create.js" defer></script> -->
   </head>
   <body>
     <header>
+      <span><ol id="errorContainer"></ol></span>
       <nav>
         <span>
-          Width:
+          Canvas Width:
           <input
             id="CWidth"
             type="number"
             placeholder="400"
             onchange="updateCSize()"
           />
-          Height:
+        </span>
+        <span>
+          Canvas Height:
           <input
             id="CHeight"
             type="number"
@@ -46,20 +51,26 @@
             onchange="updatePsize()"
           />
           <p id="currentPSize">1</p>
-          Max Climb angle:<input
-            id="maxAValue"
+        </span>
+        <span>
+          Block Width:
+          <input
+            id="BWidth"
             type="number"
-            placeholder="45"
-            onchange="updateAngle()"
+            placeholder="200"
           />
         </span>
-        <span
-          >Show Character: <input type="checkbox" placeholder="true"
-        /></span>
+        <span>
+          Block Height:
+          <input
+            id="BHeight"
+            type="number"
+            placeholder="200"
+          />
+        </span>     
       </nav>
     </header>
     <svg id="svgCanvas"></svg>
-    <ol id="errorContainer"></ol>
 
     <!-- <svg>
       <defs>

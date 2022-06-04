@@ -1,6 +1,3 @@
-
-
-
 console.log("Blocks are Loading");
 
 class Block {
@@ -29,20 +26,21 @@ class Block {
         amount:0.05,
         error:10
       */
-      this.set_path(this.type[1])
+      this.set_path(this.type[1]);
     }
-     
   }
 
-  set_path(pathBlockInfo){
+  set_path(pathBlockInfo) {
     this.pathway = pathBlockInfo.pathway;
-    this.pathway = this.pathway.map((value)=>{
-      return [c.map(value[0],0,706,0,Height),c.map(value[1],0,706,0,Height)]
-    })
+    this.pathway = this.pathway.map((value) => {
+      return [
+        c.map(value[0], 0, 706, 0, Height),
+        c.map(value[1], 0, 706, 0, Height),
+      ];
+    });
 
-
-    this.idx = pathBlockInfo.startIndex + 1;//current position inn this.pathway
-    this.error = pathBlockInfo.error;// distance error threshold
+    this.idx = pathBlockInfo.startIndex + 1; //current position inn this.pathway
+    this.error = pathBlockInfo.error; // distance error threshold
     this.vector = {
       p1: {
         x: this.pathway[this.idx - 1][0],
@@ -52,22 +50,50 @@ class Block {
         x: this.pathway[this.idx][0],
         y: this.pathway[this.idx][1],
       },
-    };//points p1 and p2
-    this.x = this.vector.p1.x-this.w/2; //this.pathway[0][0];
-    this.y = this.vector.p1.y-this.h/2; //this.pathway[0][1];
+    }; //points p1 and p2
+    this.x = this.vector.p1.x - this.w / 2; //this.pathway[0][0];
+    this.y = this.vector.p1.y - this.h / 2; //this.pathway[0][1];
     this.direction = 1;
-    this.amount = c.map(pathBlockInfo.amount,0,706,0,Height)
+    this.amount = c.map(pathBlockInfo.amount, 0, 706, 0, Height);
+
+    // this.sidewallleft = {
+    //   x:this.x,
+    //   y:this.y-10,
+    //   w:this.w*0.1,
+    // }
+    this.sidewalls = [
+      new Block(this.x, this.y, { w: 5, h: 2 }, ["regular"], {
+        x: 0,
+        y: 0,
+      }),
+      new Block(this.x, this.y, { w: 5, h: 2}, ["regular"], {
+        x: 0,
+        y: 0,
+      }),
+    ];
   }
 
   path() {
+    // c.rect(this.sidewall)
     // c.ellipse(this.vector.p1.x, this.vector.p1.y, 10, 10);
     // c.ellipse(this.vector.p2.x, this.vector.p2.y, 10, 10);
 
-    this.x = c.lerp(this.x, this.vector.p2.x-this.w/2, this.amount); //solution but to fast(this.x * 0.9 + this.vector.p2.x * 0.1);
-    this.y = c.lerp(this.y, this.vector.p2.y-this.h/2, this.amount); //solution but to fast(this.y * 0.9 + this.vector.p2.y * 0.1);
+    this.x = c.lerp(this.x, this.vector.p2.x - this.w / 2, this.amount); //solution but to fast(this.x * 0.9 + this.vector.p2.x * 0.1);
+    this.y = c.lerp(this.y, this.vector.p2.y - this.h / 2, this.amount); //solution but to fast(this.y * 0.9 + this.vector.p2.y * 0.1);
+    if(c.rectCollide(this, p)){
+      p.y = this.y - p.h;
+    }
+    this.fixSides();
+
+    this.collidePath();
 
     if (
-      c.dist(this.x+this.w/2, this.y+this.h/2, this.vector.p2.x, this.vector.p2.y) < this.error
+      c.dist(
+        this.x + this.w / 2,
+        this.y + this.h / 2,
+        this.vector.p2.x,
+        this.vector.p2.y
+      ) < this.error
     ) {
       this.idx += this.direction;
       if (this.idx > this.pathway.length - 1) {
@@ -89,6 +115,27 @@ class Block {
       };
     }
   }
+  fixSides() {
+    this.sidewalls.forEach((sidewall, idx) => {
+      sidewall.x = !idx ? this.x : this.x + this.w-sidewall.w;
+      sidewall.y = this.y - sidewall.h;
+      sidewall.origY = sidewall.y;
+      sidewall.collidePath(idx);
+    });
+  }
+
+  collidePath(idx) {
+    // console.log(p)
+    if (c.rectCollide(this, p)) {
+      if(!idx){
+        p.x = this.x + this.w;
+      } else{
+        p.x = this.x - p.w
+      }
+      
+      // p.y = this.y
+    }
+  }
 
   display() {
     this[this.type[0]]();
@@ -104,12 +151,17 @@ class Block {
         c.fill(75, 75, 75);
         break;
     }
-    if(this.pathway){
-      for(let i = 1; i < this.pathway.length; i ++){
-        c.line(this.pathway[i-1][0], this.pathway[i-1][1], this.pathway[i][0], this.pathway[i][1])
+    if (this.pathway) {
+      for (let i = 1; i < this.pathway.length; i++) {
+        c.line(
+          this.pathway[i - 1][0],
+          this.pathway[i - 1][1],
+          this.pathway[i][0],
+          this.pathway[i][1]
+        );
       }
     }
-    c.rect(this.x, this.y, this.w * 0.95, this.h, 2);
+    c.rect(this.x, this.y, this.w, this.h, 2);
   }
 
   moving() {

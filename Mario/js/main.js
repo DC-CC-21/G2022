@@ -11,6 +11,7 @@ const pointSize = document.getElementById("pointSize");
 
 const errorContainer = document.getElementById("errorContainer");
 window.onerror = function (error, source, lineno, colno, err) {
+  errorContainer.style.display = 'block'
   let info = {
     error: error,
     source: source,
@@ -26,7 +27,6 @@ window.onerror = function (error, source, lineno, colno, err) {
   });
   errorContainer.append(el);
 };
-
 const mapWidth = 746;
 const mapHeight = 706;
 pointSize.value = 10;
@@ -51,7 +51,8 @@ let mouseT = [];
 let mouseIsPressed = false;
 let keys = [];
 let points = [];
-let level = 1;
+let level = 2;
+let WorldWidth = 0;
 //#endregion
 
 class Point {
@@ -253,6 +254,49 @@ let worldPoints = [
     { x: 1568, y: 448 },
     { x: 1624, y: 479 },
   ],
+  [
+    {x: 0, y: 562},
+    {x: 88, y: 589},
+    {x: 176, y: 599},
+    {x: 264, y: 599},
+    {x: 352, y: 581},
+    {x: 440, y: 562},
+    {x: 528, y: 562},
+    {x: 704, y: 562},
+    {x: 792, y: 543},
+    {x: 880, y: 524},
+    {x: 968, y: 487},
+    {x: 1056, y: 487},
+    {x: 1144, y: 478},
+    {x: 1232, y: 460},
+    {x: 1320, y: 431},
+    {x: 1408, y: 412},
+    {x: 1496, y: 412},
+    {x: 1584, y: 412},
+    {x: 1672, y: 431},
+    {x: 1760, y: 449},
+    {x: 1848, y: 468},
+    {x: 1936, y: 468},
+    {x: 2024, y: 450},
+    {x: 2112, y: 449},
+    {x: 2200, y: 449},
+    {x: 2288, y: 468},
+    {x: 2376, y: 449},
+    {x: 2464, y: 412},
+    {x: 2552, y: 376},
+    {x: 2640, y: 356},
+    {x: 2728, y: 356},
+    {x: 2816, y: 337},
+    {x: 2904, y: 319},
+    {x: 2992, y: 318},
+    {x: 3080, y: 318},
+    {x: 3168, y: 374},
+    {x: 3256, y: 393},
+    {x: 3344, y: 412},
+    {x: 3432, y: 414},
+    {x: 3520, y: 431},
+    {x: 3520, y: 31},
+  ],
 ];
 
 function createWorld(worldPoints) {
@@ -261,15 +305,15 @@ function createWorld(worldPoints) {
 
 //setup objects
 let blocks = [
-  new Block(60, 350, { w: blockSize, h: blockSize }, ["regular"], {
+  new Block(444+52.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
     x: 0,
     y: 0,
   }),
-  new Block(108, 350, { w: blockSize, h: blockSize }, ["regular"], {
+  new Block(444+102.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
     x: 0,
     y: 0,
   }),
-  new Block(156, 350, { w: blockSize, h: blockSize }, ["regular"], {
+  new Block(444+152.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
     x: 0,
     y: 0,
   }),
@@ -277,6 +321,7 @@ let blocks = [
     x: 0,
     y: 1,
   }),
+  
   new Block(
     300,
     300,
@@ -285,13 +330,13 @@ let blocks = [
       "path",
       {
         pathway: [
-          [400, 200],
-          [700, 200],
-          [550, 100],
-          [550, 400],
-          [800, 350],
+          [300, 300],
+          [140, 140],
+          [570, 200],
+          [800, 300],
+          [1600, 350],
         ],
-        startIndex: 2,
+        startIndex: 0,
         amount: 0.01,
         error: 10,
         speed: 2,
@@ -309,15 +354,17 @@ let p = new Player(blockSize);
 let x = 0;
 
 createWorld(worldPoints[level]);//create point list
+WorldWidth = points[points.length-1].x
+console.log(points[points.length-1].x)
 
 draw = function () {
 
   c.background();
   c.image("assets/Bground1.jpg", 0, 0, 1680, Height, false, true);
+  c.image("assets/land1.png",0,0,points.at(-1).x, Height, false,false)
   x += 1;
   // c.rect(x, 100, 100, 100);
 
-  // c.image("assets/Bground1.jpg", 0, 0, points.at(-1).x,754);
   // connectTheDots(points);
   // points.forEach((point) => point.display());
   coins.forEach((coin) => coin.display());
@@ -339,6 +386,9 @@ draw = function () {
   //   JSON.stringify(mouseT),
   //   JSON.stringify(points.at(-1))
   // ])
+
+  c.rect(mouseX-c.cameraPos.x, mouseY, blockSize, blockSize)
+  c.text(mouseX-c.cameraPos.x+", "+mouseY, mouseX-c.cameraPos.x, mouseY)
 };
 
 //Onchange events
