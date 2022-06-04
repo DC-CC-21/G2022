@@ -11,7 +11,7 @@ const pointSize = document.getElementById("pointSize");
 
 const errorContainer = document.getElementById("errorContainer");
 window.onerror = function (error, source, lineno, colno, err) {
-  errorContainer.style.display = 'block'
+  errorContainer.style.display = "block";
   let info = {
     error: error,
     source: source,
@@ -92,7 +92,7 @@ class Point {
   hover(e) {
     if (this.clicked) {
       this.isHovered = true;
-      this.x = e.offsetX;
+      // this.x = e.offsetX;
       this.y = e.offsetY;
     }
     if (this.isin(e)) {
@@ -133,7 +133,7 @@ function connectTheDots(points) {
     );
 
     c.stroke(0, 255, 0);
-    c.strokeWeight(10);
+    c.strokeWeight(2);
     c.line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
   }
 }
@@ -255,47 +255,46 @@ let worldPoints = [
     { x: 1624, y: 479 },
   ],
   [
-    {x: 0, y: 562},
-    {x: 88, y: 589},
-    {x: 176, y: 599},
-    {x: 264, y: 599},
-    {x: 352, y: 581},
-    {x: 440, y: 562},
-    {x: 528, y: 562},
-    {x: 704, y: 562},
-    {x: 792, y: 543},
-    {x: 880, y: 524},
-    {x: 968, y: 487},
-    {x: 1056, y: 487},
-    {x: 1144, y: 478},
-    {x: 1232, y: 460},
-    {x: 1320, y: 431},
-    {x: 1408, y: 412},
-    {x: 1496, y: 412},
-    {x: 1584, y: 412},
-    {x: 1672, y: 431},
-    {x: 1760, y: 449},
-    {x: 1848, y: 468},
-    {x: 1936, y: 468},
-    {x: 2024, y: 450},
-    {x: 2112, y: 449},
-    {x: 2200, y: 449},
-    {x: 2288, y: 468},
-    {x: 2376, y: 449},
-    {x: 2464, y: 412},
-    {x: 2552, y: 376},
-    {x: 2640, y: 356},
-    {x: 2728, y: 356},
-    {x: 2816, y: 337},
-    {x: 2904, y: 319},
-    {x: 2992, y: 318},
-    {x: 3080, y: 318},
-    {x: 3168, y: 374},
-    {x: 3256, y: 393},
-    {x: 3344, y: 412},
-    {x: 3432, y: 414},
-    {x: 3520, y: 431},
-    {x: 3520, y: 31},
+    { x: 0, y: 547 },
+    { x: 88, y: 572 },
+    { x: 176, y: 582 },
+    { x: 264, y: 582 },
+    { x: 352, y: 565 },
+    { x: 440, y: 547 },
+    { x: 528, y: 548 },
+    { x: 704, y: 548 },
+    { x: 792, y: 529 },
+    { x: 880, y: 512 },
+    { x: 968, y: 477 },
+    { x: 1056, y: 477 },
+    { x: 1144, y: 468 },
+    { x: 1232, y: 452 },
+    { x: 1320, y: 425 },
+    { x: 1408, y: 407 },
+    { x: 1496, y: 407 },
+    { x: 1584, y: 412 },
+    { x: 1672, y: 430 },
+    { x: 1760, y: 448 },
+    { x: 1848, y: 468 },
+    { x: 1936, y: 468 },
+    { x: 2024, y: 450 },
+    { x: 2112, y: 448 },
+    { x: 2200, y: 448 },
+    { x: 2288, y: 468 },
+    { x: 2376, y: 448 },
+    { x: 2464, y: 412 },
+    { x: 2552, y: 376 },
+    { x: 2640, y: 356 },
+    { x: 2728, y: 356 },
+    { x: 2816, y: 337 },
+    { x: 2904, y: 319 },
+    { x: 2992, y: 318 },
+    { x: 3080, y: 318 },
+    { x: 3168, y: 374 },
+    { x: 3256, y: 393 },
+    { x: 3344, y: 412 },
+    { x: 3432, y: 414 },
+    { x: 3520, y: 430 },
   ],
 ];
 
@@ -305,15 +304,15 @@ function createWorld(worldPoints) {
 
 //setup objects
 let blocks = [
-  new Block(444+52.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
+  new Block(444 + 52.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
     x: 0,
     y: 0,
   }),
-  new Block(444+102.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
+  new Block(444 + 102.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
     x: 0,
     y: 0,
   }),
-  new Block(444+152.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
+  new Block(444 + 152.5, 405, { w: blockSize, h: blockSize }, ["regular"], {
     x: 0,
     y: 0,
   }),
@@ -321,7 +320,7 @@ let blocks = [
     x: 0,
     y: 1,
   }),
-  
+
   new Block(
     300,
     300,
@@ -353,15 +352,22 @@ let p = new Player(blockSize);
 
 let x = 0;
 
-createWorld(worldPoints[level]);//create point list
-WorldWidth = points[points.length-1].x
-console.log(points[points.length-1].x)
+createWorld(worldPoints[level]); //create point list
+WorldWidth = points[points.length - 1].x;
+console.log(points[points.length - 1].x);
 
 draw = function () {
-
   c.background();
   c.image("assets/Bground1.jpg", 0, 0, 1680, Height, false, true);
-  c.image("assets/land1.png",0,0,points.at(-1).x, Height, false,false)
+  c.image(
+    "assets/land1.png",
+    0,
+    0,
+    points[points.length - 1].x,
+    Height,
+    false,
+    false
+  );
   x += 1;
   // c.rect(x, 100, 100, 100);
 
@@ -388,7 +394,12 @@ draw = function () {
   // ])
 
   // c.rect(mouseX-c.cameraPos.x, mouseY, blockSize, blockSize)
-  // c.text(mouseX-c.cameraPos.x+", "+mouseY, mouseX-c.cameraPos.x, mouseY)
+  // c.text(
+  //   mouseX - c.cameraPos.x + ", " + mouseY,
+  //   mouseX - c.cameraPos.x,
+  //   mouseY
+  // );
+  // c.text(Width + ", " + Height, 10, 30);
 };
 
 //Onchange events

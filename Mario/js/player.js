@@ -4,7 +4,7 @@ class Player {
   constructor(size) {
     this.x = c.map(100, 0, 706, 0, Height);
     this.y = c.map(530, 0, 706, 0, Height);
-    this.w = size;
+    this.w = ~~size;
     this.h = ~~(this.w * 1.1);
     this.grav = 0;
     this.speed = c.map(3, 0, 706, 0, Height);
@@ -65,9 +65,9 @@ class Player {
     }
 
     this.moveX();
+    this.collideBlock(blocks, "x");
     this.x = c.constrain(this.x, 0, Width * 30);
 
-    this.collideBlock(blocks, "x");
     this.jump();
 
     this.collideCoin(coins);

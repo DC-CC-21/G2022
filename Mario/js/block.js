@@ -4,8 +4,8 @@ class Block {
   constructor(x, y, size, type, offset) {
     this.x = c.map(x, 0, 706, 0, Height);
     this.y = c.map(y, 0, 706, 0, Height);
-    this.w = size.w;
-    this.h = size.h;
+    this.w = ~~size.w;
+    this.h = ~~size.h;
     this.jumpHeight = 5;
     this.grav = 0;
     this.origY = this.y;
