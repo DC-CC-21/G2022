@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" initial-scale=1.0" />
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+
+    <script src="../jsDrawingLib/svgDraw.js" defer></script>
+    <script src="js/player.js" defer></script>
+    <script src="js/block.js" defer></script>
+    <script src="js/coin.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/listener.js" defer></script>
+    <!-- load instead of listener js when creating worlds -->
+    <!-- <script src="js/create.js" defer></script> -->
+  </head>
+  <body>
+    <span><ol id="errorContainer"></ol></span>
+    <header>
+      <nav>
+        <span>
+          Canvas Width:
+          <input
+            id="CWidth"
+            type="number"
+            placeholder="400"
+            onchange="updateCSize()"
+          />
+        </span>
+        <span>
+          Canvas Height:
+          <input
+            id="CHeight"
+            type="number"
+            placeholder="400"
+            onchange="updateCSize()"
+          />
+        </span>
+        <span
+          >PointSize:
+          <input
+            id="pointSize"
+            min="0"
+            max="20"
+            step="1"
+            type="range"
+            placeholder="1"
+            onchange="updatePsize()"
+          />
+          <p id="currentPSize">1</p>
+        </span>
+        <span>
+          Block Width:
+          <input
+            id="BWidth"
+            type="number"
+            placeholder="200"
+          />
+        </span>
+        <span>
+          Block Height:
+          <input
+            id="BHeight"
+            type="number"
+            placeholder="200"
+          />
+        </span>     
+      </nav>
+    </header>
+    <svg id="svgCanvas"></svg>
+
+    <!-- <svg>
+      <defs>
+        <pattern id="image" x="300" y="300" patternUnits="userSpaceOnUse" height="10" width="10">
+          <image xlink:href="./assets/googly.jpg"></image>
+        </pattern>
+      </defs>
+      <polyline points="0,20 20,20 200,500 0,500" fill="url(#image)"></polyline>
+    </svg> -->
+    <!-- <svg width="700" height="660">
+      <defs>
+        <pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="1" width="1">
+          <image x="0" y="0" xlink:href="./assets/googly.jpg"></image>
+        </pattern>
+      </defs>
+      <circle id='top' cx="180" cy="120" r="80" fill="url(#image)"/>
+    </svg>-->
+  </body>
+</html>

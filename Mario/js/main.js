@@ -32,6 +32,8 @@ const mapHeight = 706;
 pointSize.value = 10;
 let collectedCoins = 0;
 
+////  RENAME MARIO
+
 //#region document elements
 const dispPSize = document.getElementById("currentPSize");
 const CWidth = document.getElementById("CWidth");
@@ -415,3 +417,4 @@ function updateCSize() {
 function updateAngle() {
   MAX_ANGLE = Number(maxAValue.value);
 }
+
