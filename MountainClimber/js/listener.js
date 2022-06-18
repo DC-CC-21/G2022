@@ -3,7 +3,7 @@ console.log("Loading Controls...");
 //Listeners
 function updatePoint(e) {
   for (let i = 0; i < points.length; i++) {
-    if (points[i].press(e)) {
+    if (points[i].press(mouseX, mouseY)) {
     }
   }
 }
@@ -19,10 +19,10 @@ touchC.addEventListener("dblclick", (e) => {
   points.push(new Point(e.offsetX, e.offsetY));
 });
 touchC.addEventListener("mousemove", (e) => {
-  mouseX = e.offsetX;
-  mouseY = e.offsetY;
+  mouseX = e.offsetX-c.cameraPos.x;
+  mouseY = e.offsetY-c.cameraPos.y;
   for (let i = 0; i < points.length; i++) {
-    points[i].hover(e);
+    points[i].hover(mouseX, mouseY);
   }
 });
 touchC.addEventListener("mousedown", (e) => {

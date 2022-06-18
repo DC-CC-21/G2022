@@ -53,7 +53,7 @@ let mouseT = [];
 let mouseIsPressed = false;
 let keys = [];
 let points = [];
-let level = 2;
+let level = 3;
 let WorldWidth = 0;
 //#endregion
 
@@ -85,19 +85,21 @@ class Point {
     c.strokeWeight(1);
     c.stroke(0);
     c.ellipse(this.x, this.y, this.radius, this.radius);
+
   }
 
-  isin(e) {
-    return c.dist(this.x, this.y, e.offsetX, e.offsetY) < this.radius;
+  isin(mX, mY) {
+    return c.dist(this.x, this.y, mX, mY) < this.radius;
   }
 
-  hover(e) {
+  hover(mX, mY) {
+
     if (this.clicked) {
       this.isHovered = true;
       // this.x = e.offsetX;
-      this.y = e.offsetY;
+      this.y = mY;
     }
-    if (this.isin(e)) {
+    if (this.isin(mX, mY)) {
       this.isHovered = true;
       return;
     }
@@ -105,11 +107,11 @@ class Point {
     // return;
   }
 
-  press(e) {
+  press(mX, mY) {
     if (this.clicked) {
       return;
     }
-    if (this.isin(e)) {
+    if (this.isin(mX, mY)) {
       this.clicked = true;
       return true;
     }
@@ -298,6 +300,49 @@ let worldPoints = [
     { x: 3432, y: 414 },
     { x: 3520, y: 430 },
   ],
+  [
+    {x: 0, y: 600},
+    {x: 76, y: 610},
+    {x: 152, y: 621},
+    {x: 228, y: 620},
+    {x: 304, y: 606},
+    {x: 380, y: 591},
+    {x: 456, y: 589},
+    {x: 532, y: 589},
+    {x: 608, y: 589},
+    {x: 684, y: 573},
+    {x: 760, y: 557},
+    {x: 836, y: 528},
+    {x: 912, y: 525},
+    {x: 988, y: 517},
+    {x: 1064, y: 502},
+    {x: 1140, y: 478},
+    {x: 1216, y: 461},
+    {x: 1292, y: 460},
+    {x: 1368, y: 461},
+    {x: 1444, y: 476},
+    {x: 1520, y: 492},
+    {x: 1596, y: 507},
+    {x: 1672, y: 508},
+    {x: 1748, y: 494},
+    {x: 1824, y: 492},
+    {x: 1900, y: 493},
+    {x: 1976, y: 508},
+    {x: 2052, y: 491},
+    {x: 2128, y: 461},
+    {x: 2204, y: 430},
+    {x: 2280, y: 414},
+    {x: 2356, y: 412},
+    {x: 2432, y: 396},
+    {x: 2508, y: 381},
+    {x: 2584, y: 379},
+    {x: 2660, y: 380},
+    {x: 2736, y: 422},
+    {x: 2812, y: 442},
+    {x: 2888, y: 458},
+    {x: 2964, y: 462},
+    {x: 3040, y: 475},
+  ],
 ];
 
 function createWorld(worldPoints) {
@@ -360,22 +405,32 @@ console.log(points[points.length - 1].x);
 
 draw = function () {
   c.background();
-  c.image("assets/Bground1.jpg", 0, 0, 1680, Height, false, true);
+  c.image("assets/Bground1.jpg", c.cameraPos.x/3, 0, 1680, Height, true, true);
+  points.forEach((point) => point.display());
+  coins.forEach((coin) => coin.display());
+  connectTheDots(points);
   c.image(
-    "assets/land1.png",
+    "assets/crystal.png",
+    50,
+    375,
+    100,
+    50,
+    false,
+    true
+  );
+    c.image(
+    "assets/newBground2.png",
     0,
     0,
     points[points.length - 1].x,
     Height,
     false,
-    false
+    true
   );
+
   x += 1;
   // c.rect(x, 100, 100, 100);
 
-  // connectTheDots(points);
-  // points.forEach((point) => point.display());
-  coins.forEach((coin) => coin.display());
   blocks.forEach((block) => block.display());
   p.move(points, blocks, coins);
   p.display();
@@ -385,7 +440,6 @@ draw = function () {
   if (mouseIsPressed) {
     c.rect(100, 100, 100, 100);
   }
-
   // c.displayStats([
   //   JSON.stringify({width:Width, height:Height}),
   //   JSON.stringify(c.cameraPos),
@@ -417,4 +471,3 @@ function updateCSize() {
 function updateAngle() {
   MAX_ANGLE = Number(maxAValue.value);
 }
-

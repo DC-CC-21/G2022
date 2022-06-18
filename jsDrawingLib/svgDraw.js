@@ -33,7 +33,7 @@ class Canvas {
     this.createTouchContainer();
   }
   moveCamera(p, w) {
-    this.cameraPos = { x: this.constrain(Width/2 - p.x, -w+Width*1.4,0 ), y: 0 };
+    this.cameraPos = { x: this.constrain(Width/2 - p.x, -1630,0 ), y: 0 };
     this.#cameraPos = this.cameraPos
     // this.textSize(20);
     // this.text(JSON.stringify(this.#cameraPos), 100, 100, true);
