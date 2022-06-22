@@ -1,14 +1,6 @@
 * {
   margin: 0px;
   padding: 0px;
-}
-
-body {
-  /* overflow: hidden; */
-}
-
-div,
-svg {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -16,6 +8,15 @@ svg {
   -ms-user-select: none;
   user-select: none;
 }
+
+ body {
+  overflow: hidden;
+}
+/*
+div,
+svg {
+
+} */
 
 
 header {

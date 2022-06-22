@@ -24,7 +24,7 @@ class Canvas {
     this.#canvas.style.width = (width || 400) + "px";
     this.#canvas.style.height = (height || 400) + "px";
     this.#canvas.style.margin = "auto";
-    this.cameraPos = {x:0, y:0}
+    this.cameraPos = { x: 0, y: 0 };
     Width = width;
     Height = height;
     //1536x754
@@ -33,19 +33,19 @@ class Canvas {
     this.createTouchContainer();
   }
   moveCamera(p, w) {
-    this.cameraPos = { x: this.constrain(Width/2 - p.x, -1630,0 ), y: 0 };
-    this.#cameraPos = this.cameraPos
+    this.cameraPos = { x: this.constrain(Width / 2 - p.x, -1630, 0), y: 0 };
+    this.#cameraPos = this.cameraPos;
     // this.textSize(20);
     // this.text(JSON.stringify(this.#cameraPos), 100, 100, true);
   }
-  displayStats(lst){
-    lst.forEach((stat, index)=>{
-      this.fill('#000')
-      this.textSize(20)
-      this.textAlign('left')
+  displayStats(lst) {
+    lst.forEach((stat, index) => {
+      this.fill("#000");
+      this.textSize(20);
+      this.textAlign("left");
 
-      this.text(stat, 10, 50+index*20,true)
-    })
+      this.text(stat, 10, 50 + index * 20, true);
+    });
   }
 
   createTouchContainer() {
@@ -107,15 +107,18 @@ class Canvas {
 
   polygon(x, y, x2, y2, x3, y3, x4, y4, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-    el.setAttribute("points", `
-    ${fixed ? x : x+this.#cameraPos.x},
-    ${fixed ? y : y+this.#cameraPos.y}
-    ${fixed ? x2 : x2+this.#cameraPos.x},
-    ${fixed ? y2 : y2+this.#cameraPos.y}
-    ${fixed ? x3 : x3+this.#cameraPos.x}, 
-    ${fixed ? y3 : y3+this.#cameraPos.y}
-    ${fixed ? x4 : x4+this.#cameraPos.x},
-    ${fixed ? y4 : y4+this.#cameraPos.y}`);
+    el.setAttribute(
+      "points",
+      `
+    ${fixed ? x : x + this.#cameraPos.x},
+    ${fixed ? y : y + this.#cameraPos.y}
+    ${fixed ? x2 : x2 + this.#cameraPos.x},
+    ${fixed ? y2 : y2 + this.#cameraPos.y}
+    ${fixed ? x3 : x3 + this.#cameraPos.x}, 
+    ${fixed ? y3 : y3 + this.#cameraPos.y}
+    ${fixed ? x4 : x4 + this.#cameraPos.x},
+    ${fixed ? y4 : y4 + this.#cameraPos.y}`
+    );
     el.setAttribute("fill", this.#fillColor);
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
@@ -167,7 +170,11 @@ class Canvas {
 
   image(img, x, y, width, height, fixed, aspect) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
-    if(!aspect){el.setAttribute("preserveAspectRatio", "none");}
+    el.setAttribute("href", img);
+    
+    if (!aspect) {
+      el.setAttribute("preserveAspectRatio", "none");
+    }
 
     el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
     el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
@@ -175,8 +182,14 @@ class Canvas {
     el.setAttribute("height", height || 100);
     // el.style.width = 1000 + 'px'
     // el.style.height = height + 'px'
-    el.setAttribute("href", img);
     this.#canvas.append(el);
+  }
+
+  getAspect(src) {
+    let aspect = 0;
+    let img = new Image();   // Create new img element
+    img.src = src;
+      return img;
   }
   //COLOR & STYLE
   background(r, g, b, a) {
@@ -187,7 +200,7 @@ class Canvas {
       this.#canvas.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
     } else if (r != undefined && g != undefined) {
       this.#canvas.style.backgroundColor = `rgba(${r}, ${r}, ${r}, ${255})`;
-    } else if(r) {
+    } else if (r) {
       this.#canvas.style.backgroundColor = r;
     }
   }
@@ -238,10 +251,9 @@ class Canvas {
 
   constrain(aNumber, aMin, aMax) {
     return aNumber > aMax ? aMax : aNumber < aMin ? aMin : aNumber;
-
   }
   lerp(value1, value2, amt) {
-    return ((value2 - value1) * amt) + value1;
+    return (value2 - value1) * amt + value1;
   }
 
   //line collide
@@ -257,7 +269,7 @@ class Canvas {
     let y = point2.y - point1.y;
     let m = y / x;
     let b = point1.y - m * point1.x;
-    return { m: m, b: b, h: y, w:x };
+    return { m: m, b: b, h: y, w: x };
   }
   collideLine(line, p, xOffset, yOffset) {
     return line.m * (p.x + xOffset) + line.b + yOffset;

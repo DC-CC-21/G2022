@@ -85,7 +85,6 @@ class Point {
     c.strokeWeight(1);
     c.stroke(0);
     c.ellipse(this.x, this.y, this.radius, this.radius);
-
   }
 
   isin(mX, mY) {
@@ -93,7 +92,6 @@ class Point {
   }
 
   hover(mX, mY) {
-
     if (this.clicked) {
       this.isHovered = true;
       // this.x = e.offsetX;
@@ -197,7 +195,6 @@ const controlBtns = [left, right, up, down];
 //#endregion
 
 class PowerUp {}
-class Enemey {}
 
 let worldPoints = [
   [
@@ -301,47 +298,47 @@ let worldPoints = [
     { x: 3520, y: 430 },
   ],
   [
-    {x: 0, y: 600},
-    {x: 76, y: 610},
-    {x: 152, y: 621},
-    {x: 228, y: 620},
-    {x: 304, y: 606},
-    {x: 380, y: 591},
-    {x: 456, y: 589},
-    {x: 532, y: 589},
-    {x: 608, y: 589},
-    {x: 684, y: 573},
-    {x: 760, y: 557},
-    {x: 836, y: 528},
-    {x: 912, y: 525},
-    {x: 988, y: 517},
-    {x: 1064, y: 502},
-    {x: 1140, y: 478},
-    {x: 1216, y: 461},
-    {x: 1292, y: 460},
-    {x: 1368, y: 461},
-    {x: 1444, y: 476},
-    {x: 1520, y: 492},
-    {x: 1596, y: 507},
-    {x: 1672, y: 508},
-    {x: 1748, y: 494},
-    {x: 1824, y: 492},
-    {x: 1900, y: 493},
-    {x: 1976, y: 508},
-    {x: 2052, y: 491},
-    {x: 2128, y: 461},
-    {x: 2204, y: 430},
-    {x: 2280, y: 414},
-    {x: 2356, y: 412},
-    {x: 2432, y: 396},
-    {x: 2508, y: 381},
-    {x: 2584, y: 379},
-    {x: 2660, y: 380},
-    {x: 2736, y: 422},
-    {x: 2812, y: 442},
-    {x: 2888, y: 458},
-    {x: 2964, y: 462},
-    {x: 3040, y: 475},
+    { x: 0, y: 600 },
+    { x: 76, y: 610 },
+    { x: 152, y: 621 },
+    { x: 228, y: 620 },
+    { x: 304, y: 606 },
+    { x: 380, y: 591 },
+    { x: 456, y: 589 },
+    { x: 532, y: 589 },
+    { x: 608, y: 589 },
+    { x: 684, y: 573 },
+    { x: 760, y: 557 },
+    { x: 836, y: 528 },
+    { x: 912, y: 525 },
+    { x: 988, y: 517 },
+    { x: 1064, y: 502 },
+    { x: 1140, y: 478 },
+    { x: 1216, y: 461 },
+    { x: 1292, y: 460 },
+    { x: 1368, y: 461 },
+    { x: 1444, y: 476 },
+    { x: 1520, y: 492 },
+    { x: 1596, y: 507 },
+    { x: 1672, y: 508 },
+    { x: 1748, y: 494 },
+    { x: 1824, y: 492 },
+    { x: 1900, y: 493 },
+    { x: 1976, y: 508 },
+    { x: 2052, y: 491 },
+    { x: 2128, y: 461 },
+    { x: 2204, y: 430 },
+    { x: 2280, y: 414 },
+    { x: 2356, y: 412 },
+    { x: 2432, y: 396 },
+    { x: 2508, y: 381 },
+    { x: 2584, y: 379 },
+    { x: 2660, y: 380 },
+    { x: 2736, y: 422 },
+    { x: 2812, y: 442 },
+    { x: 2888, y: 458 },
+    { x: 2964, y: 462 },
+    { x: 3040, y: 475 },
   ],
 ];
 
@@ -395,6 +392,9 @@ let blocks = [
   ),
 ];
 let coins = [new Coin(200, 200, blockSize)];
+let enemies = [
+  new Enemy(200, 100, blockSize*3, 'thundercloud')
+];
 let p = new Player(blockSize);
 
 let x = 0;
@@ -405,21 +405,29 @@ console.log(points[points.length - 1].x);
 
 draw = function () {
   c.background();
-  c.image("assets/Bground1.jpg", c.cameraPos.x/3, 0, 1680, Height, true, true);
+  c.image(
+    "assets/Bground1.jpg",
+    c.cameraPos.x / 3,
+    0,
+    1680,
+    Height,
+    true,
+    true
+  );
   points.forEach((point) => point.display());
   coins.forEach((coin) => coin.display());
   connectTheDots(points);
+  // c.image(
+  //   "assets/thundercloud.svg",
+  //   50,
+  //   375,
+  //   100,
+  //   500,
+  //   false,
+  //   true
+  // );
   c.image(
-    "assets/crystal.png",
-    50,
-    375,
-    100,
-    50,
-    false,
-    true
-  );
-    c.image(
-    "assets/newBground2.png",
+    "assets/newBground2Small.png",
     0,
     0,
     points[points.length - 1].x,
@@ -432,6 +440,13 @@ draw = function () {
   // c.rect(x, 100, 100, 100);
 
   blocks.forEach((block) => block.display());
+  enemies.forEach((enemy, index) => {
+    enemy.move(points, blocks);
+    enemy.display();
+    if(enemy.destroy){
+      enemies.pop(index)
+    }
+  });
   p.move(points, blocks, coins);
   p.display();
 
