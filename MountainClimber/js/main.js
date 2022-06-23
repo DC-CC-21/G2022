@@ -1,12 +1,44 @@
 console.log("Main is Loading...");
 
-//program for creating mario worlds
-
 //#region Canvas
 const canvas = document.getElementById("svgCanvas");
 canvas.style.margin = "auto";
 const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
 const pointSize = document.getElementById("pointSize");
+//#endregion
+
+const mapWidth = 746;
+const mapHeight = 706;
+pointSize.value = 10;
+
+//#region document elements
+const dispPSize = document.getElementById("currentPSize");
+const CWidth = document.getElementById("CWidth");
+const CHeight = document.getElementById("CHeight");
+const maxAValue = document.getElementById("maxAValue");
+//#endregion
+
+//#region constants
+
+//size
+const blockSize = c.map(50, 0, 706, 0, Height);
+const heartSize = c.map(50, 0, 706, 0, Height);
+const heartOffset = c.map(10, 0,706, 0,Height)
+
+//mouse, keys, and touch
+let mouseX = 0;
+let mouseY = 0;
+let mouseT = [];
+let mouseIsPressed = false;
+let keys = [];
+let points = [];
+let heartDelay = 50;
+const btnSize = c.map(120,0,706,0,Height)
+const btnOffset = c.map(30, 0, 706, 0, Height)
+//game
+let G = c.map(0.35, 0, 706, 0, Height);
+let collectedCoins = 0;
+let level = 3;
 //#endregion
 
 const errorContainer = document.getElementById("errorContainer");
@@ -27,35 +59,6 @@ window.onerror = function (error, source, lineno, colno, err) {
   });
   errorContainer.append(el);
 };
-const mapWidth = 746;
-const mapHeight = 706;
-pointSize.value = 10;
-let collectedCoins = 0;
-
-////  RENAME MARIO
-
-//#region document elements
-const dispPSize = document.getElementById("currentPSize");
-const CWidth = document.getElementById("CWidth");
-const CHeight = document.getElementById("CHeight");
-const maxAValue = document.getElementById("maxAValue");
-//#endregion
-
-//#region constants
-const blockSize = c.map(50, 0, 706, 0, Height);
-
-//junk
-let G = c.map(0.35, 0, 706, 0, Height);
-let MAX_ANGLE = 60;
-let mouseX = 0;
-let mouseY = 0;
-let mouseT = [];
-let mouseIsPressed = false;
-let keys = [];
-let points = [];
-let level = 3;
-let WorldWidth = 0;
-//#endregion
 
 class Point {
   constructor(x, y) {
@@ -144,8 +147,8 @@ class Controls {
   constructor(x, y, type) {
     this.x = x; //c.map(x,0, 746,0,Width);
     this.y = y;
-    this.w = c.map(70, 0, 706, 0, Height);
-    this.h = c.map(70, 0, 706, 0, Height);
+    this.w = btnSize
+    this.h = btnSize
 
     this.pressed = false;
     this.type = type;
@@ -172,23 +175,23 @@ class Controls {
 }
 //#region Buttons
 const left = new Controls(
-  c.map(30, 0, 706, 0, Height),
-  c.map(600, 0, 706, 0, Height),
+  btnOffset,
+  Height-btnSize-btnOffset/2,
   "Left"
 );
 const right = new Controls(
-  c.map(120, 0, 706, 0, Height),
-  c.map(600, 0, 706, 0, Height),
+  btnOffset+btnSize+btnOffset/2,
+  Height-btnSize-btnOffset/2,
   "Right"
 );
 const up = new Controls(
-  Width - c.map(100, 0, 706, 0, Height),
-  c.map(520, 0, 706, 0, Height),
+  Width - btnSize-btnOffset,
+  Height-btnSize-btnOffset/2-btnSize-btnOffset/2,
   "Up"
 );
 const down = new Controls(
-  Width - c.map(100, 0, 706, 0, Height),
-  c.map(600, 0, 706, 0, Height),
+  Width-btnSize-btnOffset,
+  Height-btnSize-btnOffset/2,
   "Down"
 );
 const controlBtns = [left, right, up, down];

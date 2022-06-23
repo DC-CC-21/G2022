@@ -15,24 +15,32 @@ class Player {
     this.bVec = 0;
 
     this.landedPos = { x: this.x, y: this.y };
+    this.lives = 3;
+    this.heartDelay = 0;
+    
   }
 
   display() {
     // c.fill(255, 0, 0);
     // c.rect(this.x, this.y, this.w, this.h);
+    for(let i = 0; i < this.lives; i ++){
+      c.image("assets/heart.png", heartOffset+i*heartSize*1.1, heartOffset,heartSize, heartSize, true, false);
+    }
     c.image("assets/googly.jpg", this.x, this.y, this.w, this.h);
   }
 
   move(
     land,
     blocks,
-    coins /* Dictionary of Junk to collide with ex. blocks, coins, etc... */
+    coins 
   ) {
+    this.heartDelay -= this.heartDelay > 0 ? 1 : 0;
     this.prevX = this.x;
     this.prevY = this.y;
     this.grav += G;
     this.y += this.grav;
     this.canJump = false;
+
 
     for (let i = 0; i < land.length - 1; i++) {
       if (c.insideLineBounds(land[i], land[i + 1], this)) {

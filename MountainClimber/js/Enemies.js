@@ -42,14 +42,19 @@ class Enemy {
             x: this.x,
             y: this.y,
           };
-        }
+        } 
         // break;
       }
     }
     this.x += 0.5;
 
-    if(c.rectCollide(p, this) && p.y+p.h*0.8 < this.y){
-        this.alive = false;
+    if(c.rectCollide(p, this)){
+        if(p.y+p.h*0.8 < this.y){
+            this.alive = false;
+        } else if(p.heartDelay <= 0){
+            p.lives -=1;
+            p.heartDelay = heartDelay
+        }
     }
     if(!this.alive){
         this.die()
