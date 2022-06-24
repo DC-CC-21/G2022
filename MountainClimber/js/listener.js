@@ -40,11 +40,13 @@ document.addEventListener("touchstart", (e) => {
 });
 document.addEventListener("touchmove", (e) => {
   mouseT = e.touches;
+  return false
 });
 document.addEventListener("touchend", (e) => {
   e.preventDefault();
   e.stopImmediatePropagation();
   mouseT = e.touches;
+  return false
 });
 document.addEventListener("touchcancel", (e) => {});
 //#endregion

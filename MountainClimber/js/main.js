@@ -23,7 +23,7 @@ const maxAValue = document.getElementById("maxAValue");
 //size
 const blockSize = c.map(50, 0, 706, 0, Height);
 const heartSize = c.map(50, 0, 706, 0, Height);
-const heartOffset = c.map(10, 0,706, 0,Height)
+const heartOffset = c.map(10, 0, 706, 0, Height);
 
 //mouse, keys, and touch
 let mouseX = 0;
@@ -33,8 +33,8 @@ let mouseIsPressed = false;
 let keys = [];
 let points = [];
 let heartDelay = 50;
-const btnSize = c.map(120,0,706,0,Height)
-const btnOffset = c.map(30, 0, 706, 0, Height)
+const btnSize = c.map(120, 0, 706, 0, Height);
+const btnOffset = c.map(30, 0, 706, 0, Height);
 //game
 let G = c.map(0.35, 0, 706, 0, Height);
 let collectedCoins = 0;
@@ -147,8 +147,8 @@ class Controls {
   constructor(x, y, type) {
     this.x = x; //c.map(x,0, 746,0,Width);
     this.y = y;
-    this.w = btnSize
-    this.h = btnSize
+    this.w = btnSize;
+    this.h = btnSize;
 
     this.pressed = false;
     this.type = type;
@@ -174,24 +174,20 @@ class Controls {
   }
 }
 //#region Buttons
-const left = new Controls(
-  btnOffset,
-  Height-btnSize-btnOffset/2,
-  "Left"
-);
+const left = new Controls(btnOffset, Height - btnSize - btnOffset / 2, "Left");
 const right = new Controls(
-  btnOffset+btnSize+btnOffset/2,
-  Height-btnSize-btnOffset/2,
+  btnOffset + btnSize + btnOffset / 2,
+  Height - btnSize - btnOffset / 2,
   "Right"
 );
 const up = new Controls(
-  Width - btnSize-btnOffset,
-  Height-btnSize-btnOffset/2-btnSize-btnOffset/2,
+  Width - btnSize - btnOffset,
+  Height - btnSize - btnOffset / 2 - btnSize - btnOffset / 2,
   "Up"
 );
 const down = new Controls(
-  Width-btnSize-btnOffset,
-  Height-btnSize-btnOffset/2,
+  Width - btnSize - btnOffset,
+  Height - btnSize - btnOffset / 2,
   "Down"
 );
 const controlBtns = [left, right, up, down];
@@ -395,9 +391,7 @@ let blocks = [
   ),
 ];
 let coins = [new Coin(200, 200, blockSize)];
-let enemies = [
-  new Enemy(200, 100, blockSize*3, 'thundercloud')
-];
+let enemies = [new Enemy(200, 100, blockSize * 3, "thundercloud")];
 let p = new Player(blockSize);
 
 let x = 0;
@@ -446,8 +440,8 @@ draw = function () {
   enemies.forEach((enemy, index) => {
     enemy.move(points, blocks);
     enemy.display();
-    if(enemy.destroy){
-      enemies.pop(index)
+    if (enemy.destroy) {
+      enemies.pop(index);
     }
   });
   p.move(points, blocks, coins);
