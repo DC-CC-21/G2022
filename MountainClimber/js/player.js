@@ -76,7 +76,7 @@ class Player {
     this.collideBlock(blocks, "x");
     this.x = c.constrain(this.x, 0, Width * 30);
 
-    this.jump();
+    this.jump(1);
 
     this.collideCoin(coins);
     c.moveCamera(this, WorldWidth);
@@ -151,14 +151,15 @@ class Player {
     }
   }
 
-  jump() {
+  jump(scale) {
+
     if (keys["ArrowUp"] && this.canJump) {
       // this.grav -= 10;
-      this.grav -= this.jumpHeight;
+      this.grav -= this.jumpHeight*scale;
     } else if (mouseIsPressed) {
       for (let i = 0; i < mouseT.length; i++) {
         if (up.isin(mouseT[i].clientX, mouseT[i].clientY) && this.canJump) {
-          this.grav -= this.jumpHeight;
+          this.grav -= this.jumpHeight*scale;
         }
       }
     }

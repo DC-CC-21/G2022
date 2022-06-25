@@ -255,7 +255,9 @@ class Canvas {
   lerp(value1, value2, amt) {
     return (value2 - value1) * amt + value1;
   }
-
+  random(min,max){
+    return Math.random() * (max-min) + min;
+}
   //line collide
   insideLineBounds(point1, point2, p) {
     let x = point1.x > point2.x ? point2.x : point1.x;
@@ -281,6 +283,7 @@ class Canvas {
       a.x - b.x < b.w && b.x - a.x < a.w && a.y - b.y < b.h && b.y - a.y < a.h
     );
   }
+
 }
 
 function recursive(frame) {

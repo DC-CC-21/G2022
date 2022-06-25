@@ -391,7 +391,10 @@ let blocks = [
   ),
 ];
 let coins = [new Coin(200, 200, blockSize)];
-let enemies = [new Enemy(200, 100, blockSize * 3, "thundercloud")];
+let enemies = [
+  new Enemy(200, 100, blockSize * 2, "thundercloud"),
+  new Enemy(50, 0, blockSize * 2.5, "thundercloud2")
+];
 let p = new Player(blockSize);
 
 let x = 0;
@@ -437,13 +440,13 @@ draw = function () {
   // c.rect(x, 100, 100, 100);
 
   blocks.forEach((block) => block.display());
-  enemies.forEach((enemy, index) => {
-    enemy.move(points, blocks);
-    enemy.display();
-    if (enemy.destroy) {
-      enemies.pop(index);
+  for(let i = enemies.length-1; i >= 0; i --){
+    enemies[i].move(points, blocks);
+    enemies[i].display();
+    if (enemies[i].destroy) {
+      enemies.splice(i,1);
     }
-  });
+  };
   p.move(points, blocks, coins);
   p.display();
 
