@@ -12,6 +12,8 @@
 }
 img {
   width: 100%;
+  /* width:auto; */
+  height: 100%;
 }
 /*#endregion SETUP*/
 /*#region SMALL CSS*/

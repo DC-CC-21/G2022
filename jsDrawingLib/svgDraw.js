@@ -170,7 +170,7 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  image(img, x, y, width, height, fixed, aspect) {
+  image(img, x, y, width, height, fixed=false, aspect=false) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
     el.setAttribute("href", img);
 
