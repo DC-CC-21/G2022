@@ -17,30 +17,58 @@ class Player {
     this.landedPos = { x: this.x, y: this.y };
     this.lives = 3;
     this.heartDelay = 0;
-    
+
+    //lightning
+    this.lightningCounter = 0;
+    this.lightningImg = ~~c.random(0, 3);
+    this.lightningDelay = 0;
   }
 
   display() {
+    if (this.lightningCounter > 0) {
+      this.lightningCounter -= 1;
+    }
     // c.fill(255, 0, 0);
     // c.rect(this.x, this.y, this.w, this.h);
-    for(let i = 0; i < this.lives; i ++){
-      c.image("assets/heart.png", heartOffset+i*heartSize*1.1, heartOffset,heartSize, heartSize, true, false);
+    for (let i = 0; i < this.lives; i++) {
+      c.image(
+        "assets/heart.png",
+        heartOffset + i * heartSize * 1.1,
+        heartOffset,
+        heartSize,
+        heartSize,
+        true,
+        false
+      );
     }
+    // if(this.lightningCounter%(~~c.random(5,10)) == 0){
     c.image("assets/googly.jpg", this.x, this.y, this.w, this.h);
+    if (this.lightningCounter <= 0) {
+    } else {
+      if (this.lightningDelay <= 0) {
+        this.lightningImg = ~~c.random(0, 4);
+        this.lightningDelay = c.random(2, 8);
+      } else {
+        this.lightningDelay -= 1;
+      }
+
+      c.image(
+        `assets/lightningGoogly${this.lightningImg}.svg`,
+        this.x,
+        this.y,
+        this.w,
+        this.h
+      );
+    }
   }
 
-  move(
-    land,
-    blocks,
-    coins 
-  ) {
+  move(land, blocks, coins) {
     this.heartDelay -= this.heartDelay > 0 ? 1 : 0;
     this.prevX = this.x;
     this.prevY = this.y;
     this.grav += G;
     this.y += this.grav;
     this.canJump = false;
-
 
     for (let i = 0; i < land.length - 1; i++) {
       if (c.insideLineBounds(land[i], land[i + 1], this)) {
@@ -152,14 +180,13 @@ class Player {
   }
 
   jump(scale) {
-
     if (keys["ArrowUp"] && this.canJump) {
       // this.grav -= 10;
-      this.grav -= this.jumpHeight*scale;
+      this.grav -= this.jumpHeight * scale;
     } else if (mouseIsPressed) {
       for (let i = 0; i < mouseT.length; i++) {
         if (up.isin(mouseT[i].clientX, mouseT[i].clientY) && this.canJump) {
-          this.grav -= this.jumpHeight*scale;
+          this.grav -= this.jumpHeight * scale;
         }
       }
     }

@@ -17,18 +17,24 @@ class Enemy {
     this.alive = true;
     this.destroy = false;
 
-    //Lightning
-    this.ltng = 1;
-    this.ligntningDelay = 10;
-    this.ligntningSize = this.w * 0.8;
-    this.ligntningOffset = (this.w - this.ligntningSize) / 2;
+    this[this.src+'Setup']()
   }
   display() {
     // c.rect(this.x, this.y, this.w, this.h);
     this[this.src]();
   }
-  thundercloud() {
-    c.image(this.path, this.x, this.y, this.w, this.h, false, false);
+  //   thundercloud() {
+  //     c.image(this.path, this.x, this.y, this.w, this.h, false, false);
+  //   }
+
+  //thundercloud
+  thundercloud2Setup() {
+    //Lightning
+    this.ltng = 1;
+    this.ligntningDelay = 10;
+    this.ligntningSize = this.w * 0.8;
+    this.ligntningOffset = (this.w - this.ligntningSize) / 2;
+    this.speed = c.map(1,0,706,0,Height)
   }
   thundercloud2() {
     this.ligntningDelay -= 1;
@@ -59,12 +65,51 @@ class Enemy {
       false
     );
   }
-  move(land, blocks) {
-    this.grav += G;
-    this.y += this.grav;
+  thundercloud2Movement(land) {
+    this.gravity()
+    this.collideWithGround(land);
+    this.x += this.speed;
+    this.collideWithPlayer()
+  }
 
+  //fireball
+  fireballSetup(){
+    this.canJump = false;
+    this.rotation = 0;
+    this.direction = Math.random() > 0.5 ? -1 : 1;
+    this.speed = this.direction * 2;
+    console.log(this.speed)
+    this.jumpHeight = c.map(8,0,706,0,Height)
+    this.groundY = this.y;
+    this.groundX = this.x;
+  }
+  fireball() {
+    // this.rotation = Math.atan2(this.y-this.groundY, this.x-this.groundX)
+    // this.rotation = c.map(this.rotation*(180/Math.PI),-40,40,-180,0)
+    this.prevRot = this.rotation;
+    this.rotation = 360*c.sin(this.grav*2)
+    this.rotation = c.lerp(this.prevRot, this.rotation, 0.2)
+    this.rotation = c.constrain(this.rotation, -90, 90)
+    c.rotate((this.rotation-90)*this.speed/2,this.w/2, this.h/2)
+    c.image(this.path, this.x, this.y, this.w, this.h, false, false);
+    c.reset()
+  }
+  fireballMovement(land) {
+    this.jump = false;
+    this.gravity()
+    this.collideWithGround(land)
+    if(this.jump){
+        this.grav -= this.jumpHeight
+    }
+    this.x += this.speed;
+    
+  }
+
+  //constant
+  collideWithGround(land) {
     for (let i = 0; i < land.length - 1; i++) {
-      if (c.insideLineBounds(land[i], land[i + 1], this)) {
+      let collision = c.insideLineBounds(land[i], land[i + 1], this)
+        if (collision) {
         let line = c.lineSlope(land[i], land[i + 1], this);
         let y = c.collideLine(line, this, this.xOffset, this.yOffset);
 
@@ -77,17 +122,31 @@ class Enemy {
         if (dist < this.h) {
           this.grav = 0;
           this.y = y - this.h;
-          this.canJump = true;
+          this.jump = true;
           this.landedPos = {
             x: this.x,
             y: this.y,
           };
         }
         // break;
+        return true;
       }
     }
-    this.x += 0.5;
+  }
+  gravity(gravScale=1){
+    this.grav += G*gravScale;
+    this.y += this.grav;
 
+    if (this.y > Height) {
+      this.destroy = true;
+    }
+
+  }
+
+
+  collideWithPlayer() {
+    switch(this.src){
+        case 'thundercloud2':
     if (c.rectCollide(p, this)) {
       if (p.y + p.h * 0.8 < this.y && p.grav > 0) {
         this.alive = false;
@@ -98,11 +157,16 @@ class Enemy {
         }
       } else if (p.heartDelay <= 0) {
         p.lives -= 1;
+        p.lightningCounter = 100;
         p.heartDelay = heartDelay;
       }
+    } else {
+        p.lightningCounter = 0;
     }
+
     if (!this.alive) {
       this.die();
+    }
     }
   }
   die() {

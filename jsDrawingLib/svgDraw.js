@@ -10,7 +10,9 @@ class Canvas {
   #fillColor = "#fff";
   #strokeColor = "#000";
   #strokeWeightSize = 1;
-  #rotation = 90;
+  #rotation = 0;
+  #rotationOffsetX = 0;
+  #rotationOffsetY = 0;
   #textSize = 18;
   #textAlign = "left";
   #cameraPos = { x: 0, y: 0 };
@@ -171,7 +173,10 @@ class Canvas {
   image(img, x, y, width, height, fixed, aspect) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
     el.setAttribute("href", img);
-    
+
+
+    el.setAttribute('transform', `rotate(${this.#rotation} ${x+this.#rotationOffsetX}, ${y+this.#rotationOffsetY})`)
+   
     if (!aspect) {
       el.setAttribute("preserveAspectRatio", "none");
     }
@@ -180,6 +185,14 @@ class Canvas {
     el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
     if(!aspect){el.setAttribute("width", width || 100);}
     el.setAttribute("height", height || 100);
+    
+    //rotate
+
+    //end rotate
+
+
+
+
     // el.style.width = 1000 + 'px'
     // el.style.height = height + 'px'
     this.#canvas.append(el);
@@ -234,15 +247,31 @@ class Canvas {
   }
 
   //transformations
-  rotate(deg) {
+  rotate(deg, xOffset, yOffset) {
     this.#rotation = deg;
+    this.#rotationOffsetX = this.cameraPos.x+xOffset;
+    this.#rotationOffsetY = this.cameraPos.y+yOffset;
   }
-
+  reset(){
+    this.fill(255,0,0)
+    this.stroke(0,0,0)
+    this.rotate(0,0,0)
+  }
   //math type functions
   dist(x, y, x2, y2) {
     let X = x - x2;
     let Y = y - y2;
     return Math.sqrt(X * X + Y * Y);
+  }
+
+  sin(deg){
+    return Math.sin(deg/(180/Math.PI))
+  }
+  cos(deg){
+    return Math.cos(deg/(180/Math.PI))
+  }
+  tan(deg){
+    return Math.tan(deg/(180/Math.PI))
   }
 
   map(value, istart, istop, ostart, ostop) {
