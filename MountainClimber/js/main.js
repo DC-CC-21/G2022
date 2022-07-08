@@ -394,8 +394,8 @@ let coins = [new Coin(200, 200, blockSize)];
 let enemies = [
   // new Enemy(200, 100, blockSize * 2, "thundercloud"),
   new Enemy(290, 0, blockSize * 2.5, "thundercloud2"),
-  new Enemy(500, 0, blockSize * 1, "fireball")
-    // new Enemy(300, 0, blockSize * 1, "fireball")
+  new Enemy(500, 0, blockSize * 1, "fireball"),
+  // new Enemy(300, 0, blockSize * 1, "fireball")
 ];
 let p = new Player(blockSize);
 
@@ -404,6 +404,17 @@ let x = 0;
 createWorld(worldPoints[level]); //create point list
 WorldWidth = points[points.length - 1].x;
 console.log(points[points.length - 1].x);
+
+var ps = new ParticleSystem(
+  Width + 10,
+  Height / 3,
+  100,
+  { min: -0.05, max: 0 },
+  { min: 0, max: 0.05 },
+  200,
+  10
+);
+
 
 draw = function () {
   c.background();
@@ -438,18 +449,22 @@ draw = function () {
     true
   );
 
-  x += 1;
-  // c.rect(x, 100, 100, 100);
+  // TEST STUFF HERE
+  ps.run();
+  c.fill(255, 255, 255, 0);
+  c.rect(100, 100, 100, 100);
+  c.ellipse(100, 100, 100, 100);
+  //
 
   blocks.forEach((block) => block.display());
-  for(let i = enemies.length-1; i >= 0; i --){
+  for (let i = enemies.length - 1; i >= 0; i--) {
     // enemies[i].move(points, blocks);
-    enemies[i][enemies[i].src+'Movement'](points);
+    enemies[i][enemies[i].src + "Movement"](points);
     enemies[i].display();
     if (enemies[i].destroy) {
-      enemies.splice(i,1);
+      enemies.splice(i, 1);
     }
-  };
+  }
   p.move(points, blocks, coins);
   p.display();
 

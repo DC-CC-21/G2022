@@ -83,7 +83,7 @@ class Player {
         let dist = c.dist(this.x + this.w / 2, this.y, this.x + this.w / 2, y);
         if (dist < this.h) {
           this.grav = 0;
-          this.y = y - this.h;
+          this.y = c.lerp(this.y, y - this.h, 0.2);
           this.canJump = true;
           this.landedPos = {
             x: this.x,

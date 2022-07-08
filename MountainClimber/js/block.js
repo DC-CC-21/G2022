@@ -128,9 +128,9 @@ class Block {
     // console.log(p)
     if (c.rectCollide(this, p)) {
       if(!idx){
-        p.x = this.x + this.w;
+        p.x = p.x, this.x + this.w
       } else{
-        p.x = this.x - p.w
+        p.x = p.x, this.x - p.w
       }
       
       // p.y = this.y
