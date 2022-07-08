@@ -1,4 +1,4 @@
-import * as THREE from '../three/src/Three.js'
+import * as THREE from "../three/src/Three.js";
 
 //setup scene and render
 function createCamera() {
@@ -18,9 +18,16 @@ function createRenderer(container) {
   return renderer;
 }
 
-function directionLight(scene) {
-  let light = new THREE.DirectionalLight(0xffffff, 1, 100);
-  light.position.set(5, 10, 0); //default; light shining from top
+function directionLight(scene, position) {
+  let light = new THREE.DirectionalLight(0xffffff, 5);
+  light.position.set(position[0], position[1], position[2]); //default; light shining from top
+
+  let t = new THREE.Object3D();
+  t.translateX(0);
+  t.translateY(0);
+  t.translateZ(0);
+  light.target = t
+
   light.castShadow = true; // default false
   scene.add(light);
 
@@ -31,6 +38,11 @@ function directionLight(scene) {
   light.shadow.camera.far = 500; // default
 
   return light;
+}
+function AmbientLight(scene, intensity) {
+  const ambientLight = new THREE.AmbientLight("#404040", 1);
+  scene.add(ambientLight);
+  return ambientLight;
 }
 
 function loadEquirectangular(scene, src) {
@@ -95,29 +107,27 @@ function plane(scene, pos, dim, color, cast, receive) {
 }
 
 //trig
-function cos(deg){
-  return Math.cos(deg/(180/Math.PI))
+function cos(deg) {
+  return Math.cos(deg / (180 / Math.PI));
 }
-function sin(deg){
-  return Math.sin(deg/(180/Math.PI))
+function sin(deg) {
+  return Math.sin(deg / (180 / Math.PI));
 }
 
-export{
+export {
   //setup scene and render
   createCamera,
   createRenderer,
   directionLight,
+  AmbientLight,
   loadEquirectangular,
-
   //random
   dist,
   getNormalRotation,
-
   //geo
   cube,
   plane,
-
   //trig
   sin,
-  cos
-  }
+  cos,
+};
