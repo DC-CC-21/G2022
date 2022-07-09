@@ -1,3 +1,23 @@
 *{
     margin:0px;
 }
+nav{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr;
+}
+h3 {
+}
+
+#overlap{
+    background-color:#aaaaaa55;
+    position:absolute;
+    float:right;
+}
+
+span{
+    /* display:grid; */
+    display:flex;
+    justify-content:row;
+    align-items: center;
+    width:auto;
+}

@@ -49,7 +49,7 @@
       ct.loadEquirectangular(scene, "./assets/background.JPG");
       //LIGHTS
 
-      const light = ct.directionLight(scene);
+      const light = ct.directionLight(scene,1);
       const helper = new THREE.DirectionalLightHelper(light, 5);
       scene.add(helper);
       const ambientLight = new THREE.AmbientLight(0x404040, 3); // soft white light

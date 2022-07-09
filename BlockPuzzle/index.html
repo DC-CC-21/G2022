@@ -1,17 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="style.css" rel="stylesheet" type="text/css" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
+    <div id="overlap">
+      <nav>
+        <span>
+          <input
+            type="number"
+            min="0"
+            max="50"
+            placeholder="0"
+            value="0"
+            id="dlight"
+          />
+        </span>
+        <span
+          ><input
+            type="number"
+            min="0"
+            max="50"
+            placeholder="0"
+            value="0"
+            id="alight"
+          />
+        </span>
+        <span>
+          <label>Box Rotation:</label>
+          <input
+            type="checkbox"
+            label="rotation"
+            id="rotation"
+            placeholder="true"
+            checked="true"
+          />
+        </span>
+      </nav>
+      <div>
+        <h3 id="3dBox">Box</h3>
+        <h3 id="3dPiece1">Box</h3>
+      </div>
+    </div>
     <div id="canvas"></div>
     <!-- <script src="../3D world/three/src/Three.js"></script> -->
     <script type="module" src="script.js"></script>
-
-
-</body>
+  </body>
 </html>

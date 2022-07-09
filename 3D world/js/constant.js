@@ -19,7 +19,7 @@ function createRenderer(container) {
 }
 
 function directionLight(scene, position) {
-  let light = new THREE.DirectionalLight(0xffffff, 5);
+  let light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(position[0], position[1], position[2]); //default; light shining from top
 
   let t = new THREE.Object3D();
