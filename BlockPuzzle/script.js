@@ -59,7 +59,8 @@ function loadModel(
   path,
   modelName = "Untitled",
   draggableObjs = false,
-  scene
+  scene,
+  data = {}
 ) {
   let p = document.createElement("p");
   p.setAttribute("id", modelName);
@@ -75,12 +76,21 @@ function loadModel(
       // box.userData.draggable = true;
       model.userData.name = modelName;
       scene.add(model);
-
+      
+      if(modelName == 'Target1'){
+      model.material.transparent = true;
+      model.material.opacity = 0;
+      }
       const box = new THREE.Box3();
       box.copy(model.geometry.boundingBox).applyMatrix4(model.matrixWorld);
       const helper = new THREE.Box3Helper(box, 0x000);
       model.add(helper);
 
+      if (Object.keys(data).length) {
+        Object.keys(data).forEach((key) => {
+          model.userData[key] = data[key];
+        });
+      }
       if (draggableObjs) {
         draggableObjs.push(model);
       }
@@ -108,10 +118,28 @@ function loadModel(
 }
 
 loadModel(loader, "assets/WoodenBlock.glb", "Box", [], scene);
-loadModel(loader, "assets/Target1.glb", "Target1", puzzleBox, scene);
-loadModel(loader, "assets/piece1.glb", "piece1", draggableObjs, scene);
+loadModel(loader, "assets/Target1.glb", "Target1", puzzleBox, scene, {
+  rotation: { x: 0, y: Math.PI, z: 0 },
+});
+loadModel(loader, "assets/Target2.glb", "Target1", puzzleBox, scene, {
+  rotation: { x: 0, y: -Math.PI/2, z: 0 },
+});
 
-loadModel(loader, "assets/piece2.glb", "piece5", draggableObjs, scene);
+loadModel(loader, "assets/piece1.glb", "piece1", draggableObjs, scene, {
+  offset: {
+    x: 0,
+    y: 0,
+    z: 0,
+  },
+});
+
+loadModel(loader, "assets/piece2.glb", "piece5", draggableObjs, scene, {
+  offset: {
+    x: 0,
+    y: 0,
+    z: 0,
+  },
+});
 
 // Load a glTF resource
 // loader.load(
@@ -271,7 +299,7 @@ const dragControls = new DragControls(
 let selectedObj = false;
 let mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
-let target = new THREE.Vector3(0,0,0)
+let target = new THREE.Vector3(0, 0, 0);
 
 function changeObjectColor(event) {
   // console.log(selectedObj.children)
@@ -301,11 +329,18 @@ dragControls.addEventListener("drag", (event) => {
   const found = raycaster.intersectObjects(puzzleBox);
   if (found.length > 0) {
     let intersect = found[0];
-    if(intersect){
-      target.copy(intersect.point)
-    console.log(intersect);
-    console.log(intersect.object.userData.name);
-      event.object.position.copy(intersect.point).add(intersect.face.normal);
+    if (intersect) {
+      target.copy(intersect.point);
+      console.log(intersect);
+      console.log(intersect.object.userData.name);
+      // event.object.position.copy(intersect.point).add(intersect.face.normal);
+      if (intersect.object) {
+        event.object.position.copy(intersect.object.position);
+        event.object.rotation.x = intersect.object.userData.rotation.x+event.object.userData.offset.x;
+        event.object.rotation.y = intersect.object.userData.rotation.y+event.object.userData.offset.y;
+        event.object.rotation.z = intersect.object.userData.rotation.z+event.object.userData.offset.z;
+      }
+
       // event.object.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
     }
   }
@@ -329,4 +364,32 @@ document.addEventListener("mousedown", (event) => {
 document.addEventListener("mousemove", (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
+document.getElementById("rotateX").addEventListener("click", () => {
+  if (selectedObj) {
+    selectedObj.userData.offset.x+=Math.PI/2;
+    selectedObj.rotation.x+=Math.PI/2;
+    if (selectedObj.rotation.y == Math.PI) {
+      // selectedObj.position.z = selectedObj.position.z -20
+    }
+  }
+});
+document.getElementById("rotateY").addEventListener("click", () => {
+  if (selectedObj) {
+    selectedObj.userData.offset.y+=Math.PI/2;
+    selectedObj.rotation.y+=Math.PI/2;
+    if (selectedObj.rotation.y == Math.PI) {
+      // selectedObj.position.z = selectedObj.position.z -20
+    }
+  }
+});
+document.getElementById("rotateZ").addEventListener("click", () => {
+  if (selectedObj) {
+    selectedObj.userData.offset.z+=Math.PI/2;
+    selectedObj.rotation.z+=Math.PI/2;
+    if (selectedObj.rotation.y == Math.PI) {
+      // selectedObj.position.z = selectedObj.position.z -20
+    }
+  }
 });
