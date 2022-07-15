@@ -77,13 +77,13 @@ function loadModel(
       model.userData.name = modelName;
       scene.add(model);
       
-      if(modelName == 'Target1'){
+      if(modelName.includes('Target')){
       model.material.transparent = true;
       model.material.opacity = 0;
       }
       const box = new THREE.Box3();
       box.copy(model.geometry.boundingBox).applyMatrix4(model.matrixWorld);
-      const helper = new THREE.Box3Helper(box, 0x000);
+      const helper = new THREE.Box3Helper(box, 0xffff00);
       model.add(helper);
 
       if (Object.keys(data).length) {
@@ -117,28 +117,52 @@ function loadModel(
   );
 }
 
+//models
+//box
 loadModel(loader, "assets/WoodenBlock.glb", "Box", [], scene);
+
+//targets
 loadModel(loader, "assets/Target1.glb", "Target1", puzzleBox, scene, {
   rotation: { x: 0, y: Math.PI, z: 0 },
 });
-loadModel(loader, "assets/Target2.glb", "Target1", puzzleBox, scene, {
+loadModel(loader, "assets/Target2.glb", "Target2", puzzleBox, scene, {
   rotation: { x: 0, y: -Math.PI/2, z: 0 },
 });
+loadModel(loader, "assets/Target3.glb", "Target3", puzzleBox, scene, {
+  rotation: { x: 0, y: -Math.PI/2, z: 0 },
+});
+loadModel(loader, "assets/Target4.glb", "Target4", puzzleBox, scene, {
+  rotation: { x: Math.PI/2, y: 0, z: 0 },
+});
+loadModel(loader, "assets/Target5.glb", "Target5", puzzleBox, scene, {
+  rotation: { x: Math.PI/2, y:0, z: 0 },
+});
+loadModel(loader, "assets/Target6.glb", "Target6", puzzleBox, scene, {
+  rotation: { x: Math.PI/2, y: 0, z: 0 },
+});
+loadModel(loader, "assets/Target7.glb", "Target7", puzzleBox, scene, {
+  rotation: { x: Math.PI/2, y:0, z: 0 },
+});
+loadModel(loader, "assets/Target8.glb", "Target7", puzzleBox, scene, {
+  rotation: { x: 0, y:0, z: 0 },
+});
 
+//pieces
 loadModel(loader, "assets/piece1.glb", "piece1", draggableObjs, scene, {
   offset: {
     x: 0,
     y: 0,
     z: 0,
   },
+  prev:new THREE.Vector3(0,0,0)
 });
-
 loadModel(loader, "assets/piece2.glb", "piece5", draggableObjs, scene, {
   offset: {
     x: 0,
     y: 0,
     z: 0,
   },
+  prev:new THREE.Vector3(0,0,0)
 });
 
 // Load a glTF resource
@@ -211,18 +235,32 @@ loadModel(loader, "assets/piece2.glb", "piece5", draggableObjs, scene, {
 
 /////////////////////////////
 console.log(dLight);
+let placePiece = false
+
 
 function animate() {
   controls.update();
   dLight.position.set(camera.position.x, camera.position.y, camera.position.z);
   cube1.rotation.x += 0.01;
   cube1.rotation.y += 0.01;
+  if(placePiece){
+    place()
+  }
   // cube1.rotation.z += 0.01;
   //   if(!controls.enabled){dragObj();}
   // if(draggableObjs.length > 1){
   // draggableObjs[1].rotation.z += 0.01;}
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
+}
+
+console.log(new THREE.Vector3(1,10,5.5).distanceTo(new THREE.Vector3(1,10,5.5)), '💩')
+function place(){
+  if (selectedObj.userData.prev.distanceTo(puzzleBox[0].position) < 1 && selectedObj.position.z-puzzleBox[7].position.z > 0) {
+    selectedObj.position.z -= 0.5
+  } else if (selectedObj.userData.prev.distanceTo(puzzleBox[7].position) < 1 && selectedObj.position.z-puzzleBox[0].position.z < 0) {
+    selectedObj.position.z += 0.5
+  }
 }
 
 //Listeners
@@ -300,6 +338,7 @@ let selectedObj = false;
 let mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 let target = new THREE.Vector3(0, 0, 0);
+;
 
 function changeObjectColor(event) {
   // console.log(selectedObj.children)
@@ -357,6 +396,7 @@ function map(value, istart, istop, ostart, ostop) {
 }
 
 document.addEventListener("mousedown", (event) => {
+  placePiece = false;
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 });
@@ -364,6 +404,19 @@ document.addEventListener("mousedown", (event) => {
 document.addEventListener("mousemove", (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+document.addEventListener("touchmove", (event) => {
+  mouse.x = (event.touches[0].clientX / Width) * 2 - 1;
+  mouse.y = -(event.touches[0].clientY / Height) * 2 + 1;
+});
+document.addEventListener("mouseup", (event) => {
+  
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  if (selectedObj) {
+    selectedObj.userData.prev.copy(selectedObj.position)
+    placePiece = true;
+  }
 });
 
 document.getElementById("rotateX").addEventListener("click", () => {
@@ -392,4 +445,12 @@ document.getElementById("rotateZ").addEventListener("click", () => {
       // selectedObj.position.z = selectedObj.position.z -20
     }
   }
+});
+document.getElementById("place").addEventListener("click", () => {
+  if (selectedObj) {
+    selectedObj.userData.prev.copy(selectedObj.position)
+    placePiece = true;
+    console.log(selectedObj.userData.prev.distanceTo(puzzleBox[0].position))
+  }
+  
 });
