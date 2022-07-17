@@ -360,6 +360,9 @@ function changeObjectColor(event) {
 }
 
 dragControls.addEventListener("drag", (event) => {
+  document.getElementById('mx').innerHTML = mouse.x
+  document.getElementById('my').innerHTML = mouse.y
+
   changeObjectColor(event);
 
   event.object.lookAt(target);
@@ -369,6 +372,7 @@ dragControls.addEventListener("drag", (event) => {
   if (found.length > 0) {
     let intersect = found[0];
     if (intersect) {
+      document.getElementById('ray').innerHTML = JSON.stringify(intersect, null, ' ')
       target.copy(intersect.point);
       console.log(intersect);
       console.log(intersect.object.userData.name);
@@ -402,10 +406,12 @@ document.addEventListener("mousedown", (event) => {
 });
 
 document.addEventListener("mousemove", (event) => {
+    placePiece = false;
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 });
 document.addEventListener("touchmove", (event) => {
+    placePiece = false;
   mouse.x = (event.touches[0].clientX / Width) * 2 - 1;
   mouse.y = -(event.touches[0].clientY / Height) * 2 + 1;
 });

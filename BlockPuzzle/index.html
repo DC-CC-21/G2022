@@ -6,30 +6,25 @@
 
     <link href="style.css" rel="stylesheet" type="text/css" />
     <title>Document</title>
+    <script type="importmap">
+            //move all imports to here  |
+            //                         \|/
+            {
+                "imports": {
+                    "three": "../3D world/three/src/Three.js",
+                    "renderpass": "../3D world/three/examples/jsm/postprocessing/RenderPass.js",
+                    "OrbitControls": "../3D world/three/examples/jsm/controls/OrbitControls.js",
+                    "DragControls": "../3D world/three/examples/jsm/controls/DragControls.js",
+                    "GLTFLoader": "../3D world/three/examples/jsm/loaders/GLTFLoader.js",
+                    "DRACOLoader": "../3D world/three/examples/jsm/loaders/DRACOLoader.js",
+                    "EffectComposer": "../3D world/three/examples/jsm/postprocessing/EffectComposer.js"
+                }
+            }
+    </script>
   </head>
-  <body>
+  <body>2
     <div id="overlap">
       <nav>
-        <span>
-          <input
-            type="number"
-            min="0"
-            max="50"
-            placeholder="0"
-            value="0"
-            id="dlight"
-          />
-        </span>
-        <span
-          ><input
-            type="number"
-            min="0"
-            max="50"
-            placeholder="0"
-            value="0"
-            id="alight"
-          />
-        </span>
         <span>
           <label>Box Rotation:</label>
           <input
@@ -48,12 +43,14 @@
         </span>
       </nav>
       <div id="Loading">
-
+        <p id="mx">mouseX</p>
+        <p id="my">mouseY</p>
+        <p id="ray">intersect</p>
       </div>
     </div>
     <div id="canvas"></div>
     <!-- <script src="../3D world/three/src/Three.js"></script> -->
-    <script type="module" src="script.js"></script>
+    <!-- <script type="module" src="script.js"></script> -->
+    <script type="module" src="script2.js"></script>
   </body>
 </html>
-
