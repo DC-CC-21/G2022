@@ -21,3 +21,37 @@ span{
     width:auto;
 
 }
+
+#pieceContainer {
+    background-color: #814114;
+    width: auto;
+    height:100vh;
+    overflow: scroll;
+    padding:5px;
+
+}::-webkit-scrollbar {
+    display: none;
+  }
+
+
+#pieceContainer div {
+    width: 100%;
+    height:auto;
+}
+
+img {
+    width:100%;
+    height:100%;
+}
+
+
+
+canvas {
+    width:100%;
+    height:100%;
+}
+
+body{
+    display:grid;
+    grid-template-columns: 25% 1fr;
+}

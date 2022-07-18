@@ -1,25 +1,25 @@
 import * as THREE from "../three/src/Three.js";
 
 //setup scene and render
-function createCamera() {
+function createCamera(width, height) {
   return new THREE.PerspectiveCamera(
     75,
-    window.innerWidth / window.innerHeight,
+    width/height,
     0.1,
     1000
   );
 }
-function createRenderer(container) {
+function createRenderer(container, width, height) {
   let renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(width, height);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
   return renderer;
 }
 
-function directionLight(scene, position) {
-  let light = new THREE.DirectionalLight(0xffffff, 1);
+function directionLight(scene, position, intensity=1, helper=false) {
+  let light = new THREE.DirectionalLight(0xffffff, intensity);
   light.position.set(position[0], position[1], position[2]); //default; light shining from top
 
   let t = new THREE.Object3D();
@@ -37,10 +37,15 @@ function directionLight(scene, position) {
   light.shadow.camera.near = 0.5; // default
   light.shadow.camera.far = 500; // default
 
+  if(helper){
+    helper = new THREE.DirectionalLightHelper( light, 50 );
+    scene.add( helper )
+  }
+
   return light;
 }
 function AmbientLight(scene, intensity) {
-  const ambientLight = new THREE.AmbientLight("#404040", 1);
+  const ambientLight = new THREE.AmbientLight("#ffffff", intensity);
   scene.add(ambientLight);
   return ambientLight;
 }
@@ -94,8 +99,8 @@ function cube(scene, pos, dim, color, cast, receive) {
   let material = new THREE.MeshPhongMaterial({ color: color });
   let c = new THREE.Mesh(geometry, material);
   c.position.set(pos.x, pos.y, pos.z);
-  c.castShadow = true;
-  c.receiveShadow = false;
+  c.castShadow = cast;
+  c.receiveShadow = receive;
   scene.add(c);
   return c;
 }
@@ -105,8 +110,8 @@ function plane(scene, pos, dim, color, cast, receive) {
   let p = new THREE.Mesh(geo, mat);
   p.position.set(pos.x, pos.y, pos.z);
   p.rotation.x = -90 / (180 / Math.PI);
-  p.receiveShadow = true;
-  p.castShadow = true;
+  p.receiveShadow = receive;
+  p.castShadow = cast;
   scene.add(p);
 
   return p;

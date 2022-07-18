@@ -16,17 +16,25 @@ console.clear();
 
 //#region SETUP
 const canvas = document.getElementById("canvas");
+console.log(canvas.clientWidth);
+
+let Width = canvas.clientWidth;
+let Height = canvas.clientHeight;
+let xOffset = -(window.innerWidth - Width);
+let yOffset = -(window.innerHeight - Height);
+
 const scene = new THREE.Scene();
-const camera = ct.createCamera();
+const camera = ct.createCamera(Width, Height);
 const controls = new OrbitControls(camera, canvas);
 // controls.enablePan = false;
 // controls.enableZoom = false;
 
-const renderer = ct.createRenderer(canvas);
-const dLight = ct.directionLight(scene, [10, 10, -10]);
-const aLight = ct.AmbientLight(scene, 10);
+const renderer = ct.createRenderer(canvas, Width, Height);
+const dLight = ct.directionLight(scene, [30, 30, 30], 1, true);
+const aLight = ct.AmbientLight(scene, 1);
 //#endregion
 
+plane(scene, new THREE.Vector3(0,-35,0), [300, 300, 300], 0x404040, false , true)
 let cube1 = cube(scene, { x: 0, y: 0, z: 0 }, [2, 2, 2], 0x00aaff, true, true);
 camera.position.z = 55;
 const draggableObjs = [];
@@ -42,6 +50,14 @@ const dragControls = new DragControls(
   renderer.domElement
 );
 ///////////////////////////////
+let jsonUrl = "./levels.json";
+let level = 1;
+fetch(jsonUrl)
+  .then((request) => request.json())
+  .then((jsobject) => {
+    jsobject['level'+level].pieces.forEach(piece => {console.log(piece)})
+  });
+
 
 //#region loadModels
 const loader = new GLTFLoader();
@@ -169,9 +185,11 @@ const sphereSize = 1;
 const pointLightHelper = new THREE.PointLightHelper(selectedLight, sphereSize);
 scene.add(pointLightHelper);
 
+
 function animate() {
   controls.update();
-  dLight.position.set(camera.position.x, camera.position.y, camera.position.z);
+  // dLight.position.set(camera.position.x, camera.position.y, camera.position.z);
+  // dLight.rotation.copy(camera.rotation)
   cube1.rotation.x += 0.01;
   cube1.rotation.y += 0.01;
   if (placePiece) {
@@ -278,8 +296,8 @@ dragControls.addEventListener("drag", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
+  mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
   const found = raycaster.intersectObjects(puzzleBox);
@@ -313,23 +331,25 @@ document.addEventListener("click", (event) => {
 
 document.addEventListener("mousedown", (event) => {
   placePiece = false;
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
+  mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
 });
 
 document.addEventListener("mousemove", (event) => {
   placePiece = false;
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
+  mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
+  document.getElementById("mx").innerHTML = mouse.x;
+  document.getElementById("my").innerHTML = mouse.y;
 });
 document.addEventListener("touchmove", (event) => {
   placePiece = false;
-  mouse.x = (event.touches[0].clientX / Width) * 2 - 1;
-  mouse.y = -(event.touches[0].clientY / Height) * 2 + 1;
+  mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
+  mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
 });
 document.addEventListener("mouseup", (event) => {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
+  mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
   if (selectedObj) {
     selectedObj.userData.prev.copy(selectedObj.position);
     placePiece = true;
