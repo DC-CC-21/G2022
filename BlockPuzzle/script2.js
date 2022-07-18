@@ -1,14 +1,16 @@
-//imports
-import * as THREE from "three";
-import { OrbitControls } from "OrbitControls";
-import { DragControls } from "DragControls";
-import { GLTFLoader } from "GLTFLoader";
+//import
+import * as THREE from "../3D world/three/src/Three.js";
+import { OrbitControls } from "../3D world/three/examples/jsm/controls/OrbitControls.js";
+import { DragControls } from "../3D world/three/examples/jsm/controls/DragControls.js";
+import { GLTFLoader } from "../3D world/three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "../3D world/three/examples/jsm/loaders/DRACOLoader.js";
 import * as ct from "../3D world/js/constant.js";
 import { cube, plane } from "../3D world/js/constant.js";
 ///// NEW /////
 // import {RenderPass} from 'renderpass'
 // import {EffectComposer} from 'EffectComposer'
+
+//add ambient light to selected square
 
 console.clear();
 
@@ -75,11 +77,10 @@ function loadModel(
         model.material.transparent = true;
         model.material.opacity = 0;
       }
-        const box = new THREE.Box3();
-        box.copy(model.geometry.boundingBox).applyMatrix4(model.matrixWorld);
-        const helper = new THREE.Box3Helper(box, 0xffff00);
-        model.add(helper);
-
+      // const box = new THREE.Box3();
+      // box.copy(model.geometry.boundingBox).applyMatrix4(model.matrixWorld);
+      // const helper = new THREE.Box3Helper(box, 0xffff00);
+      // model.add(helper);
 
       if (Object.keys(data).length) {
         Object.keys(data).forEach((key) => {
@@ -163,6 +164,10 @@ loadModel(loader, "assets/piece2.glb", "piece5", draggableObjs, scene, {
 
 //#endregion
 
+let selectedLight = ct.PointLight(scene, 0xffff00, 100, 50);
+const sphereSize = 1;
+const pointLightHelper = new THREE.PointLightHelper(selectedLight, sphereSize);
+scene.add(pointLightHelper);
 
 function animate() {
   controls.update();
@@ -288,10 +293,13 @@ document.addEventListener("click", (event) => {
         puzzleBox.forEach((object) => {
           object.material.opacity = 0;
         });
-        intersect.object.material.opacity = 1;
+        // intersect.object.material.opacity = 1;
         console.log(intersect.object);
-        intersect.object.children[0].material.emissive = new THREE.Color( 0xffff00 );
-        intersect.object.children[0].material.intensity = 10;
+        selectedLight.position.copy(intersect.object.position);
+        if (intersect.object.children.length > 0) {
+          // intersect.object.children[0].material.emissive = new THREE.Color( 0xffff00 );
+          // intersect.object.children[0].material.intensity = 10;
+        }
         //   event.object.position.copy(intersect.object.position);
         //   event.object.rotation.x = intersect.object.userData.rotation.x+event.object.userData.offset.x;
         //   event.object.rotation.y = intersect.object.userData.rotation.y+event.object.userData.offset.y;

@@ -44,6 +44,12 @@ function AmbientLight(scene, intensity) {
   scene.add(ambientLight);
   return ambientLight;
 }
+function PointLight(scene, color, intensity, decay) {
+  const light = new THREE.PointLight(color, intensity, 100 , decay);
+  light.position.set(10000,10000,10000 );
+  scene.add(light)
+  return light;
+}
 
 function loadEquirectangular(scene, src) {
   const equirectangular = new THREE.TextureLoader().load(src);
@@ -120,6 +126,7 @@ export {
   createRenderer,
   directionLight,
   AmbientLight,
+  PointLight,
   loadEquirectangular,
   //random
   dist,
