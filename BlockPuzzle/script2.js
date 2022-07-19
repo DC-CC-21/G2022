@@ -55,7 +55,8 @@ let level = 1;
 fetch(jsonUrl)
   .then((request) => request.json())
   .then((jsobject) => {
-    jsobject['level'+level].pieces.forEach(piece => {console.log(piece)})
+    jsobject['level'+level].pieces.forEach(piece => {console.log(piece)
+    })
   });
 
 
@@ -306,34 +307,34 @@ document.addEventListener("click", (event) => {
   mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
   mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
 
-  // raycaster.setFromCamera(mouse, camera);
-  // const found = raycaster.intersectObjects(puzzleBox);
-  // if (found.length > 0) {
-  //   let intersect = found[0];
-  //   console.log(intersect);
-  //   if (intersect) {
-  //     // document.getElementById('ray').innerHTML = JSON.stringify(intersect, null, ' ')
+  raycaster.setFromCamera(mouse, camera);
+  const found = raycaster.intersectObjects(puzzleBox);
+  if (found.length > 0) {
+    let intersect = found[0];
+    console.log(intersect);
+    if (intersect) {
+      // document.getElementById('ray').innerHTML = JSON.stringify(intersect, null, ' ')
 
-  //     if (intersect.object) {
-  //       puzzleBox.forEach((object) => {
-  //         object.material.opacity = 0;
-  //       });
-  //       // intersect.object.material.opacity = 1;
-  //       console.log(intersect.object);
-  //       selectedLight.position.copy(intersect.object.position);
-  //       if (intersect.object.children.length > 0) {
-  //         // intersect.object.children[0].material.emissive = new THREE.Color( 0xffff00 );
-  //         // intersect.object.children[0].material.intensity = 10;
-  //       }
-  //       //   event.object.position.copy(intersect.object.position);
-  //       //   event.object.rotation.x = intersect.object.userData.rotation.x+event.object.userData.offset.x;
-  //       //   event.object.rotation.y = intersect.object.userData.rotation.y+event.object.userData.offset.y;
-  //       //   event.object.rotation.z = intersect.object.userData.rotation.z+event.object.userData.offset.z;
-  //     }
+      if (intersect.object) {
+        puzzleBox.forEach((object) => {
+          object.material.opacity = 0;
+        });
+        // intersect.object.material.opacity = 1;
+        console.log(intersect.object);
+        selectedLight.position.copy(intersect.object.position);
+        if (intersect.object.children.length > 0) {
+          // intersect.object.children[0].material.emissive = new THREE.Color( 0xffff00 );
+          // intersect.object.children[0].material.intensity = 10;
+        }
+        //   event.object.position.copy(intersect.object.position);
+        //   event.object.rotation.x = intersect.object.userData.rotation.x+event.object.userData.offset.x;
+        //   event.object.rotation.y = intersect.object.userData.rotation.y+event.object.userData.offset.y;
+        //   event.object.rotation.z = intersect.object.userData.rotation.z+event.object.userData.offset.z;
+      }
 
-  //     // event.object.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
-  //   }
-  // }
+      // event.object.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
+    }
+  }
 
 
 
@@ -341,20 +342,21 @@ document.addEventListener("click", (event) => {
 
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 document.addEventListener("mousedown", (event) => {
-  // if(supportsTouch){
+  console.log(supportsTouch)
+  if(!supportsTouch){
     placePiece = false;
     mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
     mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
     document.getElementById('my').innerHTML = mouse.x+',' + mouse.y+'mouse?'
-  // }
+  }
 });
 document.addEventListener("touchstart", (event) => {
-  // if(supportsTouch){
+  if(supportsTouch){
     placePiece = false;
     mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
     mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
     document.getElementById("mx").innerHTML = mouse.x+','+mouse.y+'touch';
-  // }
+  }
 });
 
 document.addEventListener("mousemove", (event) => {
