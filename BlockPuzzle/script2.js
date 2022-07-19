@@ -21,7 +21,7 @@ console.log(canvas.clientWidth);
 let Width = canvas.clientWidth;
 let Height = canvas.clientHeight;
 let xOffset = -(window.innerWidth - Width);
-let yOffset = -(window.innerHeight - Height);
+let yOffset = 0//-(window.innerHeight - Height);
 
 const scene = new THREE.Scene();
 const camera = ct.createCamera(Width, Height);
