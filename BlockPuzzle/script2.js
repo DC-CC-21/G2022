@@ -341,6 +341,8 @@ document.addEventListener("click", (event) => {
 });
 
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+console.log('Supports touch', supportsTouch)
+
 document.addEventListener("mousedown", (event) => {
   console.log(supportsTouch)
   if(!supportsTouch){
