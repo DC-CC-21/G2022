@@ -346,6 +346,9 @@ document.addEventListener("touchmove", (event) => {
   placePiece = false;
   mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
   mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
+  document.getElementById("mx").innerHTML = mouse.x+','+mouse.y;
+  document.getElementById('my').innerHTML = JSON.stringify(event)
+
 });
 document.addEventListener("mouseup", (event) => {
   mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
