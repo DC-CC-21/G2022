@@ -1,3 +1,15 @@
+Array.prototype.countDuplicates = function () {
+  let count = {};
+  this.forEach((value) => {
+    if (value in count) {
+      count[value] += 1;
+    } else {
+      count[value] = 1;
+    }
+  });
+  return count;
+};
+
 //import
 import * as THREE from "../3D world/three/src/Three.js";
 import { OrbitControls } from "../3D world/three/examples/jsm/controls/OrbitControls.js";
@@ -21,7 +33,7 @@ console.log(canvas.clientWidth);
 let Width = canvas.clientWidth;
 let Height = canvas.clientHeight;
 let xOffset = -(window.innerWidth - Width);
-let yOffset = 0//-(window.innerHeight - Height);
+let yOffset = 0; //-(window.innerHeight - Height);
 
 const scene = new THREE.Scene();
 const camera = ct.createCamera(Width, Height);
@@ -34,7 +46,14 @@ const dLight = ct.directionLight(scene, [30, 30, 30], 1, true);
 const aLight = ct.AmbientLight(scene, 1);
 //#endregion
 
-plane(scene, new THREE.Vector3(0,-35,0), [300, 300, 300], 0x404040, false , true)
+plane(
+  scene,
+  new THREE.Vector3(0, -35, 0),
+  [300, 300, 300],
+  0x404040,
+  false,
+  true
+);
 let cube1 = cube(scene, { x: 0, y: 0, z: 0 }, [2, 2, 2], 0x00aaff, true, true);
 camera.position.z = 55;
 const draggableObjs = [];
@@ -55,10 +74,19 @@ let level = 1;
 fetch(jsonUrl)
   .then((request) => request.json())
   .then((jsobject) => {
-    jsobject['level'+level].pieces.forEach(piece => {console.log(piece)
-    })
+    let pieceCounts = jsobject["level" + level].pieces.countDuplicates();
+    let pieces = Array.from(new Set(jsobject["level" + level].pieces));
+    pieces.forEach((piece) => {
+      let div = document.createElement("div");
+      let img = document.createElement("img");
+      let span = document.createElement("span");
+      span.innerHTML = `<p>${pieceCounts[piece]}</p>`;
+      span.setAttribute("class", "pieceCount");
+      img.setAttribute("src", `./assets/woodPiece${piece}.png`);
+      div.append(img, span);
+      document.getElementById("pieceContainer").append(div);
+    });
   });
-
 
 //#region loadModels
 const loader = new GLTFLoader();
@@ -186,7 +214,6 @@ const sphereSize = 1;
 const pointLightHelper = new THREE.PointLightHelper(selectedLight, sphereSize);
 scene.add(pointLightHelper);
 
-
 function animate() {
   controls.update();
   // dLight.position.set(camera.position.x, camera.position.y, camera.position.z);
@@ -252,12 +279,6 @@ function map(value, istart, istop, ostart, ostop) {
 
 //#region Listeners
 
-
-
-
-
-
-
 let dIntensity = document.getElementById("dlight");
 let aIntensity = document.getElementById("alight");
 let rotation = document.getElementById("rotation");
@@ -307,6 +328,12 @@ document.addEventListener("click", (event) => {
   mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
   mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
 
+  console.log(event.target.nextSibling.tagName);
+  if (event.target.nextSibling.tagName == "SPAN") {
+    let p = event.target.nextSibling.children[0];
+    p.innerHTML = Number(p.innerHTML) > 0 ? Number(p.innerHTML) - 1 : 0;
+  }
+
   raycaster.setFromCamera(mouse, camera);
   const found = raycaster.intersectObjects(puzzleBox);
   if (found.length > 0) {
@@ -335,29 +362,27 @@ document.addEventListener("click", (event) => {
       // event.object.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
     }
   }
-
-
-
 });
 
-var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
-console.log('Supports touch', supportsTouch)
+var supportsTouch = "ontouchstart" in window || navigator.msMaxTouchPoints;
+console.log("Supports touch", supportsTouch);
 
 document.addEventListener("mousedown", (event) => {
-  console.log(supportsTouch)
-  if(!supportsTouch){
+  console.log(supportsTouch);
+  if (!supportsTouch) {
     placePiece = false;
     mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
     mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
-    document.getElementById('my').innerHTML = mouse.x+',' + mouse.y+'mouse?'
+    document.getElementById("my").innerHTML =
+      mouse.x + "," + mouse.y + "mouse?";
   }
 });
 document.addEventListener("touchstart", (event) => {
-  if(supportsTouch){
+  if (supportsTouch) {
     placePiece = false;
     mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
     mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
-    document.getElementById("mx").innerHTML = mouse.x+','+mouse.y+'touch';
+    document.getElementById("mx").innerHTML = mouse.x + "," + mouse.y + "touch";
   }
 });
 
@@ -374,7 +399,6 @@ document.addEventListener("touchmove", (event) => {
   mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
   // document.getElementById("mx").innerHTML = mouse.x+','+mouse.y;
   // document.getElementById('my').innerHTML = JSON.stringify(event)
-
 });
 document.addEventListener("mouseup", (event) => {
   mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
@@ -419,4 +443,16 @@ document.getElementById("place").addEventListener("click", () => {
     console.log(selectedObj.userData.prev.distanceTo(puzzleBox[0].position));
   }
 });
+
+// window.addEventListener( 'resize', onWindowResize, false );
+
+// function onWindowResize(){
+
+//     camera.aspect = window.innerWidth / window.innerHeight;
+//     camera.updateProjectionMatrix();
+
+//     renderer.setSize( window.innerWidth, window.innerHeight );
+
+// }
+
 //#endregion
