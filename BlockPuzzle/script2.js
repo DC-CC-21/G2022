@@ -56,7 +56,7 @@ plane(
 );
 let cube1 = cube(scene, { x: 0, y: 0, z: 0 }, [2, 2, 2], 0x00aaff, true, true);
 camera.position.z = 55;
-const draggableObjs = [];
+const draggableObjs = {};
 let puzzleBox = [];
 let placePiece = false;
 let selectedObj = false;
@@ -83,6 +83,7 @@ fetch(jsonUrl)
       span.innerHTML = `<p>${pieceCounts[piece]}</p>`;
       span.setAttribute("class", "pieceCount");
       img.setAttribute("src", `./assets/woodPiece${piece}.png`);
+      img.setAttribute("data-piece", piece);
       div.append(img, span);
       document.getElementById("pieceContainer").append(div);
     });
@@ -132,15 +133,22 @@ function loadModel(
           model.userData[key] = data[key];
         });
       }
-      if (draggableObjs) {
+      if (draggableObjs && !modelName.includes("piece")) {
         draggableObjs.push(model);
+      } else {
+        if (!(modelName in draggableObjs)) {
+          draggableObjs[modelName] = [];
+        }
+        draggableObjs[modelName].push(model);
       }
+
       // gltf.animations; // Array<THREE.AnimationClip>
       // gltf.scene; // THREE.Group
       // gltf.scenes; // Array<THREE.Group>
       // gltf.cameras; // Array<THREE.Camera>
       // gltf.asset; // Object
       loadingDiv.removeChild(document.getElementById(modelName));
+      return model;
     },
     // called while loading is progressing
     function (xhr) {
@@ -328,10 +336,25 @@ document.addEventListener("click", (event) => {
   mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
   mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
 
-  console.log(event.target.nextSibling.tagName);
+  console.log(event.target);
   if (event.target.nextSibling.tagName == "SPAN") {
     let p = event.target.nextSibling.children[0];
     p.innerHTML = Number(p.innerHTML) > 0 ? Number(p.innerHTML) - 1 : 0;
+
+    let obj = draggableObjs["piece" + event.target.dataset.piece][0];
+    obj.userData.hole = selectedLight.userData.hole[6];
+
+    let light = selectedLight.userData.rotation;
+
+    console.log(light);
+    const a = new THREE.Euler(0, 1, 1.57, "XYZ");
+    const b = new THREE.Vector3(light.x, light.y, light.z)
+    b.applyEuler(a);
+    obj.rotation.x = light.x
+    obj.rotation.y = light.y
+    obj.rotation.z = light.z
+    obj.position.copy(selectedLight.position);
+    return;
   }
 
   raycaster.setFromCamera(mouse, camera);
@@ -349,6 +372,9 @@ document.addEventListener("click", (event) => {
         // intersect.object.material.opacity = 1;
         console.log(intersect.object);
         selectedLight.position.copy(intersect.object.position);
+        selectedLight.userData.hole = intersect.object.userData.name;
+        selectedLight.userData.rotation = intersect.object.userData.rotation;
+
         if (intersect.object.children.length > 0) {
           // intersect.object.children[0].material.emissive = new THREE.Color( 0xffff00 );
           // intersect.object.children[0].material.intensity = 10;
@@ -385,7 +411,7 @@ document.addEventListener("touchstart", (event) => {
     document.getElementById("mx").innerHTML = mouse.x + "," + mouse.y + "touch";
   }
 });
-
+//
 document.addEventListener("mousemove", (event) => {
   placePiece = false;
   mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
