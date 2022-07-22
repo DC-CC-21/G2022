@@ -395,45 +395,53 @@ console.log("Supports touch", supportsTouch);
 
 document.addEventListener("mousedown", (event) => {
   console.log(supportsTouch);
-  if (!supportsTouch) {
+  // if (!supportsTouch) {
     placePiece = false;
-    mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
-    mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
-    document.getElementById("my").innerHTML =
-      mouse.x + "," + mouse.y + "mouse?";
-  }
+    setPickPosition(event)
+    // mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
+    // mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
+  // }
 });
 document.addEventListener("touchstart", (event) => {
   // if (supportsTouch) {
     placePiece = false;
-    mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
-    mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
-    document.getElementById("mx").innerHTML = mouse.x + "," + mouse.y + "touch";
+    event.preventDefault()
+    setPickPosition(event.touches[0])
+    // mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
+    // mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
+    // document.getElementById("mx").innerHTML = mouse.x + "," + mouse.y + "touch";
   // }
-});
+}, {passive:false});
 //
 document.addEventListener("mousemove", (event) => {
   placePiece = false;
-  mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
-  mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
+  setPickPosition(event)
+  // mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
+  // mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
   // document.getElementById("mx").innerHTML = mouse.x;
   // document.getElementById("my").innerHTML = mouse.y;
 });
 document.addEventListener("touchmove", (event) => {
   placePiece = false;
-  mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
-  mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
+  // mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
+  // mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
+  setPickPosition(event.touches[0])
   // document.getElementById("mx").innerHTML = mouse.x+','+mouse.y;
   // document.getElementById('my').innerHTML = JSON.stringify(event)
 });
 document.addEventListener("mouseup", (event) => {
-  mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
-  mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
+  // mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
+  // mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
   if (selectedObj) {
     selectedObj.userData.prev.copy(selectedObj.position);
     placePiece = true;
   }
+  clearPickPosition()
 });
+document.addEventListener('touchend', () => {
+  clearPickPosition()
+})
+
 
 document.getElementById("rotateX").addEventListener("click", () => {
   if (selectedObj) {
@@ -470,6 +478,24 @@ document.getElementById("place").addEventListener("click", () => {
   }
 });
 
+
+function getCanvasRelativePosition(event) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+  };
+}
+ 
+function setPickPosition(event) {
+  const pos = getCanvasRelativePosition(event);
+  mouse.x = (pos.x / canvas.clientWidth ) *  2 - 1;
+  mouse.y = (pos.y / canvas.clientHeight) * -2 + 1;  // note we flip Y
+}
+function clearPickPosition(){
+  mouse.x = -100000;
+mouse.y = -100000;
+}
 // window.addEventListener( 'resize', onWindowResize, false );
 
 // function onWindowResize(){
