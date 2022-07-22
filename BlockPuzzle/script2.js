@@ -404,12 +404,12 @@ document.addEventListener("mousedown", (event) => {
   }
 });
 document.addEventListener("touchstart", (event) => {
-  if (supportsTouch) {
+  // if (supportsTouch) {
     placePiece = false;
     mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
     mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
     document.getElementById("mx").innerHTML = mouse.x + "," + mouse.y + "touch";
-  }
+  // }
 });
 //
 document.addEventListener("mousemove", (event) => {
