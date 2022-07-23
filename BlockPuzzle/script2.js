@@ -482,8 +482,8 @@ document.getElementById("place").addEventListener("click", () => {
 function getCanvasRelativePosition(event) {
   const rect = canvas.getBoundingClientRect();
   return {
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top,
+    x: event.pageX - rect.left,
+    y: event.pageY - rect.top,
   };
 }
  
