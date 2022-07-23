@@ -8,33 +8,36 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="overlap">
-      <nav>
-        <span>
-          <label>Box Rotation:</label>
-          <input
-            type="checkbox"
-            label="rotation"
-            id="rotation"
-            placeholder="true"
-            checked="true"
-          />
-        </span>
-        <span>
-          <button id="rotateX">RotateX</button>
-          <button id="rotateY">RotateY</button>
-          <button id="rotateZ">RotateZ</button>
-          <button id="place">Place</button>
-        </span>
-      </nav>
-      <div id="Loading">
-        <p id="mx">mouseX</p>
-        <p id="my">mouseY</p>
-        <p id="ray">intersect</p>
-      </div>
+    <nav>
+      <span>
+        <label>Box Rotation:</label>
+        <input
+          type="checkbox"
+          label="rotation"
+          id="rotation"
+          placeholder="true"
+          checked="true"
+        />
+      </span>
+      <span>
+        <button id="rotateX">RotateX</button>
+        <button id="rotateY">RotateY</button>
+        <button id="rotateZ">RotateZ</button>
+        <button id="place">Place</button>
+      </span>
+    </nav>
+
+    <div id="Loading">
+      <p id="mx">mouseX</p>
+      <p id="my">mouseY</p>
+      <p id="ray">intersect</p>
     </div>
     <div id="pieceContainer"></div>
     <div id="canvas"></div>
+    <div id="container">
+      <div id="errorContainer">ERRORS HERE</div>
+      <div id="raycaster">RAYCASTING HERE</div>
+    </div>
     <!-- <script src="../3D world/three/src/Three.js"></script> -->
     <!-- <script type="module" src="script.js"></script> -->
     <script type="module" src="script2.js"></script>

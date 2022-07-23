@@ -1,3 +1,23 @@
+let errors = document.getElementById("errorContainer");
+
+window.onerror = function (error, source, lineno, colno, err) {
+  errors.style.display = "block";
+  let info = {
+    error: error,
+    source: source,
+    line: lineno,
+    column: colno,
+    err: err,
+  };
+  let el = document.createElement("li");
+  Object.keys(info).forEach((key) => {
+    let li = document.createElement("p");
+    li.innerHTML = `${key}: ${info[key]}`;
+    el.append(li);
+  });
+  errors.append(el);
+};
+
 Array.prototype.countDuplicates = function () {
   let count = {};
   this.forEach((value) => {
@@ -9,7 +29,6 @@ Array.prototype.countDuplicates = function () {
   });
   return count;
 };
-
 //import
 import * as THREE from "../3D world/three/src/Three.js";
 import { OrbitControls } from "../3D world/three/examples/jsm/controls/OrbitControls.js";
@@ -333,11 +352,10 @@ dragControls.addEventListener("drag", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
-  mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
-
-  console.log(event.target);
-  if (event.target.nextSibling.tagName == "SPAN") {
+  // mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
+  // mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
+  console.log(event.target.nextSibling);
+  if (event.target.nextSibling && event.target.nextSibling.tagName == "SPAN") {
     let p = event.target.nextSibling.children[0];
     p.innerHTML = Number(p.innerHTML) > 0 ? Number(p.innerHTML) - 1 : 0;
 
@@ -348,14 +366,66 @@ document.addEventListener("click", (event) => {
 
     console.log(light);
     const a = new THREE.Euler(0, 1, 1.57, "XYZ");
-    const b = new THREE.Vector3(light.x, light.y, light.z)
+    const b = new THREE.Vector3(light.x, light.y, light.z);
     b.applyEuler(a);
-    obj.rotation.x = light.x
-    obj.rotation.y = light.y
-    obj.rotation.z = light.z
+    obj.rotation.x = light.x;
+    obj.rotation.y = light.y;
+    obj.rotation.z = light.z;
     obj.position.copy(selectedLight.position);
     return;
   }
+  // interactWithObject(event)
+});
+
+var supportsTouch = "ontouchstart" in window || navigator.msMaxTouchPoints;
+let offset = canvas.getBoundingClientRect();
+console.log("Supports touch", supportsTouch);
+///
+function onDocumentTouchStart(event) {
+  console.log("TouchStart");
+
+  event.preventDefault();
+
+  event.clientX = event.touches[0].pageX;
+  event.clientY = event.touches[0].pageY;
+
+  onDocumentMouseDown(event);
+}
+
+function onDocumentTouchMove(event) {
+  // console.log("TouchMove");
+
+  if (event.touches.length == 1) {
+    event.preventDefault();
+    mouse.x =
+      ((event.clientX - offset.x) / renderer.domElement.clientWidth) * 2 - 1;
+    mouse.y =
+      -((event.clientY - offset.y) / renderer.domElement.clientHeight) * 2 + 1;
+  }
+}
+
+function onDocumentMouseMove(event) {
+  mouse.x =
+    ((event.clientX - offset.x) / renderer.domElement.clientWidth) * 2 - 1;
+  mouse.y =
+    -((event.clientY - offset.y) / renderer.domElement.clientHeight) * 2 + 1;
+  document.getElementById("mx").innerHTML = mouse.x + ", " + mouse.y;
+}
+
+function onDocumentMouseDown(event) {
+  console.log("mousedown");
+  console.log(canvas.getBoundingClientRect());
+  event.preventDefault();
+  mouse.x =
+    ((event.clientX - offset.x) / renderer.domElement.clientWidth) * 2 - 1;
+  mouse.y =
+    -((event.clientY - offset.y) / renderer.domElement.clientHeight) * 2 + 1;
+  interactWithObject(event);
+}
+///
+
+function interactWithObject(event) {
+  document.getElementById("mx").innerHTML = mouse.x + ", " + mouse.y;
 
   raycaster.setFromCamera(mouse, camera);
   const found = raycaster.intersectObjects(puzzleBox);
@@ -371,78 +441,21 @@ document.addEventListener("click", (event) => {
         });
         // intersect.object.material.opacity = 1;
         console.log(intersect.object);
+        document.getElementById("raycaster").innerHTML = intersect.object.name;
         selectedLight.position.copy(intersect.object.position);
         selectedLight.userData.hole = intersect.object.userData.name;
         selectedLight.userData.rotation = intersect.object.userData.rotation;
-
-        if (intersect.object.children.length > 0) {
-          // intersect.object.children[0].material.emissive = new THREE.Color( 0xffff00 );
-          // intersect.object.children[0].material.intensity = 10;
-        }
-        //   event.object.position.copy(intersect.object.position);
-        //   event.object.rotation.x = intersect.object.userData.rotation.x+event.object.userData.offset.x;
-        //   event.object.rotation.y = intersect.object.userData.rotation.y+event.object.userData.offset.y;
-        //   event.object.rotation.z = intersect.object.userData.rotation.z+event.object.userData.offset.z;
       }
-
-      // event.object.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
     }
   }
-});
+}
 
-var supportsTouch = "ontouchstart" in window || navigator.msMaxTouchPoints;
-console.log("Supports touch", supportsTouch);
+document.addEventListener("mousedown", onDocumentMouseDown);
+document.addEventListener("mousemove", onDocumentMouseMove);
+document.addEventListener("touchstart", onDocumentTouchStart);
+document.addEventListener("touchmove", onDocumentTouchMove);
 
-document.addEventListener("mousedown", (event) => {
-  console.log(supportsTouch);
-  // if (!supportsTouch) {
-    placePiece = false;
-    setPickPosition(event)
-    // mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
-    // mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
-  // }
-});
-document.addEventListener("touchstart", (event) => {
-  // if (supportsTouch) {
-    placePiece = false;
-    event.preventDefault()
-    setPickPosition(event.touches[0])
-    // mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
-    // mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
-    // document.getElementById("mx").innerHTML = mouse.x + "," + mouse.y + "touch";
-  // }
-}, {passive:false});
-//
-document.addEventListener("mousemove", (event) => {
-  placePiece = false;
-  setPickPosition(event)
-  // mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
-  // mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
-  // document.getElementById("mx").innerHTML = mouse.x;
-  // document.getElementById("my").innerHTML = mouse.y;
-});
-document.addEventListener("touchmove", (event) => {
-  placePiece = false;
-  // mouse.x = ((event.touches[0].clientX + xOffset) / Width) * 2 - 1;
-  // mouse.y = -((event.touches[0].clientY + yOffset) / Height) * 2 + 1;
-  setPickPosition(event.touches[0])
-  // document.getElementById("mx").innerHTML = mouse.x+','+mouse.y;
-  // document.getElementById('my').innerHTML = JSON.stringify(event)
-});
-document.addEventListener("mouseup", (event) => {
-  // mouse.x = ((event.clientX + xOffset) / Width) * 2 - 1;
-  // mouse.y = -((event.clientY + yOffset) / Height) * 2 + 1;
-  if (selectedObj) {
-    selectedObj.userData.prev.copy(selectedObj.position);
-    placePiece = true;
-  }
-  clearPickPosition()
-});
-document.addEventListener('touchend', () => {
-  clearPickPosition()
-})
-
-
+//#region buttons
 document.getElementById("rotateX").addEventListener("click", () => {
   if (selectedObj) {
     selectedObj.userData.offset.x += Math.PI / 2;
@@ -477,25 +490,7 @@ document.getElementById("place").addEventListener("click", () => {
     console.log(selectedObj.userData.prev.distanceTo(puzzleBox[0].position));
   }
 });
-
-
-function getCanvasRelativePosition(event) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: event.pageX - rect.left,
-    y: event.pageY - rect.top,
-  };
-}
- 
-function setPickPosition(event) {
-  const pos = getCanvasRelativePosition(event);
-  mouse.x = (pos.x / canvas.clientWidth ) *  2 - 1;
-  mouse.y = (pos.y / canvas.clientHeight) * -2 + 1;  // note we flip Y
-}
-function clearPickPosition(){
-  mouse.x = -100000;
-mouse.y = -100000;
-}
+//#endregion
 // window.addEventListener( 'resize', onWindowResize, false );
 
 // function onWindowResize(){
