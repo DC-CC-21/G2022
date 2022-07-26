@@ -16,6 +16,8 @@ class Canvas {
   #textSize = 18;
   #textAlign = "left";
   #cameraPos = { x: 0, y: 0 };
+  #scale = { x: -1, y: 1 };
+  #transformOrigin = {x:0, y:0}
   //#endregion
 
   constructor(canvas, width, height) {
@@ -170,28 +172,31 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  image(img, x, y, width, height, fixed=false, aspect=false) {
+  image(img, x, y, width, height, fixed = false, aspect = false) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
     el.setAttribute("href", img);
 
+    el.setAttribute("transform-origin", `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`);
+    el.setAttribute(
+      "transform",
+      `rotate(${this.#rotation}), scale(${this.#scale.x},${this.#scale.y})`
+    );
 
-    el.setAttribute('transform', `rotate(${this.#rotation} ${x+this.#rotationOffsetX}, ${y+this.#rotationOffsetY})`)
-   
     if (!aspect) {
       el.setAttribute("preserveAspectRatio", "none");
     }
 
     el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
+
     el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
-    if(!aspect){el.setAttribute("width", width || 100);}
+    if (!aspect) {
+      el.setAttribute("width", width || 100);
+    }
     el.setAttribute("height", height || 100);
-    
+
     //rotate
 
     //end rotate
-
-
-
 
     // el.style.width = 1000 + 'px'
     // el.style.height = height + 'px'
@@ -200,9 +205,9 @@ class Canvas {
 
   getAspect(src) {
     let aspect = 0;
-    let img = new Image();   // Create new img element
+    let img = new Image(); // Create new img element
     img.src = src;
-      return img;
+    return img;
   }
   //COLOR & STYLE
   background(r, g, b, a) {
@@ -247,15 +252,29 @@ class Canvas {
   }
 
   //transformations
-  rotate(deg, xOffset, yOffset) {
+  rotate(deg) {
+  
     this.#rotation = deg;
-    this.#rotationOffsetX = this.cameraPos.x+xOffset;
-    this.#rotationOffsetY = this.cameraPos.y+yOffset;
+    // this.#rotationOffsetX = this.cameraPos.x + xOffset;
+    // this.#rotationOffsetY = this.cameraPos.y + yOffset;
   }
-  reset(){
-    this.fill(255,0,0)
-    this.stroke(0,0,0)
-    this.rotate(0,0,0)
+
+  scale(scaleX, scaleY) {
+    this.#scale = {x:scaleX, y:scaleY}
+  }
+  transformOrigin(x, y){
+    if(!x){
+      console.warn('undefined value of x')
+    }
+    if(!y){
+      console.warn('undefined value of y')
+    }
+    this.#transformOrigin = {x: x, y: y}
+  }
+  reset() {
+    this.fill(255, 0, 0);
+    this.stroke(0, 0, 0);
+    this.rotate(0, 0, 0);
   }
   //math type functions
   dist(x, y, x2, y2) {
@@ -264,14 +283,14 @@ class Canvas {
     return Math.sqrt(X * X + Y * Y);
   }
 
-  sin(deg){
-    return Math.sin(deg/(180/Math.PI))
+  sin(deg) {
+    return Math.sin(deg / (180 / Math.PI));
   }
-  cos(deg){
-    return Math.cos(deg/(180/Math.PI))
+  cos(deg) {
+    return Math.cos(deg / (180 / Math.PI));
   }
-  tan(deg){
-    return Math.tan(deg/(180/Math.PI))
+  tan(deg) {
+    return Math.tan(deg / (180 / Math.PI));
   }
 
   map(value, istart, istop, ostart, ostop) {
@@ -284,9 +303,9 @@ class Canvas {
   lerp(value1, value2, amt) {
     return (value2 - value1) * amt + value1;
   }
-  random(min,max){
-    return Math.random() * (max-min) + min;
-}
+  random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
   //line collide
   insideLineBounds(point1, point2, p) {
     let x = point1.x > point2.x ? point2.x : point1.x;
@@ -312,7 +331,6 @@ class Canvas {
       a.x - b.x < b.w && b.x - a.x < a.w && a.y - b.y < b.h && b.y - a.y < a.h
     );
   }
-
 }
 
 function recursive(frame) {

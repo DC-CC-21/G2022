@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dots</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="../jsDrawingLib/svgDraw.js" defer></script>
     <script src="dots.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <svg id="canvas"></svg>
-    <div class="btns">
-        <button id="rot">rotate</button>
-        <button id="for">frwd</button>
-        <button id="back">back</button>
+    <div id="selectionMenu">
+      <img src="assets/card1.png" alt="" />
+      <img src="assets/card1.png" alt="" />
+      <img src="assets/card1.png" alt="" />
+      <img src="assets/card1.png" alt="" />
     </div>
-</body>
+    <div class="btns">
+      <button id="rot">rotate</button>
+      <button id="for">frwd</button>
+      <button id="back">back</button>
+      <button id="flip">flip</button>
+    </div>
+  </body>
 </html>
