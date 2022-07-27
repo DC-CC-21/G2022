@@ -1,6 +1,6 @@
 //#region setup
 const canvas = document.getElementById("canvas");
-const c = new Canvas(canvas, window.innerWidth, window.innerHeight);
+const c = new Canvas(canvas, window.innerWidth, window.innerHeight, false);
 
 console.log(window.innerWidth, window.innerHeight);
 let domSize =
@@ -39,7 +39,7 @@ class customImg {
 class createCard {
   constructor(name, width, height, dots) {
     this.card1 = new customImg(document.querySelector("body"), `card${name}`, width);
-    this.c2 = new Canvas(this.card1, width, height);
+    this.c2 = new Canvas(this.card1, width, height, false);
     this.width = width;
     this.height = height;
 
@@ -242,6 +242,13 @@ draw = function () {
 //#region listeners
 let currentCard;
 let prevCard;
+
+function setCurrentCard(value){
+  console.log(value)
+}
+
+let debug =   document.getElementById('stats')
+
 document.addEventListener("mousedown", (e) => {
   console.log(e.target.tagName);
   if (e.target.tagName == "BUTTON") {
@@ -261,6 +268,8 @@ document.addEventListener("mousedown", (e) => {
 document.addEventListener("mousemove", (e) => {
   mx = e.clientX;
   my = e.clientY;
+  debug.innerHTML = `mx:${mx}, my:${my}, currentCard:${JSON.stringify(currentCard, '', '\n')}`
+  
   if (currentCard) {
     currentCard.card.drag(e.clientX, e.clientY);
     currentCard.card.snap();

@@ -20,7 +20,7 @@ class Canvas {
   #transformOrigin = {x:0, y:0}
   //#endregion
 
-  constructor(canvas, width, height) {
+  constructor(canvas, width, height, createTouch=true) {
     // SETUP this.#canvas
     this.#canvas = canvas;
     this.#canvas.style.overflow = "show";
@@ -34,7 +34,10 @@ class Canvas {
     //1536x754
     console.log(`Your canvas is ${Width}x${Height}`);
     recursive();
-    this.createTouchContainer();
+    if(createTouch){
+      this.createTouchContainer();
+
+    }
   }
   moveCamera(p, w) {
     this.cameraPos = { x: this.constrain(Width / 2 - p.x, -1630, 0), y: 0 };
@@ -222,7 +225,7 @@ class Canvas {
     el.setAttribute("width", width || 100);
     el.setAttribute("height", height || 100);
     el.setAttribute('draggable', true)
-
+    el.setAttribute('ondrag', 'setCurrentCard(event)')
     //rotate
 
     //end rotate
