@@ -11,13 +11,21 @@
     <script src="dots.js" defer></script>
   </head>
   <body>
+    <svg style="display: none">
+      <defs>
+        <symbol id="test">
+          <!-- <rect x="10" y="10" width="100" height="100"></rect> -->
+          <circle cx="100" cy="0" r="50"></circle>
+        </symbol>
+      </defs>
+    </svg>
     <svg id="canvas"></svg>
-    <div id="selectionMenu">
+    <!-- <div id="selectionMenu">
       <img src="assets/card1.png" alt="" />
       <img src="assets/card1.png" alt="" />
       <img src="assets/card1.png" alt="" />
       <img src="assets/card1.png" alt="" />
-    </div>
+    </div> -->
     <div class="btns">
       <button id="rot">rotate</button>
       <button id="for">frwd</button>
@@ -26,3 +34,12 @@
     </div>
   </body>
 </html>
+
+<!-- <svg id="canvas" width="600px" height="600px" style="display:none">
+  <symbol id="test">
+  <circle cx="200px" cy="150" r="100" fill="#00aaff"></circle>
+  </symbol>
+</svg>
+<svg >
+  <use x="100" href="#test" transform="scale(-0.2,1)" transform-origin="300px 100px"></use>
+</svg> -->

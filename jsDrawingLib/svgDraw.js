@@ -203,6 +203,36 @@ class Canvas {
     this.#canvas.append(el);
   }
 
+  useLocal(img, x, y, width, height, fixed=false){
+    let el = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    el.setAttribute("href", img);
+
+    el.setAttribute("transform-origin", `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`);
+    el.setAttribute(
+      "transform",
+      `rotate(${this.#rotation}), scale(${this.#scale.x},${this.#scale.y})`
+    );
+
+ 
+    el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
+
+    el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
+    // if (!aspect) {
+    // }
+    el.setAttribute("width", width || 100);
+    el.setAttribute("height", height || 100);
+    el.setAttribute('draggable', true)
+
+    //rotate
+
+    //end rotate
+
+    // el.style.width = 1000 + 'px'
+    // el.style.height = height + 'px'
+    this.#canvas.append(el);
+  }
+
+
   getAspect(src) {
     let aspect = 0;
     let img = new Image(); // Create new img element
@@ -234,6 +264,9 @@ class Canvas {
       this.#fillColor = r;
     }
   }
+  color(r,g,b,a=1){
+    return `rgba(${r},${g},${b},${a})`
+  }
 
   stroke(r, g, b, a) {
     if (r != undefined && g != undefined && b != undefined && a != undefined) {
@@ -263,18 +296,16 @@ class Canvas {
     this.#scale = {x:scaleX, y:scaleY}
   }
   transformOrigin(x, y){
-    if(!x){
-      console.warn('undefined value of x')
-    }
-    if(!y){
-      console.warn('undefined value of y')
-    }
+
     this.#transformOrigin = {x: x, y: y}
   }
   reset() {
-    this.fill(255, 0, 0);
+    this.fill(255, 255, 255);
     this.stroke(0, 0, 0);
+    this.strokeWeight(1)
     this.rotate(0, 0, 0);
+    this.scale(1,1)
+    this.transformOrigin(0,0)
   }
   //math type functions
   dist(x, y, x2, y2) {
