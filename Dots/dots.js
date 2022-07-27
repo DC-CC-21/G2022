@@ -278,6 +278,8 @@ document.addEventListener("mousemove", (e) => {
 document.addEventListener("touchmove", (e) => {
   mx = e.touches[0].clientX;
   my = e.touches[0].clientY;
+  debug.innerHTML = `mx:${mx}, my:${my}, currentCard:${JSON.stringify(currentCard, '', '\n')}`
+
   if (currentCard) {
     currentCard.card.drag(e.touches[0].clientX, e.touches[0].clientY);
     currentCard.card.snap();
