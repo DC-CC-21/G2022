@@ -225,7 +225,6 @@ class Canvas {
     el.setAttribute("width", width || 100);
     el.setAttribute("height", height || 100);
     el.setAttribute('draggable', true)
-    el.setAttribute('ondrag', 'setCurrentCard(event)')
     //rotate
 
     //end rotate

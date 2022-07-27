@@ -1,6 +1,6 @@
 //#region setup
 const canvas = document.getElementById("canvas");
-const c = new Canvas(canvas, window.innerWidth, window.innerHeight, false);
+const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
 
 console.log(window.innerWidth, window.innerHeight);
 let domSize =
@@ -38,7 +38,11 @@ class customImg {
 }
 class createCard {
   constructor(name, width, height, dots) {
-    this.card1 = new customImg(document.querySelector("body"), `card${name}`, width);
+    this.card1 = new customImg(
+      document.querySelector("body"),
+      `card${name}`,
+      width
+    );
     this.c2 = new Canvas(this.card1, width, height, false);
     this.width = width;
     this.height = height;
@@ -97,21 +101,44 @@ class createCard {
     return colors;
   }
 }
+class targetCard{
+  constructor(x, y, i){
+    this.x = x;
+    this.y = y;
+    this.scales = [-1,1]
+    this.rotations = [0,90,180,270]
+    
+    this.rotation = this.rotations[~~c.random(0,this.rotations.length)];
+    this.scale = this.scales[~~c.random(0,this.scales.length)];
+    this.card = i;
+    this.s = cardSize
+    
+  }
+  display(){
 
-let customCards = [];
-let cardCount = 4
-for (let i = 0; i < cardCount; i++) {
-  new createCard(i,cardSize, cardSize, 5);
+    c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
+    c.rotate(this.rotation, this.s / 2, this.s / 2);
+    c.scale(this.scale, 1);
+    // c.image(this.src, this.x, this.y, this.s, this.s);
+    c.useLocal(`#card${this.card}`, this.x, this.y, this.s, this.s);
+  }
 }
 
-// c2.background(255,0,0)
+
+
+let customCards = [];
+let cardCount = 4;
+for (let i = 0; i < cardCount; i++) {
+  new createCard(i, cardSize, cardSize, 5);
+}
+
 
 class Card {
   constructor(x, y, cardNum) {
     this.x = x;
     this.y = y;
     this.src = `assets/card${cardNum}.png`;
-    console.log(this.src)
+    console.log(this.src);
     this.index = cardNum;
     this.card = cardNum;
     this.s = cardSize;
@@ -151,7 +178,7 @@ class Card {
     c.rotate(this.rotation, this.s / 2, this.s / 2);
     c.scale(this.scale, 1);
     // c.image(this.src, this.x, this.y, this.s, this.s);
-    c.useLocal(`#card${this.card}`, this.x, this.y, this.s, this.s)
+    c.useLocal(`#card${this.card}`, this.x, this.y, this.s, this.s);
   }
   isin(mx, my) {
     return (
@@ -198,15 +225,17 @@ class Card {
     controls.style.top = this.y + this.s * 0.1 + "px";
   }
 }
-let cards = []
+let cards = [];
+let targets = []
 //   new Card(100, 250, 1),
 //   new Card(120, 100, 2),
 //   new Card(140, 100, 3),
 //   new Card(160, 100, 4),
 // ];
-for(let i = 0; i < cardCount; i ++){
-  console.log(i+1)
-  cards.push(new Card(i*10, 100, i))
+for (let i = 0; i < cardCount; i++) {
+  console.log(i + 1);
+  cards.push(new Card(window.innerWidth/2+cardSize/2+i*20, window.innerHeight/2-cardSize*1+i*100, i));
+  targets.push(new targetCard(50, window.innerHeight/2-cardSize/2,i))
 }
 
 //temp
@@ -227,15 +256,20 @@ draw = function () {
     cardSize
   );
 
-  c.scale(0.5,0.5)
+  c.scale(0.5, 0.5);
 
-  for(let i = 0; i < cardCount; i ++){
+  for (let i = 0; i < cardCount; i++) {
     // c.useLocal(`#card${i}`, i*cardSize/2, i*cardSize, cardSize/2, cardSize/2);
   }
-  c.reset()
+  c.reset();
   cards.forEach((card, i) => {
     card.display();
   });
+  targets.forEach((card, i) => {
+    card.display();
+  });
+
+
 };
 // draw2()
 
@@ -243,49 +277,61 @@ draw = function () {
 let currentCard;
 let prevCard;
 
-function setCurrentCard(value){
-  console.log(value)
-}
 
-let debug =   document.getElementById('stats')
-
-document.addEventListener("mousedown", (e) => {
+function ontouchDown(e, mx, my) {
   console.log(e.target.tagName);
   if (e.target.tagName == "BUTTON") {
     return;
   }
   for (let i = cards.length - 1; i >= 0; i--) {
     let card = cards[i];
-    if (card.isin(e.clientX, e.clientY)) {
-      card.press(e.clientX, e.clientY);
+    if (card.isin(mx, my)) {
+      card.press(mx, my);
       currentCard = { card: card, index: i };
       controls.style.display = "flex";
       return false;
     }
   }
+}
+
+document.addEventListener("mousedown", (e) => {
+  ontouchDown(e, e.clientX, e.clientY);
   //   controls.style.display = 'none';
 });
+document.addEventListener("touchstart", (e) => {
+  e.clientX = e.touches[0].clientX;
+  e.clientY = e.touches[0].clientY;
+
+  ontouchDown(e, e.pageX, e.pageY);
+});
+
 document.addEventListener("mousemove", (e) => {
   mx = e.clientX;
   my = e.clientY;
-  debug.innerHTML = `mx:${mx}, my:${my}, currentCard:${JSON.stringify(currentCard, '', '\n')}`
-  
+
   if (currentCard) {
     currentCard.card.drag(e.clientX, e.clientY);
     currentCard.card.snap();
   }
 });
 document.addEventListener("touchmove", (e) => {
+
   mx = e.touches[0].clientX;
   my = e.touches[0].clientY;
-  debug.innerHTML = `mx:${mx}, my:${my}, currentCard:${JSON.stringify(currentCard, '', '\n')}`
 
   if (currentCard) {
-    currentCard.card.drag(e.touches[0].clientX, e.touches[0].clientY);
+    currentCard.card.drag(e.pageX, e.pageY);
     currentCard.card.snap();
   }
 });
 document.addEventListener("mouseup", (e) => {
+  if (currentCard) {
+    currentCard.card.release();
+    prevCard = currentCard;
+    currentCard = false;
+  }
+});
+document.addEventListener("touchend", (e) => {
   if (currentCard) {
     currentCard.card.release();
     prevCard = currentCard;
