@@ -18,6 +18,7 @@ class Canvas {
   #cameraPos = { x: 0, y: 0 };
   #scale = { x: -1, y: 1 };
   #transformOrigin = {x:0, y:0}
+  #textFont = 'sans-serif'
   //#endregion
 
   constructor(canvas, width, height, createTouch=true) {
@@ -78,7 +79,11 @@ class Canvas {
 
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
-
+    el.setAttribute("transform-origin", `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`);
+    el.setAttribute(
+      "transform",
+      `rotate(${this.#rotation}), scale(${this.#scale.x},${this.#scale.y})`
+    );
     // else{el.setAttribute('x', el.getAttribute('x')+this.#canvas.style.left) }
     // el.setAttribute("transform","rotate(-90 50 100)")
     if (radius) {
@@ -145,7 +150,12 @@ class Canvas {
     // el.setAttribute("stroke-width", this.#strokeWeightSize);
     el.setAttribute("font-size", this.#textSize);
     el.setAttribute("text-anchor", this.#textAlign);
+    el.setAttribute('font-family', this.#textFont)
     this.#canvas.append(el);
+  }
+
+  textFont(font){
+    this.#textFont = font;
   }
 
   textAlign(mode) {
