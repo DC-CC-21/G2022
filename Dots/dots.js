@@ -8,8 +8,9 @@ let domSize =
     ? window.innerHeight
     : window.innerWidth;
 
-const cardSize = c.map(300, 0, 706, 0, window.innerHeight);
+const cardSize = c.map(250, 0, 706, 0, window.innerHeight);
 let controls = document.querySelector(".btns");
+let selectionMenu = document.getElementById('selectionMenu')
 
 let mx = 0;
 let my = 0;
@@ -20,6 +21,7 @@ class customImg {
     this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg.style.width = s + "px";
     this.svg.style.height = s + "px";
+    this.svg.setAttribute('viewBox', `0 0 ${s} ${s}`)
 
     // this.defs = document.createElementNS('http://www.w3.org/2000/svg','defs')
 
@@ -28,6 +30,9 @@ class customImg {
       "symbol"
     );
     this.symbol.setAttribute("id", name);
+    this.symbol.setAttribute('width', s)
+    this.symbol.setAttribute('height', s)
+    this.symbol.setAttribute('viewBox', `0 0 ${s} ${s}`)
 
     // this.svg.append(this.defs)
     this.svg.append(this.symbol);
@@ -38,15 +43,16 @@ class customImg {
 }
 class createCard {
   constructor(name, width, height, dots) {
+    this.name = `card${name}`
     this.card1 = new customImg(
       document.querySelector("body"),
-      `card${name}`,
+      this.name,
       width
     );
     this.c2 = new Canvas(this.card1, width, height, false);
     this.width = width;
     this.height = height;
-
+this.index = name
     this.colors = [
       [
         this.c2.color(255, 0, 0),
@@ -60,6 +66,7 @@ class createCard {
       [],
     ];
     this.createDots(this.c2, dots);
+    
   }
   createDots(c2, dots) {
     let colors = this.selectColors(dots);
@@ -86,6 +93,21 @@ class createCard {
         );
       }
     }
+
+    let div = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    let use = document.createElementNS("http://www.w3.org/2000/svg", 'use')
+
+    div.setAttribute('class' , 'select')
+    div.setAttribute('id', this.index)
+
+    use.setAttribute('href',  '#'+this.name)
+    div.setAttribute('viewBox', `0 0 ${cardSize} ${cardSize}`)
+  //  / use.setAttribute('width', "100px")
+  //  / use.setAttribute('height', '100px')
+    use.style.position = 'relative'
+
+    div.append(use)
+    selectionMenu.append(div)
   }
   selectColors(len) {
     let colors = [];
@@ -115,11 +137,17 @@ class targetCard{
     
   }
   display(){
+    if(this.card == 0){//ardCount-1){
+      c.fill(0,0,0)
+      c.rect(this.x, this.y, this.s, this.s)
+    }
+    c.fill(0,0,0,0)
 
     c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
     c.scale(this.scale, 1);
     // c.image(this.src, this.x, this.y, this.s, this.s);
+
     c.useLocal(`#card${this.card}`, this.x, this.y, this.s, this.s);
   }
 }
@@ -232,6 +260,9 @@ let targets = []
 //   new Card(140, 100, 3),
 //   new Card(160, 100, 4),
 // ];
+
+
+
 for (let i = 0; i < cardCount; i++) {
   console.log(i + 1);
   cards.push(new Card(window.innerWidth/2+cardSize/2+i*20, window.innerHeight/2-cardSize*1+i*100, i));
@@ -245,10 +276,13 @@ c.textSize(50);
 //
 
 draw = function () {
+  x+=10;
+window.scrollTo(0,0)
   c.reset();
+  c.textAlign('middle')
   c.background(75, 75, 75);
-  x += 1;
-  c.rect(c.lerp(0, 100, 0.1), 50, 100, 100);
+  // x += 1;
+  // c.rect(x, 50, 100, 100);
   c.rect(
     window.innerWidth / 2 - cardSize / 2,
     window.innerHeight / 2 - cardSize / 2,
@@ -265,30 +299,63 @@ draw = function () {
   cards.forEach((card, i) => {
     card.display();
   });
+
+  c.text('Complete this card to win'+Height, window.innerWidth/2-cardSize/2, c.map(200,0,249.99,0,Height))
   targets.forEach((card, i) => {
     card.display();
   });
 
 
 };
+// draw
+// let frame = 0;
+// draw=function(){
+//   frame++;
+//   if(frame < 10){
+//     draw2()
+//   }
+//   if(frame > 1000){
+//     frame = 0;
+//   }
+//   if(frame%200== 0){
+//     draw2()
+//   }
+// }
 // draw2()
 
 //#region listeners
 let currentCard;
 let prevCard;
 
+function selectCard(mx, my, card, i){
+  card.press(mx, my);
+  currentCard = { card: card, index: i };
+  document.querySelectorAll('.active').forEach(el => el.classList.toggle('active'))
+  document.getElementById(currentCard.card.index).classList.toggle('active')
+  controls.style.display = "flex";
+}
 
 function ontouchDown(e, mx, my) {
   console.log(e.target.tagName);
-  if (e.target.tagName == "BUTTON") {
+  console.log(e.target.parentElement.tagName)
+  if(e.target.tagName == 'use' && e.target.parentElement.tagName == 'svg'){
+    cards.forEach((card, i ) => {
+      console.log(card.index, e.target.parentElement)
+      if(card.index == e.target.parentElement.id){
+        selectCard(mx, my, card, i)
+        return;
+      }
+    })
+    console.log(currentCard)
+  }
+  if (e.target.tagName == "BUTTON" || e.target.tagName == 'use') {
+   
     return;
   }
   for (let i = cards.length - 1; i >= 0; i--) {
     let card = cards[i];
     if (card.isin(mx, my)) {
-      card.press(mx, my);
-      currentCard = { card: card, index: i };
-      controls.style.display = "flex";
+      selectCard(mx, my, card, i)
       return false;
     }
   }
@@ -330,6 +397,7 @@ document.addEventListener("mouseup", (e) => {
     prevCard = currentCard;
     currentCard = false;
   }
+  draw2()
 });
 document.addEventListener("touchend", (e) => {
   if (currentCard) {
@@ -353,7 +421,7 @@ document.getElementById("flip").addEventListener("click", (_) => {
 document.getElementById("for").addEventListener("click", (_) => {
   console.log(prevCard);
   if (prevCard) {
-    if (prevCard.index == cards.length) {
+    if (prevCard.index == cards.length-1) {
       return;
     }
     // cards = array_move(cards, prevCard, )
@@ -383,5 +451,7 @@ function array_move(arr, old_index, new_index) {
   arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
   return arr; // for testing
 }
+
+
 //#endregion
 // cards.push(cards.splice(i, 1)[0]);

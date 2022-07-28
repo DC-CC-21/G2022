@@ -10,7 +10,7 @@
     <script src="../jsDrawingLib/svgDraw.js" defer></script>
     <script src="dots.js" defer></script>
   </head>
-  <body>
+  <body onload="window.scrollTo(0,0)">
     <svg style="display: none">
       <defs>
         <symbol id="test">
@@ -21,12 +21,9 @@
     </svg>
     <svg id="canvas"></svg>
     <p id="stats">MouseX: 0, MouseY:0, Card:0 </p>
-    <!-- <div id="selectionMenu">
-      <img src="assets/card1.png" alt="" />
-      <img src="assets/card1.png" alt="" />
-      <img src="assets/card1.png" alt="" />
-      <img src="assets/card1.png" alt="" />
-    </div> -->
+    <div id="selectionMenu">
+
+    </div>
     <div class="btns">
       <button id="rot">rotate</button>
       <button id="for">forward</button>
