@@ -1,9 +1,9 @@
 let errors = document.createElement("ul");
-document.getElementById('stats').append(errors)
+document.getElementById("stats").append(errors);
 
 window.onerror = function (error, source, lineno, colno, err) {
   errors.style.display = "block";
-  
+
   let info = {
     error: error,
     source: source,
@@ -20,14 +20,12 @@ window.onerror = function (error, source, lineno, colno, err) {
   errors.append(el);
 };
 
-
-
 //#region setup
 const canvas = document.getElementById("canvas");
 const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
 
 console.log(window.innerWidth, window.innerHeight);
-let domSize = window.innerWidth > window.innerHeight ? "height" : "width";
+let mode = window.innerWidth > window.innerHeight ? "Landscape" : "Portrait";
 
 let originalCanvas = {
   width: 520,
@@ -35,16 +33,11 @@ let originalCanvas = {
 };
 
 let cardSize;
-if(domSize == 'height'){
-
-  cardSize = c.map(250, 0, 706, 0, window.innerHeight);
+if (mode == "Landscape") {
+  cardSize = c.map(200, 0, 706, 0, window.innerHeight);
+} else if (mode == "Portrait") {
+  cardSize = c.map(120, 0, originalCanvas.width, 0, window.innerWidth);
 }
-else if(domSize == 'width'){
-
-  cardSize = c.map(150, 0, originalCanvas.width, 0, window.innerWidth);
-}
-
-
 
 document.getElementById(
   "stats"
@@ -114,8 +107,8 @@ class createCard {
     let colors = this.selectColors(dots);
     c2.fill(c2.color(255, 0, 0, 0));
     c2.stroke(0, 0, 255, 0.6);
-    c2.strokeWeight(5);
-    c2.rect(0, 0, this.width, this.height, this.width * 0.1);
+    c2.strokeWeight(8);
+    c2.rect(0, 0, this.width, this.height, 30);
 
     for (let i = 0; i < this.width; i += this.width / 6) {
       for (let j = 0; j < this.height; j += this.height / 6) {
@@ -143,6 +136,7 @@ class createCard {
     div.setAttribute("id", this.index);
 
     use.setAttribute("href", "#" + this.name);
+    div.setAttribute('preserveAspectRatio', true)
     div.setAttribute("viewBox", `0 0 ${cardSize} ${cardSize}`);
     //  / use.setAttribute('width', "100px")
     //  / use.setAttribute('height', '100px')
@@ -194,6 +188,49 @@ class targetCard {
     c.useLocal(`#card${this.card}`, this.x, this.y, this.s, this.s);
   }
 }
+class Game {
+  constructor() {
+    this[`create${mode}Display`]();
+  }
+  createPortraitDisplay() {
+    for (let i = 0; i < cardCount; i++) {
+      let offset = i / 2 - cardCount / 4;
+      cards.push(
+        new Card(
+          window.innerWidth / 2 + cardSize * offset - cardSize / 4,
+          window.innerHeight - cardSize * 1.5 + (cardSize * i) / 10,
+          i
+        )
+      );
+      targets.push(
+        new targetCard(
+          window.innerWidth / 2 - cardSize / 2,
+          c.map(10, 0, originalCanvas.width, 0, window.innerWidth),
+          i
+        )
+      );
+    }
+  }
+  createLandscapeDisplay() {
+    for (let i = 0; i < cardCount; i++) {
+      cards.push(
+        new Card(
+          (i * cardSize) / 10 +
+            c.map(10, 0, originalCanvas.height, 0, window.innerHeight),
+            c.map(100,0,originalCanvas.height,0,window.innerHeight)+ cardSize/2*i,
+          i
+        )
+      );
+      targets.push(
+        new targetCard(
+          window.innerWidth / 2 - cardSize / 2,
+          c.map(0, 0, originalCanvas.width, 0, window.innerWidth),
+          i
+        )
+      );
+    }
+  }
+}
 
 let customCards = [];
 let cardCount = 4;
@@ -211,7 +248,7 @@ class Card {
     this.card = cardNum;
     this.s = cardSize;
     this.overlap = { x: 0, y: 0 };
-    this.clicked = false;
+    this.clicked = true;
     this.rotation = 0;
     this.newRotation = 0;
     this.scale = 1;
@@ -305,42 +342,7 @@ let targets = [];
 let offsetX = 0;
 let textY = 0;
 
-switch (domSize) {
-  case "width":
-    for (let i = 0; i < cardCount; i++) {
-      console.log(i + 1);
-      cards.push(
-        new Card((i * cardSize) / 5, window.innerHeight - cardSize * 1.1, i)
-      );
-      targets.push(
-        new targetCard(
-          window.innerWidth / 2 - cardSize / 2,
-          c.map(-10, 0, 150, 0, cardSize),
-          i
-        )
-      );
-    }
-    break;
-  case "height":
-    for (let i = 0; i < cardCount; i++) {
-      console.log(i + 1);
-      cards.push(
-        new Card(
-          c.map(40,0,249.9,0,cardSize) + i * 20,
-          c.map(100,0,706,0,window.innerHeight)+i*cardSize/4,
-          i
-        )
-      );
-      targets.push(
-        new targetCard(
-          window.innerWidth / 2 - cardSize / 2,
-          c.map(-30, 0, 150, 0, cardSize),
-          i
-        )
-      );
-    }
-    break;
-}
+let game = new Game();
 
 //temp
 let x = 0;
@@ -356,31 +358,25 @@ draw = function () {
   c.background(75, 75, 75);
   // x += 1;
   // c.rect(x, 50, 100, 100);
+  c.fill(0,0,0)
+  c.strokeWeight(0);
   c.rect(
-    window.innerWidth / 2 - cardSize / 2,
-    window.innerHeight / 2 - cardSize / 2,
+    window.innerWidth / 2 - cardSize/2,
+    window.innerHeight / 2 - cardSize/2 ,
     cardSize,
-    cardSize
+    cardSize,
+    20
   );
 
   c.scale(0.5, 0.5);
 
-  for (let i = 0; i < cardCount; i++) {
-    // c.useLocal(`#card${i}`, i*cardSize/2, i*cardSize, cardSize/2, cardSize/2);
-  }
+
   c.reset();
   cards.forEach((card, i) => {
     card.display();
   });
 
 
-  
-  c.textSize(c.map(20,0,150,0,cardSize))
-  c.text(
-    "Match the card above to win",
-    window.innerWidth / 2,
-    c.map(170, 0, 706, 0, window.innerHeight)
-  );
   targets.forEach((card, i) => {
     card.display();
   });
@@ -539,5 +535,4 @@ window.onresize = function () {
   document.getElementById(
     "stats"
   ).innerHTML = `Width: ${window.innerWidth}, Height: ${window.innerHeight}, cardSize: ${cardSize}`;
-  
 };

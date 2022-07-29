@@ -45,18 +45,18 @@ img{
     display:flex;
     flex-direction:column;
     z-index:2;
-    /* overflow-y:scroll; */
+    overflow-y:scroll;
 }
 
 #selectionMenu svg {
     /* position:relative; */
-    /* width:auto; */
-    height:100%;
+    width:80%;
+    /* height:100%; */
     /* margin-bottom:-100%; */
     background-color:black;
     padding:5%;
     
-    margin:5%;
+    margin:5% auto ;
     border-radius:6%;
 }  
 svg.active{
@@ -81,11 +81,20 @@ body{
 
 p{
     position:absolute;
-    z-index:100;
-    left:0px;
+    z-index:1;
+    left:5em;
     top:0px;
     background-color: white;
     padding:1%;
     border-radius: 5px;
     font-family:Arial, Helvetica, sans-serif;
+}
+
+#backBtn{
+    position:absolute;
+    left:3px;
+    top:3px;
+    z-index:2;
+    background-color:rgb(150, 133, 83);
+    width:4em;
 }
