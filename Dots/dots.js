@@ -222,17 +222,70 @@ class createCard {
       [],
       [],
     ];
+    
+    //createDots(canvas, grid x*x, number of colors, number of dots)
+    this.createDots2(this.c2, grid, 4, 4);
 
-    this.createDots2(grid, dots);
-
-    this.createDots(this.c2, dots);
+    // this.createDots(this.c2, dots);
     // drawImage();
-  }
-  createDots2(dpc, num) {
+    }
+    drawOutline(c2){
+      c2.stroke(0,0,255,0.6)
+      c2.strokeWeight(5);
+      c2.fill(0,0,0,0)
+      if (mode == "Landscape") {
+        c2.strokeWeight(c.map(5, 0, 754, 0, window.innerHeight));
+        c2.rect(
+          0,
+          0,
+          this.width,
+          this.height,
+          c.map(20, 0, 754, 0, window.innerHeight)
+        );
+      } else {
+        // c2.strokeWeight(10);
+        c2.strokeWeight(c.map(8, 0, 1286, 0, window.innerWidth));
+        c2.rect(
+          0,
+          0,
+          this.width,
+          this.height,
+          c.map(10, 0, 407.2, 0, window.innerWidth)
+        );
+      }
+    }
+  createDots2(c2, grid, num, dpc) {
+    c2.reset();
+    this.drawOutline(c2)
     let colors = this.selectColors(num);
-    this.dots = new Array(dpc, dpc).fill(0);
-    // for(let i = 0 ;)
+    let s = this.width / grid;
+    let padding = 0.5;
+    let spacing = this.width / grid;
+
+    this.dots = new Array(grid * grid).fill(0);
+    for (let i = 0; i < dpc; i++) {
+      this.dots[i] = 1;
+    }
+    this.dots = c.shuffleArray(this.dots);
+
+    console.log(colors);
+    for (let i = 0; i < this.dots.length / grid; i++) {
+      for (let j = 0; j < grid; j++) {
+        if (this.dots[i + j * grid] == 1) {
+          c2.stroke(0,0,0,0)
+          c2.fill(colors[~~c2.random(0, colors.length)]);
+          c2.ellipse(
+            i * spacing + s / 2,
+            j * spacing + s / 2,
+            s * padding,
+            s * padding
+          );
+        }
+      }
+    }
+    this.appendHTML();
   }
+
   createDots(c2, dots) {
     c2.reset();
     let colors = this.selectColors(dots);
@@ -276,19 +329,40 @@ class createCard {
       }
     }
 
-    let div = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let div = document.createElement('div')
+    
+    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let use = document.createElementNS("http://www.w3.org/2000/svg", "use");
 
     div.setAttribute("class", "select");
     div.setAttribute("id", this.index);
 
     use.setAttribute("href", "#" + this.name);
-    div.setAttribute("viewBox", `0 0 ${cardSize} ${cardSize}`);
+    svg.setAttribute("viewBox", `0 0 ${cardSize} ${cardSize}`);
     //  / use.setAttribute('width', "100px")
     //  / use.setAttribute('height', '100px')
     use.style.position = "relative";
 
-    div.append(use);
+    svg.append(use);
+    div.append(svg)
+    selectionMenu.append(div);
+  }
+  appendHTML() {
+    let div = document.createElement('div')
+    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+
+    svg.setAttribute("class", "select");
+    svg.setAttribute("id", this.index);
+
+    use.setAttribute("href", "#" + this.name);
+    svg.setAttribute("viewBox", `0 0 ${cardSize} ${cardSize}`);
+    //  / use.setAttribute('width', "100px")
+    //  / use.setAttribute('height', '100px')
+    use.style.position = "relative";
+
+    svg.append(use);
+    div.append(svg)
     selectionMenu.append(div);
   }
   selectColors(len) {
@@ -384,7 +458,10 @@ class Card {
     this.newRotation = 0;
     this.scale = 1;
     this.newScale = 1;
+
+
     this.checkedRot = true;
+    this.checkedScale = true;
     this.snapped = false;
   }
   display() {
@@ -406,24 +483,35 @@ class Card {
     // else {c.fill(255,0,0)}
     // c.rect(this.x, this.y, this.s, this.s);
     // console.log(dst)
-    c.textSize(20);
-    c.textFont("Impact");
-    c.text(this.card + "," + this.index, this.x, this.y);
+    c.textSize(30);
+    c.textFont("sans-serif");
+    c.text(this.rotation.toFixed(2) + "," + this.newRotation, this.x, this.y-25);
+    c.text(this.scale.toFixed(2) + "," + this.newScale, this.x, this.y);
 
-    this.rotation = this.newRotation; //Math.ceil(c.lerp(this.rotation, this.newRotation, 0.01));
-    this.scale = this.newScale; //c.lerp(this.scale, this.newScale, 0.05);
+    this.rotation = (c.lerp(this.rotation, this.newRotation, 0.02));
+    this.scale = c.lerp(this.scale, this.newScale, 0.05);
     if (this.rotation == 360) {
       this.rotation = 0;
       this.newRotation = 0;
     }
-    if (this.rotation !== this.newRotation) {
-      this.checkedRot = false;
-    }
-    if (this.checkedRot == false && ~~this.rotation % 90 == 0) {
-      console.log("check");
+    if(Math.abs(this.rotation-this.newRotation) < 2  && !this.checkedRot){
+      this.rotation = this.newRotation;
       check = true;
       this.checkedRot = true;
     }
+    if(Math.abs(this.scale - this.newScale) < 0.1 && !this.checkedScale){
+      this.scale = this.newScale;
+      check = true;
+      this.checkedScale = true;
+    }
+    // if (this.rotation !== this.newRotation) {
+    //   this.checkedRot = false;
+    // }
+    // if (this.checkedRot == false && ~~this.rotation % 90 == 0) {
+    //   console.log("check");
+    //   check = true;
+    //   this.checkedRot = true;
+    // }
     c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
     c.scale(this.scale, 1);
@@ -554,7 +642,7 @@ class Game {
           (i * cardSize) / 10 +
             c.map(10, 0, originalCanvas.height, 0, window.innerHeight),
           c.map(100, 0, originalCanvas.height, 0, window.innerHeight) +
-            (cardSize / 2) * i,
+            (cardSize / cardCount*2) * i,
           i
         )
       );
@@ -660,6 +748,10 @@ class Game {
 
   win() {
     document.getElementById("win").style.display = "block";
+    document
+    .querySelectorAll(".active")
+    .forEach((el) => el.classList.toggle("active"));
+    controls.style.display = 'none'
   }
 }
 
@@ -762,7 +854,7 @@ function levenshtein(s, t) {
   return h;
 }
 
-let cardCount = 4;
+let cardCount = 8;
 let customCards = [];
 let cards = [];
 let targets = [];
@@ -780,6 +872,7 @@ c.textSize(50);
 //
 
 let placedCards = 0;
+
 draw = function () {
   game.check();
   x += 10;
@@ -838,24 +931,26 @@ draw = function () {
 let currentCard;
 let prevCard;
 
-function selectCard(mx, my, card, i) {
+function selectCard(mx, my, card, i, done) {
   card.press(mx, my);
   currentCard = { card: card, index: i };
   document
     .querySelectorAll(".active")
     .forEach((el) => el.classList.toggle("active"));
-  document.getElementById(currentCard.card.index).classList.toggle("active");
+  document.getElementById(currentCard.card.card).classList.toggle("active");
   controls.style.display = "flex";
+
 }
 
 function ontouchDown(e, mx, my) {
   // console.log(e.target.tagName);
   // console.log(e.target.parentElement.tagName);
-  if (e.target.tagName == "use" && e.target.parentElement.tagName == "svg") {
+  
+  if (e.target.tagName == "use" && e.target.parentElement.tagName == "svg" || e.target.parentElement.tagName == 'DIV') {
     cards.forEach((card, i) => {
       // console.log(card.index, e.target.parentElement);
-      if (card.index == e.target.parentElement.id) {
-        selectCard(mx, my, card, i);
+      if (card.card == e.target.parentElement.id) {
+        selectCard(mx, my, card, i, 0);
         return;
       }
     });
@@ -909,6 +1004,7 @@ document.addEventListener("mouseup", (e) => {
     prevCard = currentCard;
     currentCard = false;
   }
+  refreshElement(selectionMenu)
 });
 document.addEventListener("touchend", (e) => {
   if (currentCard) {
@@ -916,19 +1012,24 @@ document.addEventListener("touchend", (e) => {
     prevCard = currentCard;
     currentCard = false;
   }
+    refreshElement(selectionMenu)
 });
 document.getElementById("rot").addEventListener("click", (_) => {
   // console.log(prevCard);
   if (prevCard) {
-    prevCard.card.newRotation += 90;
-    check = true;
+    prevCard.card.newRotation += 90 * (prevCard.card.scale<0?-1:1);
+    prevCard.card.checkedRot = false;
+    console.log(prevCard.card.newRotation)
+    
+    // check = true;
   }
 });
 document.getElementById("flip").addEventListener("click", (_) => {
   // console.log(prevCard);
   if (prevCard) {
     prevCard.card.newScale *= -1;
-    check = true;
+    prevCard.card.checkedScale = false;
+    // check = true;
   }
 });
 document.getElementById("for").addEventListener("click", (_) => {
@@ -980,4 +1081,11 @@ window.onresize = function () {
 document.getElementById("next").addEventListener("click", (_) => {
   game.run();
 });
+function refreshElement(el){
+  let children = Array.from(el.children);
+  el.innerHTML = '';
+  children.forEach(child => {
+    el.append(child)
+  })
+}
 ////

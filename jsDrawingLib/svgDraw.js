@@ -242,7 +242,7 @@ class Canvas {
     );
     el.setAttribute(
       "transform",
-      `rotate(${this.#rotation}), scale(${this.#scale.x},${this.#scale.y})`
+      `scale(${this.#scale.x},${this.#scale.y}),rotate(${this.#rotation})`
     );
 
     el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);

@@ -5,6 +5,11 @@
 *{
     margin:0px;
     padding:0px;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-touch-action: none;
+    touch-action: none; 
+
 }
 
 .btns{
@@ -32,32 +37,41 @@ img{
 }
 
 #selectionMenu{
+    -webkit-user-select:auto;
+    user-select:all;
+    -ms-touch-action:auto;
+    touch-action:auto; 
     width:15%;
-    /* height:100px; */
-    max-height:80%;
+    height:100%;
+    border-left:2px solid black;
+
+    /* max-height:80%; */
     position:absolute;
     right:0px;
     /* left:0; */
     top:0px;
     background-color:rgba(170, 170, 170, 0.278);
-    /* height:100%; */
-    /* padding:0.1%; */
-    display:flex;
-    flex-direction:column;
-    z-index:2;
-    overflow-y:scroll;
-}
 
+    z-index:2;
+    overflow:scroll !important;
+}
+#selectionMenu div{
+    position: relative;
+    width:100px;
+    height:100px;
+    margin-top:10%;
+    /* background-color:white; */
+    margin-left:auto;
+    margin-right:auto;
+}
 #selectionMenu svg {
-    /* position:relative; */
-    width:80%;
-    /* height:100%; */
-    /* margin-bottom:-100%; */
+    position:relative;
+    width:100%;
+    height:100%;
     background-color:black;
-    padding:5%;
-    
-    margin:5% auto ;
+
     border-radius:6%;
+    /* display:none; */
 }  
 svg.active{
     border:1px solid var(--shadow);
@@ -104,12 +118,14 @@ p{
     left:0px;
     top:0px;
     z-index: 100;
+    display:none;
 }
 #checkCards2{
     position:absolute;
     left:0px;
     top:200px;
     z-index: 100;
+    display:none;
 }
 #completeTarget{
     position:absolute;
@@ -145,7 +161,7 @@ p{
     position:absolute;
     left:0;
     right:0;
-    top:50%;
+    top:23%;
     background:rgb(0, 0, 0);
     z-index:500;
     border:1px solid yellow;
@@ -153,8 +169,10 @@ p{
     padding:5px;
     color:white;
     text-align:center;
+    font-size:larger;
     margin-left:auto;
     margin-right:auto;
+    width:-moz-fit-content;
     width:fit-content;
     display:none;
 }
