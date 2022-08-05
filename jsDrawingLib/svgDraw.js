@@ -17,11 +17,12 @@ class Canvas {
   #textAlign = "left";
   #cameraPos = { x: 0, y: 0 };
   #scale = { x: -1, y: 1 };
-  #transformOrigin = {x:0, y:0}
-  #textFont = 'sans-serif'
+  #transformOrigin = { x: 0, y: 0 };
+  #textFont = "sans-serif";
+  #translate = { x: 0, y: 0 };
   //#endregion
 
-  constructor(canvas, width, height, createTouch=true) {
+  constructor(canvas, width, height, createTouch = true) {
     // SETUP this.#canvas
     this.#canvas = canvas;
     this.#canvas.style.overflow = "show";
@@ -35,9 +36,8 @@ class Canvas {
     //1536x754
     console.log(`Your canvas is ${Width}x${Height}`);
     recursive();
-    if(createTouch){
+    if (createTouch) {
       this.createTouchContainer();
-
     }
   }
   moveCamera(p, w) {
@@ -79,7 +79,10 @@ class Canvas {
 
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
-    el.setAttribute("transform-origin", `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`);
+    el.setAttribute(
+      "transform-origin",
+      `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`
+    );
     el.setAttribute(
       "transform",
       `rotate(${this.#rotation}), scale(${this.#scale.x},${this.#scale.y})`
@@ -102,6 +105,16 @@ class Canvas {
     el.setAttribute("fill", this.#fillColor);
     el.setAttribute("stroke", this.#strokeColor);
     el.setAttribute("stroke-width", this.#strokeWeightSize);
+    el.setAttribute(
+      "transform-origin",
+      `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`
+    );
+    el.setAttribute(
+      "transform",
+      `translate(${this.#translate.x}, ${this.#translate.y}), rotate(${
+        this.#rotation
+      }), scale(${this.#scale.x},${this.#scale.y})`
+    );
     this.#canvas.append(el);
   }
 
@@ -150,11 +163,11 @@ class Canvas {
     // el.setAttribute("stroke-width", this.#strokeWeightSize);
     el.setAttribute("font-size", this.#textSize);
     el.setAttribute("text-anchor", this.#textAlign);
-    el.setAttribute('font-family', this.#textFont)
+    el.setAttribute("font-family", this.#textFont);
     this.#canvas.append(el);
   }
 
-  textFont(font){
+  textFont(font) {
     this.#textFont = font;
   }
 
@@ -189,7 +202,10 @@ class Canvas {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
     el.setAttribute("href", img);
 
-    el.setAttribute("transform-origin", `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`);
+    el.setAttribute(
+      "transform-origin",
+      `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`
+    );
     el.setAttribute(
       "transform",
       `rotate(${this.#rotation}), scale(${this.#scale.x},${this.#scale.y})`
@@ -216,17 +232,19 @@ class Canvas {
     this.#canvas.append(el);
   }
 
-  useLocal(img, x, y, width, height, fixed=false){
+  useLocal(img, x, y, width, height, fixed = false) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "use");
     el.setAttribute("href", img);
 
-    el.setAttribute("transform-origin", `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`);
+    el.setAttribute(
+      "transform-origin",
+      `${this.#transformOrigin.x}px ${this.#transformOrigin.y}px`
+    );
     el.setAttribute(
       "transform",
       `rotate(${this.#rotation}), scale(${this.#scale.x},${this.#scale.y})`
     );
 
- 
     el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
 
     el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
@@ -234,7 +252,7 @@ class Canvas {
     // }
     el.setAttribute("width", width || 100);
     el.setAttribute("height", height || 100);
-    el.setAttribute('draggable', true)
+    el.setAttribute("draggable", true);
     //rotate
 
     //end rotate
@@ -243,7 +261,6 @@ class Canvas {
     // el.style.height = height + 'px'
     this.#canvas.append(el);
   }
-
 
   getAspect(src) {
     let aspect = 0;
@@ -276,8 +293,8 @@ class Canvas {
       this.#fillColor = r;
     }
   }
-  color(r,g,b,a=1){
-    return `rgba(${r},${g},${b},${a})`
+  color(r, g, b, a = 1) {
+    return `rgba(${r},${g},${b},${a})`;
   }
 
   stroke(r, g, b, a) {
@@ -298,26 +315,27 @@ class Canvas {
 
   //transformations
   rotate(deg) {
-  
     this.#rotation = deg;
     // this.#rotationOffsetX = this.cameraPos.x + xOffset;
     // this.#rotationOffsetY = this.cameraPos.y + yOffset;
   }
-
-  scale(scaleX, scaleY) {
-    this.#scale = {x:scaleX, y:scaleY}
+  translate(x, y) {
+    this.#translate = { x: x, y: y };
   }
-  transformOrigin(x, y){
-
-    this.#transformOrigin = {x: x, y: y}
+  scale(scaleX, scaleY) {
+    this.#scale = { x: scaleX, y: scaleY };
+  }
+  transformOrigin(x, y) {
+    this.#transformOrigin = { x: x, y: y };
   }
   reset() {
     this.fill(255, 255, 255);
     this.stroke(0, 0, 0);
-    this.strokeWeight(1)
+    this.strokeWeight(1);
     this.rotate(0, 0, 0);
-    this.scale(1,1)
-    this.transformOrigin(0,0)
+    this.scale(1, 1);
+    this.transformOrigin(0, 0);
+    this.translate(0, 0);
   }
   //math type functions
   dist(x, y, x2, y2) {
@@ -348,6 +366,19 @@ class Canvas {
   }
   random(min, max) {
     return Math.random() * (max - min) + min;
+  }
+  shuffleArray(array) {
+    var counter = array.length;
+
+    while (counter > 0) {
+      var ind = Math.floor(Math.random() * counter);
+      counter--;
+
+      var temp = array[counter];
+      array[counter] = array[ind];
+      array[ind] = temp;
+    }
+    return array;
   }
   //line collide
   insideLineBounds(point1, point2, p) {

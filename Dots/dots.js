@@ -20,6 +20,131 @@ window.onerror = function (error, source, lineno, colno, err) {
   errors.append(el);
 };
 
+//class checkCards
+
+let completeTarget = document.getElementById("completeTarget");
+let completeCards = document.getElementById("completeCards");
+
+const checkCardsCanvas = document.getElementById("checkCards");
+var ctx = checkCardsCanvas.getContext("2d");
+eraseCanvas(ctx);
+const checkCardsCanvas2 = document.getElementById("checkCards2");
+var ctx2 = checkCardsCanvas2.getContext("2d");
+eraseCanvas(ctx2);
+
+function sizeCanvas(canvas, s) {
+  canvas.width = s;
+  canvas.height = s;
+  canvas.style.width = s + "px";
+  canvas.style.height = s + "px";
+}
+
+let cSize = 200;
+sizeCanvas(checkCardsCanvas, cSize);
+sizeCanvas(checkCardsCanvas2, cSize);
+// checkCardsCanvas.width = 200
+// checkCardsCanvas.height = 200
+// checkCardsCanvas2.width = 200
+// checkCardsCanvas2.height = 200
+// checkCardsCanvas.style.width = '200px'
+// checkCardsCanvas.style.height = '200px'
+// checkCardsCanvas2.style.width = '200px'
+// checkCardsCanvas2.style.height = '200px'
+
+function drawImage(i) {
+  transferSVG(document.getElementById(`card${i}`), completeTarget, i);
+  let svgs = document.querySelectorAll("#completeTarget svg");
+
+  imgFromSVGnode(ctx, svgs[i], function () {});
+}
+
+function transferSVG(svg, newSvg, i) {
+  let newSVGcontainer = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+  let attr = document.querySelectorAll(`#${newSvg.id} use`)[i];
+  // console.log(newSvg);
+
+  Array.from(attr.attributes).forEach((attribute) => {
+    if (attribute.name != "id" && attribute.name != "transform-origin") {
+      newSVGcontainer.setAttribute(
+        `data-${attribute.name}`,
+        attr.getAttribute(attribute.name)
+      );
+    }
+  });
+  newSVGcontainer.setAttribute("viewBox", `0 0 ${cardSize} ${cardSize}`);
+  Array.from(svg.children).forEach((child) => {
+    let el = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      child.tagName
+    );
+
+    Array.from(child.attributes).forEach((attribute) => {
+      // console.log(attribute, child.getAttribute(attribute.name));
+      el.setAttribute(attribute.name, child.getAttribute(attribute.name));
+    });
+    newSVGcontainer.append(el);
+    // console.log(child.tagName)
+    // console.log(child.attributes)
+  });
+  newSvg.append(newSVGcontainer);
+}
+// //
+function createURLforSvg(rawSVG) {
+  var svgURL = new XMLSerializer().serializeToString(rawSVG);
+  var svg64 = btoa(svgURL);
+  var b64Start = "data:image/svg+xml;base64,";
+  return b64Start + svg64;
+}
+function eraseCanvas(ctx) {
+  // Store the current transformation matrix
+  ctx.save();
+
+  // Use the identity matrix while clearing the canvas
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, checkCardsCanvas.width, checkCardsCanvas.height);
+
+  // Restore the transform
+  ctx.restore();
+}
+
+function imgFromSVGnode(ctx, rawSVG, callback) {
+  //transform
+  let transform = rawSVG.dataset.transform;
+  let rotation = Number(transform.split("(")[1].split(")")[0]);
+  let scale = Number(transform.split("(")[2].split(",")[0]);
+
+  //create link
+  let image64 = createURLforSvg(rawSVG);
+  var img = new Image();
+
+  img.onload = function () {
+    let w = checkCardsCanvas.width;
+    let h = checkCardsCanvas.width;
+    ctx.save();
+
+    // ctx.resetTransform()
+    ctx.translate(w / 2, h / 2);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.scale(scale, 1);
+    ctx.drawImage(this, -w / 2, -h / 2, w, h);
+    ctx.restore();
+    callback();
+  };
+  img.src = image64;
+
+  let nimg = document.createElement("img");
+  nimg.src = image64;
+  // document.getElementById("imgs").append(nimg);
+}
+
+function canvasToDataURL(canvas) {
+  let dataURL = canvas.toDataURL("image/png");
+  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+}
+
 //#region setup
 const canvas = document.getElementById("canvas");
 const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
@@ -57,13 +182,10 @@ class customImg {
     this.svg.style.width = s + "px";
     this.svg.style.height = s + "px";
     this.svg.setAttribute("viewBox", `0 0 ${s} ${s}`);
-
+    this.svg.setAttribute("class", "dotsCard");
     // this.defs = document.createElementNS('http://www.w3.org/2000/svg','defs')
 
-    this.symbol = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "symbol"
-    );
+    this.symbol = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.symbol.setAttribute("id", name);
     this.symbol.setAttribute("width", s);
     this.symbol.setAttribute("height", s);
@@ -77,7 +199,7 @@ class customImg {
   }
 }
 class createCard {
-  constructor(name, width, height, dots) {
+  constructor(name, width, height, grid, dots) {
     this.name = `card${name}`;
     this.card1 = new customImg(
       document.querySelector("body"),
@@ -100,32 +222,57 @@ class createCard {
       [],
       [],
     ];
+
+    this.createDots2(grid, dots);
+
     this.createDots(this.c2, dots);
+    // drawImage();
+  }
+  createDots2(dpc, num) {
+    let colors = this.selectColors(num);
+    this.dots = new Array(dpc, dpc).fill(0);
+    // for(let i = 0 ;)
   }
   createDots(c2, dots) {
     c2.reset();
     let colors = this.selectColors(dots);
     c2.fill(c2.color(255, 0, 0, 0));
     c2.stroke(0, 0, 255, 0.6);
-    c2.strokeWeight(8);
-    c2.rect(0, 0, this.width, this.height, 30);
-
-    for (let i = 0; i < this.width; i += this.width / 6) {
-      for (let j = 0; j < this.height; j += this.height / 6) {
-        c2.transformOrigin(0, 0);
-        c2.scale(1, 1);
-        if (Math.random() > 0.1) {
+    // console.log(mode)
+    if (mode == "Landscape") {
+      c2.strokeWeight(c.map(5, 0, 754, 0, window.innerHeight));
+      c2.rect(
+        0,
+        0,
+        this.width,
+        this.height,
+        c.map(20, 0, 754, 0, window.innerHeight)
+      );
+    } else {
+      // c2.strokeWeight(10);
+      c2.strokeWeight(c.map(8, 0, 1286, 0, window.innerWidth));
+      c2.rect(
+        0,
+        0,
+        this.width,
+        this.height,
+        c.map(10, 0, 407.2, 0, window.innerWidth)
+      );
+    }
+    // 1286,754
+    let s = this.width / 12;
+    let offset = 0;
+    c2.translate(s, s);
+    for (let i = offset; i < this.width - offset; i += this.width / 6) {
+      for (let j = offset; j < this.height - offset; j += this.height / 6) {
+        if (Math.random() > 0.05) {
           c2.fill(255, 0, 0, 0);
+          continue;
         } else {
           c2.fill(colors[~~c2.random(0, colors.length)]);
         }
         c2.stroke(0, 0, 0, 0);
-        c2.ellipse(
-          i + this.width / 12,
-          j + this.height / 12,
-          this.width / 10,
-          this.height / 10
-        );
+        c2.ellipse(i, j, s, s);
       }
     }
 
@@ -136,7 +283,6 @@ class createCard {
     div.setAttribute("id", this.index);
 
     use.setAttribute("href", "#" + this.name);
-    div.setAttribute('preserveAspectRatio', true)
     div.setAttribute("viewBox", `0 0 ${cardSize} ${cardSize}`);
     //  / use.setAttribute('width', "100px")
     //  / use.setAttribute('height', '100px')
@@ -148,14 +294,14 @@ class createCard {
   selectColors(len) {
     let colors = [];
     let colorsCopy = this.colors[0];
-    console.log(this.colors, "a");
+    // console.log(this.colors, "a");
     while (colors.length < len) {
       let color = ~~this.c2.random(0, colorsCopy.length);
       colors.push(colorsCopy[color]);
       colorsCopy.pop(color);
       // break;
     }
-    console.log(colors);
+    // console.log(colors);
     return colors;
   }
 }
@@ -170,6 +316,9 @@ class targetCard {
     this.scale = this.scales[~~c.random(0, this.scales.length)];
     this.card = i;
     this.s = cardSize;
+    this.setTarget();
+
+    drawImage(this.card);
   }
   display() {
     // c.reset()
@@ -187,63 +336,45 @@ class targetCard {
 
     c.useLocal(`#card${this.card}`, this.x, this.y, this.s, this.s);
   }
-}
-class Game {
-  constructor() {
-    this[`create${mode}Display`]();
-  }
-  createPortraitDisplay() {
-    for (let i = 0; i < cardCount; i++) {
-      let offset = i / 2 - cardCount / 4;
-      cards.push(
-        new Card(
-          window.innerWidth / 2 + cardSize * offset - cardSize / 4,
-          window.innerHeight - cardSize * 1.5 + (cardSize * i) / 10,
-          i
-        )
-      );
-      targets.push(
-        new targetCard(
-          window.innerWidth / 2 - cardSize / 2,
-          c.map(10, 0, originalCanvas.width, 0, window.innerWidth),
-          i
-        )
-      );
+  setTarget() {
+    // c.reset()
+    c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
+    c.rotate(this.rotation, this.s / 2, this.s / 2);
+    c.scale(this.scale * 0.5, 1 * 0.5);
+    if (this.card == 0) {
+      //ardCount-1){
+      c.fill(0, 0, 0);
+      c.rect(this.x, this.y, this.s, this.s, 30);
     }
-  }
-  createLandscapeDisplay() {
-    for (let i = 0; i < cardCount; i++) {
-      cards.push(
-        new Card(
-          (i * cardSize) / 10 +
-            c.map(10, 0, originalCanvas.height, 0, window.innerHeight),
-            c.map(100,0,originalCanvas.height,0,window.innerHeight)+ cardSize/2*i,
-          i
-        )
-      );
-      targets.push(
-        new targetCard(
-          window.innerWidth / 2 - cardSize / 2,
-          c.map(0, 0, originalCanvas.width, 0, window.innerWidth),
-          i
-        )
-      );
-    }
+    c.fill(0, 0, 0, 0);
+
+    // c.image(this.src, this.x, this.y, this.s, this.s);
+
+    c.useLocal(`#card${this.card}`, this.x, this.y, this.s, this.s);
+
+    let el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    el.setAttribute("x", 0);
+    el.setAttribute("y", 0);
+    el.setAttribute("fill", c.color(0, 0, 255, 1));
+    let use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute(
+      "transform-origin",
+      `${this.x + this.s / 2}px ${this.y + this.s / 2}px`
+    );
+    use.setAttribute(
+      "transform",
+      `rotate(${this.rotation}), scale(${this.scale},1)`
+    );
+    use.setAttribute("href", `#card${this.card}`);
+    completeTarget.append(use);
   }
 }
-
-let customCards = [];
-let cardCount = 4;
-for (let i = 0; i < cardCount; i++) {
-  new createCard(i, cardSize, cardSize, 5);
-}
-
 class Card {
   constructor(x, y, cardNum) {
     this.x = x;
     this.y = y;
     this.src = `assets/card${cardNum}.png`;
-    console.log(this.src);
+    // console.log(this.src);
     this.index = cardNum;
     this.card = cardNum;
     this.s = cardSize;
@@ -253,6 +384,8 @@ class Card {
     this.newRotation = 0;
     this.scale = 1;
     this.newScale = 1;
+    this.checkedRot = true;
+    this.snapped = false;
   }
   display() {
     // switch (this.index) {
@@ -273,12 +406,23 @@ class Card {
     // else {c.fill(255,0,0)}
     // c.rect(this.x, this.y, this.s, this.s);
     // console.log(dst)
+    c.textSize(20);
+    c.textFont("Impact");
+    c.text(this.card + "," + this.index, this.x, this.y);
 
-    this.rotation = Math.ceil(c.lerp(this.rotation, this.newRotation, 0.01));
-    this.scale = c.lerp(this.scale, this.newScale, 0.05);
+    this.rotation = this.newRotation; //Math.ceil(c.lerp(this.rotation, this.newRotation, 0.01));
+    this.scale = this.newScale; //c.lerp(this.scale, this.newScale, 0.05);
     if (this.rotation == 360) {
       this.rotation = 0;
       this.newRotation = 0;
+    }
+    if (this.rotation !== this.newRotation) {
+      this.checkedRot = false;
+    }
+    if (this.checkedRot == false && ~~this.rotation % 90 == 0) {
+      console.log("check");
+      check = true;
+      this.checkedRot = true;
     }
     c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
@@ -321,36 +465,323 @@ class Card {
       ) <
       cardSize / 4
     ) {
+      this.snapped = true;
+      check = true;
       this.x = window.innerWidth / 2 - cardSize / 2;
       this.y = window.innerHeight / 2 - cardSize / 2;
       this.moveControls();
+      return;
     }
+    this.snapped = false;
   }
   moveControls() {
     controls.style.left = this.x + this.s + "px";
     controls.style.top = this.y + this.s * 0.1 + "px";
   }
+  appendToHTML(i) {
+    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute(
+      "transform",
+      `rotate(${this.rotation}), scale(${this.scale}, 1)`
+    );
+    completeCards.append(use);
+    let oldSVG = document.getElementById(`card${this.card}`);
+    transferSVG(oldSVG, completeCards, i);
+
+    let svgs = document.querySelectorAll("#completeCards svg");
+
+    imgFromSVGnode(ctx2, svgs[i], function () {
+      if (i == cardCount - 1) {
+        game.checkImageData();
+      }
+    });
+  }
 }
+class Game {
+  constructor() {
+    this.run();
+  }
+  resetArrays() {
+    document.getElementById("win").style.display = "none";
+    document.querySelectorAll(".dotsCard").forEach((card) => card.remove());
+    selectionMenu.innerHTML = "";
+    eraseCanvas(ctx);
+    eraseCanvas(ctx2);
+
+    completeTarget.innerHTML = "";
+    customCards = [];
+    cards = [];
+    targets = [];
+    targetComplete = [];
+    complete = [];
+  }
+  run() {
+    this.resetArrays();
+    for (let i = 0; i < cardCount; i++) {
+      new createCard(i, cardSize, cardSize, 6, 4);
+    }
+
+    this[`create${mode}Display`]();
+    this.imageData = ctx.getImageData(0, 0, 200, 200);
+    this.dataURL = checkCardsCanvas.toDataURL("image/png");
+    this.dataURL = this.dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    this.shuffleCards(cards);
+  }
+  createPortraitDisplay() {
+    for (let i = 0; i < cardCount; i++) {
+      let offset = i / 2 - cardCount / 4;
+      cards.push(
+        new Card(
+          window.innerWidth / 2 + cardSize * offset - cardSize / 4,
+          window.innerHeight - cardSize * 1.5 + (cardSize * i) / 10,
+          i
+        )
+      );
+      targets.push(
+        new targetCard(
+          window.innerWidth / 2 - cardSize / 2,
+          c.map(10, 0, originalCanvas.width, 0, window.innerWidth),
+          i
+        )
+      );
+    }
+  }
+  createLandscapeDisplay() {
+    for (let i = 0; i < cardCount; i++) {
+      cards.push(
+        new Card(
+          (i * cardSize) / 10 +
+            c.map(10, 0, originalCanvas.height, 0, window.innerHeight),
+          c.map(100, 0, originalCanvas.height, 0, window.innerHeight) +
+            (cardSize / 2) * i,
+          i
+        )
+      );
+      targets.push(
+        new targetCard(
+          window.innerWidth / 2 - cardSize / 2,
+          c.map(0, 0, originalCanvas.width, 0, window.innerWidth),
+          i
+        )
+      );
+    }
+  }
+  shuffleCards(array) {
+    var counter = array.length;
+
+    while (counter > 0) {
+      var ind = Math.floor(Math.random() * counter);
+      counter--;
+
+      var temp = array[counter];
+      array[counter] = array[ind];
+      array[ind] = temp;
+    }
+    return array;
+  }
+  checkImageData() {
+    for (let i = 0; i < cards.length; i++) {
+      if (cards[i].snapped) {
+        continue;
+      } else {
+        return false;
+      }
+    }
+
+    var imageData = ctx.getImageData(0, 0, 200, 200);
+    var imageData2 = ctx2.getImageData(0, 0, 200, 200);
+
+    var pixels = imageData.data;
+    var pixels2 = imageData2.data;
+
+    if (pixels.join("") === pixels2.join("")) {
+      console.log("complete with pixels search");
+      this.win();
+      return true;
+    }
+
+    var img = new Image();
+    img.src = checkCardsCanvas.toDataURL();
+
+    var img2 = new Image();
+    img2.src = checkCardsCanvas2.toDataURL();
+
+    var xPromise = new Promise((resolve) => {
+      img.onload = resolve;
+    });
+    var yPromise = new Promise((resolve) => {
+      img2.onload = resolve;
+    });
+    Promise.all([xPromise, yPromise]).then(() => {
+      let dataURL = canvasToDataURL(checkCardsCanvas);
+      let dataURL2 = canvasToDataURL(checkCardsCanvas2);
+
+      if (dataURL == dataURL2) {
+        //match
+        console.log("complete with data url search");
+        this.win();
+        return true;
+      } else {
+        let l = levenshtein(dataURL, dataURL2);
+        if (l < 100) {
+          console.log("complete with levenshtein search");
+          this.win();
+          return true;
+        }
+        this.debugCheckSequence(pixels, pixels2, dataURL, dataURL2);
+        return false;
+      }
+    });
+    let totalDist = 0;
+  }
+  debugCheckSequence(pixels, pixels2, dataURL, dataURL2) {
+    console.log("pixels: ", pixels.length);
+    console.log("pixels2: ", pixels2.length);
+    console.log(dataURL);
+    console.log(dataURL2);
+    let leven = levenshtein(dataURL, dataURL2);
+    console.log(leven);
+  }
+  check() {
+    if (check) {
+      completeCards.innerHTML = "";
+      eraseCanvas(ctx2);
+      // sizeCanvas(checkCardsCanvas, cSize);
+      // sizeCanvas(checkCardsCanvas2, cSize);
+      for (let i = 0; i < cards.length; i++) {
+        cards[i].appendToHTML(i);
+      }
+
+      check = false;
+    }
+    return false;
+  }
+
+  win() {
+    document.getElementById("win").style.display = "block";
+  }
+}
+
+function levenshtein(s, t) {
+  if (s === t) {
+    return 0;
+  }
+  var n = s.length,
+    m = t.length;
+  if (n === 0 || m === 0) {
+    return n + m;
+  }
+  var x = 0,
+    y,
+    a,
+    b,
+    c,
+    d,
+    g,
+    h;
+  var p = new Uint16Array(n);
+  var u = new Uint32Array(n);
+  for (y = 0; y < n; ) {
+    u[y] = s.charCodeAt(y);
+    p[y] = ++y;
+  }
+
+  for (; x + 3 < m; x += 4) {
+    var e1 = t.charCodeAt(x);
+    var e2 = t.charCodeAt(x + 1);
+    var e3 = t.charCodeAt(x + 2);
+    var e4 = t.charCodeAt(x + 3);
+    c = x;
+    b = x + 1;
+    d = x + 2;
+    g = x + 3;
+    h = x + 4;
+    for (y = 0; y < n; y++) {
+      a = p[y];
+      if (a < c || b < c) {
+        c = a > b ? b + 1 : a + 1;
+      } else {
+        if (e1 !== u[y]) {
+          c++;
+        }
+      }
+
+      if (c < b || d < b) {
+        b = c > d ? d + 1 : c + 1;
+      } else {
+        if (e2 !== u[y]) {
+          b++;
+        }
+      }
+
+      if (b < d || g < d) {
+        d = b > g ? g + 1 : b + 1;
+      } else {
+        if (e3 !== u[y]) {
+          d++;
+        }
+      }
+
+      if (d < g || h < g) {
+        g = d > h ? h + 1 : d + 1;
+      } else {
+        if (e4 !== u[y]) {
+          g++;
+        }
+      }
+      p[y] = h = g;
+      g = d;
+      d = b;
+      b = c;
+      c = a;
+    }
+  }
+
+  for (; x < m; ) {
+    var e = t.charCodeAt(x);
+    c = x;
+    d = ++x;
+    for (y = 0; y < n; y++) {
+      a = p[y];
+      if (a < c || d < c) {
+        d = a > d ? d + 1 : a + 1;
+      } else {
+        if (e !== u[y]) {
+          d = c + 1;
+        } else {
+          d = c;
+        }
+      }
+      p[y] = d;
+      c = a;
+    }
+    h = d;
+  }
+
+  return h;
+}
+
+let cardCount = 4;
+let customCards = [];
 let cards = [];
 let targets = [];
-//   new Card(100, 250, 1),
-//   new Card(120, 100, 2),
-//   new Card(140, 100, 3),
-//   new Card(160, 100, 4),
-// ];
-
+let targetComplete = [];
+let complete = [];
+let check = true;
 let offsetX = 0;
 let textY = 0;
 
 let game = new Game();
-
 //temp
 let x = 0;
 cards[0].snap();
 c.textSize(50);
 //
 
+let placedCards = 0;
 draw = function () {
+  game.check();
   x += 10;
   window.scrollTo(0, 0);
   c.reset();
@@ -358,27 +789,34 @@ draw = function () {
   c.background(75, 75, 75);
   // x += 1;
   // c.rect(x, 50, 100, 100);
-  c.fill(0,0,0)
+  c.fill(0, 0, 0);
   c.strokeWeight(0);
   c.rect(
-    window.innerWidth / 2 - cardSize/2,
-    window.innerHeight / 2 - cardSize/2 ,
+    window.innerWidth / 2 - cardSize / 2,
+    window.innerHeight / 2 - cardSize / 2,
     cardSize,
     cardSize,
     20
   );
+  // c.image('assets/Metal035.jpg', 0, 0, window.innerWidth, window.innerHeight)
 
   c.scale(0.5, 0.5);
 
-
   c.reset();
+  complete = [];
+  targetComplete = [];
   cards.forEach((card, i) => {
+    card.index = i;
     card.display();
+    complete.push(card.card);
+    complete.push(card.index);
   });
 
-
+  c.reset();
   targets.forEach((card, i) => {
     card.display();
+    targetComplete.push(card.card);
+    targetComplete.push(card.card);
   });
 };
 // draw
@@ -395,7 +833,6 @@ draw = function () {
 //     draw2()
 //   }
 // }
-// draw2()
 
 //#region listeners
 let currentCard;
@@ -412,17 +849,17 @@ function selectCard(mx, my, card, i) {
 }
 
 function ontouchDown(e, mx, my) {
-  console.log(e.target.tagName);
-  console.log(e.target.parentElement.tagName);
+  // console.log(e.target.tagName);
+  // console.log(e.target.parentElement.tagName);
   if (e.target.tagName == "use" && e.target.parentElement.tagName == "svg") {
     cards.forEach((card, i) => {
-      console.log(card.index, e.target.parentElement);
+      // console.log(card.index, e.target.parentElement);
       if (card.index == e.target.parentElement.id) {
         selectCard(mx, my, card, i);
         return;
       }
     });
-    console.log(currentCard);
+    // console.log(currentCard);
   }
   if (e.target.tagName == "BUTTON" || e.target.tagName == "use") {
     return;
@@ -437,6 +874,7 @@ function ontouchDown(e, mx, my) {
 }
 
 document.addEventListener("mousedown", (e) => {
+  console.log(complete, targetComplete);
   ontouchDown(e, e.clientX, e.clientY);
   //   controls.style.display = 'none';
 });
@@ -471,7 +909,6 @@ document.addEventListener("mouseup", (e) => {
     prevCard = currentCard;
     currentCard = false;
   }
-  draw2();
 });
 document.addEventListener("touchend", (e) => {
   if (currentCard) {
@@ -481,19 +918,22 @@ document.addEventListener("touchend", (e) => {
   }
 });
 document.getElementById("rot").addEventListener("click", (_) => {
-  console.log(prevCard);
+  // console.log(prevCard);
   if (prevCard) {
     prevCard.card.newRotation += 90;
+    check = true;
   }
 });
 document.getElementById("flip").addEventListener("click", (_) => {
-  console.log(prevCard);
+  // console.log(prevCard);
   if (prevCard) {
     prevCard.card.newScale *= -1;
+    check = true;
   }
 });
 document.getElementById("for").addEventListener("click", (_) => {
-  console.log(prevCard);
+  // console.log(prevCard);
+  check = true;
   if (prevCard) {
     if (prevCard.index == cards.length - 1) {
       return;
@@ -505,7 +945,8 @@ document.getElementById("for").addEventListener("click", (_) => {
   }
 });
 document.getElementById("back").addEventListener("click", (_) => {
-  console.log(prevCard);
+  // console.log(prevCard);
+  check = true;
   if (prevCard) {
     if (prevCard.index == 0) {
       return;
@@ -536,3 +977,7 @@ window.onresize = function () {
     "stats"
   ).innerHTML = `Width: ${window.innerWidth}, Height: ${window.innerHeight}, cardSize: ${cardSize}`;
 };
+document.getElementById("next").addEventListener("click", (_) => {
+  game.run();
+});
+////

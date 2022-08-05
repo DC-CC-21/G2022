@@ -98,3 +98,63 @@ p{
     background-color:rgb(150, 133, 83);
     width:4em;
 }
+
+#checkCards{
+    position:absolute;
+    left:0px;
+    top:0px;
+    z-index: 100;
+}
+#checkCards2{
+    position:absolute;
+    left:0px;
+    top:200px;
+    z-index: 100;
+}
+#completeTarget{
+    position:absolute;
+    background-color:aqua;
+    bottom:0px;
+    left:0px;
+    z-index:100;
+    display:none;
+}
+
+#imgs{
+    position:absolute;
+    z-index:200;
+    right:10px;
+    top:0px;
+    display:none;
+}
+#imgs img{
+    width:100px;
+     height:100px;
+}
+
+#completeCards{
+    position:absolute;
+    left:0px;
+    top:200px;
+    z-index:300;
+    display:none;
+   
+}
+
+#win{
+    position:absolute;
+    left:0;
+    right:0;
+    top:50%;
+    background:rgb(0, 0, 0);
+    z-index:500;
+    border:1px solid yellow;
+    box-shadow: inset 0 0 10px yellow, 0 0 10px yellow;
+    padding:5px;
+    color:white;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+    width:fit-content;
+    display:none;
+}

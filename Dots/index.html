@@ -7,17 +7,18 @@
     <title>Dots</title>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://cdnjs.deepai.org/deepai.min.js"></script>
     <script src="../jsDrawingLib/svgDraw.js" defer></script>
     <script src="dots.js" defer></script>
   </head>
   <body onload="window.scrollTo(0,0)">
-    <svg style="display: none">
-      <defs>
-        <symbol id="test">
+    <svg style="display: none" id="test">
+      <!-- <defs> -->
+        <!-- <symbol id="test"> -->
           <!-- <rect x="10" y="10" width="100" height="100"></rect> -->
-          <circle cx="100" cy="0" r="50"></circle>
-        </symbol>
-      </defs>
+          <circle cx="50" cy="50" r="50" fill="rgba(0,0,255,1)"></circle>
+        <!-- </symbol> -->
+      <!-- </defs> -->
     </svg>
     <svg id="canvas"></svg>
     <p id="stats">MouseX: 0, MouseY:0, Card:0 </p>
@@ -32,6 +33,23 @@
       <button id="flip">flip</button>
     </div>
     <button id="backBtn">BACK</button>
+
+    <canvas id="checkCards" width="200" height="200"> hello</canvas>
+    <canvas id="checkCards2" width="200" height="200"> hello</canvas>
+
+    <img  src="assets/card1.png" id="ctest" style="display:none">
+    <svg id="completeTarget" >
+    </svg>
+    <svg id="completeCards" >
+
+    </svg>
+    <div id="imgs"></div>
+    <div id="compare"></div>
+
+    <div id="win">
+    <h1>Level Complete</h1>
+    <button id="next">NEXT</button>
+    </div>
   </body>
 </html>
 
