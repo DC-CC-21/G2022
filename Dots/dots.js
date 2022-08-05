@@ -946,7 +946,7 @@ function ontouchDown(e, mx, my) {
   // console.log(e.target.tagName);
   // console.log(e.target.parentElement.tagName);
   
-  if (e.target.tagName == "use" && e.target.parentElement.tagName == "svg" || e.target.parentElement.tagName == 'DIV') {
+  if (e.target.tagName == "use" && e.target.parentElement.tagName == "svg" ) {
     cards.forEach((card, i) => {
       // console.log(card.index, e.target.parentElement);
       if (card.card == e.target.parentElement.id) {
