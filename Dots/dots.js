@@ -1,3 +1,5 @@
+console.log(window.location)
+
 let errors = document.createElement("ul");
 document.getElementById("stats").append(errors);
 
@@ -483,10 +485,10 @@ class Card {
     // else {c.fill(255,0,0)}
     // c.rect(this.x, this.y, this.s, this.s);
     // console.log(dst)
-    c.textSize(30);
-    c.textFont("sans-serif");
-    c.text(this.rotation.toFixed(2) + "," + this.newRotation, this.x, this.y-25);
-    c.text(this.scale.toFixed(2) + "," + this.newScale, this.x, this.y);
+    // c.textSize(30);
+    // c.textFont("sans-serif");
+    // c.text(this.rotation.toFixed(2) + "," + this.newRotation, this.x, this.y-25);
+    // c.text(this.scale.toFixed(2) + "," + this.newScale, this.x, this.y);
 
     this.rotation = (c.lerp(this.rotation, this.newRotation, 0.02));
     this.scale = c.lerp(this.scale, this.newScale, 0.05);
