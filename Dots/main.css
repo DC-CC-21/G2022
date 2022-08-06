@@ -7,8 +7,6 @@ body{
     background-color:black;
 }
 #levels{
-    
-    
     width:100%;
     /* height:auto; */
     display:flex;
@@ -21,13 +19,22 @@ body{
 
 #levels a{
     background-color: rgba(0,0,0,0.5);
-    display:inline;
     width:40%;
     height:auto;
     text-align: center;
+    align-items: center;
     padding:10px;
     margin-top:2%;
     font-size: 3em;
     border-radius:10%;
     color:rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+.levels {
+    margin-left: 5%;
+    font-size: 0.5em;
+    color:darkgrey;
+    font-size:auto;
+
 }

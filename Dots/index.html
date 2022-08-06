@@ -1,45 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="main.css">
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="main.css" />
+  </head>
+  <body>
     <div id="levels">
-<a href="play.html?grid=4&dots=4&colors=4?cards=4">  4 x 4</a>
-<a href="play.html?grid=5&dots=4&colors=4?cards=4">  5 x 5</a>
-<a href="play.html?grid=6&dots=4&colors=4?cards=4">  6 x 6</a>
-<a href="play.html?grid=7&dots=4&colors=4?cards=4">  7 x 7</a>
-<a href="play.html?grid=8&dots=4&colors=4?cards=4">  8 x 8</a>    
-<a href="play.html?grid=9&dots=4&colors=4?cards=4">  9 x 9</a>
-<a href="play.html?grid=10&dots=4&colors=4?cards=4"> 10 x 10</a>
-<a href="play.html?grid=11&dots=4&colors=4?cards=4"> 11 x 11</a>
-<a href="play.html?grid=12&dots=4&colors=4?cards=4"> 12 x 12</a>
-<a href="play.html?grid=15&dots=4&colors=4?cards=4"> 15 x 15</a>    
-</div>
-<script>
-    let colors = [
-        'rgb(255,0,0)',
-        'rgb(0,255,0)',
-        'rgb(255,255,0)',
-        'rgb(255,255,255)',
-        'rgb(0,100,200)',
-        'rgb(200,0,255)',
-        'rgb(190,100,0)',
-        'rgb(255,50,100)',
-        'rgb(205,200,50)',
-        'rgb(120, 120, 120)',
-        
-    ]
-    document.getElementById('levels');
-    Array.from(levels.children).forEach((element, index) => {
+      <a href="levels.html?grid=4&dots=4&colors=4?cards=4">
+        <span>4 x 4</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=5&dots=4&colors=4?cards=4">
+        <span>5 x 5</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=6&dots=4&colors=4?cards=4">
+        <span>6 x 6</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=7&dots=4&colors=4?cards=4">
+        <span>7 x 7</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=8&dots=4&colors=4?cards=4">
+        <span>8 x 8</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=9&dots=4&colors=4?cards=4">
+        <span>9 x 9</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=10&dots=4&colors=4?cards=4">
+        <span>10 x 10</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=11&dots=4&colors=4?cards=4">
+        <span>11 x 11</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=12&dots=4&colors=4?cards=4">
+        <span>12 x 12</span><span class="levels">levels - 100</span></a
+      >
+      <a href="levels.html?grid=15&dots=4&colors=4?cards=4">
+        <span>15 x 15</span><span class="levels">levels - 100</span></a
+      >
+      <a href="settings.html"> <span>Custom</span></a>
+    </div>
+    <script>
+      let colors = [
+        "rgb(255,0,0)",
+        "rgb(0,255,0)",
+        "rgb(255,255,0)",
+        "rgb(255,255,255)",
+        "rgb(0,100,200)",
+        "rgb(200,0,255)",
+        "rgb(190,100,0)",
+        "rgb(255,50,100)",
+        "rgb(205,200,50)",
+        "rgb(120, 120, 120)",
+      ];
+      let levels = Array.from(document.getElementById("levels").children);
+      levels.forEach((element, index) => {
+        let strength = 30;
+        element.style.boxShadow = `inset 0 0 ${strength}px ${colors[index]}, 0 0 ${strength}px ${colors[index]}`;
+        element.style.border = `2px solid ${colors[index]}`;
+      });
+      let num = {
+        white:  [0, 0, 50],
+        green:  [0, 0, 20],
+        red:    [0, 0, 20],
+        orange: [0, 0, 10],
+        yellow: [0, 0, 30],
+        blue:   [0, 0, 30],
+      }
+      levels[levels.length - 1].style.boxShadow =
+      `${num.white[0]}px ${num.white[1]}px ${num.white[2]}px white,`+
+      `inset ${num.yellow[0]}px ${num.yellow[1]}px ${num.yellow[2]}px yellow,`+
+      `inset ${num.orange[0]}px ${num.orange[1]}px ${num.orange[2]}px orange,`+
+      `inset ${num.red[0]}px ${num.red[1]}px ${num.red[2]}px red,`+
+      `inset ${num.green[0]}px ${num.green[1]}px ${num.green[2]}px green,`+
+        `inset ${num.blue[0]}px ${num.blue[1]}px ${num.blue[2]}px blue`
+        // `inset ${num.red[0]} ${num.red[1]} ${num.red[2]}px indigo,`+
+        // `inset ${num.red[0]} ${num.red[1]} ${num.red[2]}px violet`
 
-        element.style.boxShadow = `inset 0 0 30px ${colors[index]}, 0 0 30px ${colors[index]}`
-        element.style.border= `2px solid ${colors[index]}`
-    });
-</script>
-</body>
+    </script>
+  </body>
 </html>
