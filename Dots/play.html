@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=1000, height=device-height, target-densitydpi=device-dpi" />    <title>Dots</title>
+    <meta
+      name="viewport"
+      content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=1000, height=device-height, target-densitydpi=device-dpi"
+    />
+    <title>Dots</title>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="../jsDrawingLib/svgDraw.js" defer></script>
@@ -11,19 +15,17 @@
   </head>
   <body onload="window.scrollTo(0,0)">
     <!-- <svg style="display: none" id="test">-->
-      <!-- <defs> -->
-        <!-- <symbol id="test"> -->
-          <!-- <rect x="10" y="10" width="100" height="100"></rect> -->
-          <!-- <circle cx="50" cy="50" r="50" fill="rgba(0,0,255,1)"></circle> -->
-        <!-- </symbol> -->
-      <!-- </defs> -->
-<!--    </svg> -->
+    <!-- <defs> -->
+    <!-- <symbol id="test"> -->
+    <!-- <rect x="10" y="10" width="100" height="100"></rect> -->
+    <!-- <circle cx="50" cy="50" r="50" fill="rgba(0,0,255,1)"></circle> -->
+    <!-- </symbol> -->
+    <!-- </defs> -->
+    <!--    </svg> -->
     <svg id="canvas"></svg>
-    <p id="stats">MouseX: 0, MouseY:0, Card:0 </p>
-  
-    <div id="selectionMenu">
+    <p id="stats">MouseX: 0, MouseY:0, Card:0</p>
 
-    </div>
+    <div id="selectionMenu"></div>
     <div class="btns">
       <button id="rot">rotate</button>
       <button id="for">forward</button>
@@ -36,17 +38,14 @@
     <canvas id="checkCards2" width="200" height="200"> hello</canvas>
 
     <!-- <img  src="assets/card1.png" id="ctest" style="display:none"> -->
-    <svg id="completeTarget" >
-    </svg>
-    <svg id="completeCards" >
-
-    </svg>
+    <svg id="completeTarget"></svg>
+    <svg id="completeCards"></svg>
     <div id="imgs"></div>
     <div id="compare"></div>
 
     <div id="win">
-    <h1>Level Complete</h1>
-    <button id="next">NEXT</button>
+      <h1>Level Complete</h1>
+      <button id="next">NEXT</button>
     </div>
   </body>
 </html>
