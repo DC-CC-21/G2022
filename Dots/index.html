@@ -1,62 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />    <title>Dots</title>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+    <div id="levels">
+<a href="play.html?grid=4&dots=4&colors=4?cards=4">  4 x 4</a>
+<a href="play.html?grid=5&dots=4&colors=4?cards=4">  5 x 5</a>
+<a href="play.html?grid=6&dots=4&colors=4?cards=4">  6 x 6</a>
+<a href="play.html?grid=7&dots=4&colors=4?cards=4">  7 x 7</a>
+<a href="play.html?grid=8&dots=4&colors=4?cards=4">  8 x 8</a>    
+<a href="play.html?grid=9&dots=4&colors=4?cards=4">  9 x 9</a>
+<a href="play.html?grid=10&dots=4&colors=4?cards=4"> 10 x 10</a>
+<a href="play.html?grid=11&dots=4&colors=4?cards=4"> 11 x 11</a>
+<a href="play.html?grid=12&dots=4&colors=4?cards=4"> 12 x 12</a>
+<a href="play.html?grid=15&dots=4&colors=4?cards=4"> 15 x 15</a>    
+</div>
+<script>
+    let colors = [
+        'rgb(255,0,0)',
+        'rgb(0,255,0)',
+        'rgb(255,255,0)',
+        'rgb(255,255,255)',
+        'rgb(0,100,200)',
+        'rgb(200,0,255)',
+        'rgb(190,100,0)',
+        'rgb(255,50,100)',
+        'rgb(205,200,50)',
+        'rgb(120, 120, 120)',
+        
+    ]
+    document.getElementById('levels');
+    Array.from(levels.children).forEach((element, index) => {
 
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <script src="https://cdnjs.deepai.org/deepai.min.js"></script>
-    <script src="../jsDrawingLib/svgDraw.js" defer></script>
-    <script src="dots.js" defer></script>
-  </head>
-  <body onload="window.scrollTo(0,0)">
-    <!-- <svg style="display: none" id="test">-->
-      <!-- <defs> -->
-        <!-- <symbol id="test"> -->
-          <!-- <rect x="10" y="10" width="100" height="100"></rect> -->
-          <!-- <circle cx="50" cy="50" r="50" fill="rgba(0,0,255,1)"></circle> -->
-        <!-- </symbol> -->
-      <!-- </defs> -->
-<!--    </svg> -->
-    <svg id="canvas"></svg>
-    <p id="stats">MouseX: 0, MouseY:0, Card:0 </p>
-  
-    <div id="selectionMenu">
-
-    </div>
-    <div class="btns">
-      <button id="rot">rotate</button>
-      <button id="for">forward</button>
-      <button id="back">back</button>
-      <button id="flip">flip</button>
-    </div>
-    <button id="backBtn">BACK</button>
-
-    <canvas id="checkCards" width="200" height="200"> hello</canvas>
-    <canvas id="checkCards2" width="200" height="200"> hello</canvas>
-
-    <!-- <img  src="assets/card1.png" id="ctest" style="display:none"> -->
-    <svg id="completeTarget" >
-    </svg>
-    <svg id="completeCards" >
-
-    </svg>
-    <div id="imgs"></div>
-    <div id="compare"></div>
-
-    <div id="win">
-    <h1>Level Complete</h1>
-    <button id="next">NEXT</button>
-    </div>
-  </body>
+        element.style.boxShadow = `inset 0 0 30px ${colors[index]}, 0 0 30px ${colors[index]}`
+        element.style.border= `2px solid ${colors[index]}`
+    });
+</script>
+</body>
 </html>
-
-<!-- <svg id="canvas" width="600px" height="600px" style="display:none">
-  <symbol id="test">
-  <circle cx="200px" cy="150" r="100" fill="#00aaff"></circle>
-  </symbol>
-</svg>
-<svg >
-  <use x="100" href="#test" transform="scale(-0.2,1)" transform-origin="300px 100px"></use>
-</svg> -->

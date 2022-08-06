@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="The settings page for Dots: choose the number of dots, the number of colors, and the grid size."
+    />
+
+    <title>Dots: Custom Settings</title>
+
+    <script src="settings.js" defer></script>
+    <link href="settings.css" rel="stylesheet">
+  </head>
+  <body>
+    <header>
+      <button class="return"><strong>↩</strong></button>
+      <h1>Dots!</h1>
+    </header>
+    <main>
+      <h2>Custom Settings</h2>
+      <form method="get" action="#">
+        <label
+          >Number of Colored Dots:
+          <input type="number" name="dotColNum" id="dotColNum"
+        /></label>
+        <label
+          >Number of Dots to Solve For:
+          <input type="number" name="dotSolve" id="dotSolve"
+        /></label>
+        <label
+          >Grid Size:
+          <select class="gridSize">
+            <option>💩 x 💩</option>
+          </select></label
+        >
+        <button class="play">Play Now!</button>
+      </form>
+    </main>
+    <footer>
+      <p>&copy; 2022 🟡 Dots 🔴 DC-CC-21 🟢 Tauriel1202</p>
+    </footer>
+  </body>
+</html>

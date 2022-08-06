@@ -1,4 +1,4 @@
-console.log(window.location)
+console.log(window.location);
 
 let errors = document.createElement("ul");
 document.getElementById("stats").append(errors);
@@ -201,7 +201,7 @@ class customImg {
   }
 }
 class createCard {
-  constructor(name, width, height, grid, dots) {
+  constructor(name, width, height, grid, dots, cs) {
     this.name = `card${name}`;
     this.card1 = new customImg(
       document.querySelector("body"),
@@ -224,41 +224,41 @@ class createCard {
       [],
       [],
     ];
-    
+
     //createDots(canvas, grid x*x, number of colors, number of dots)
-    this.createDots2(this.c2, grid, 4, 4);
+    this.createDots2(this.c2, grid, dots, cs);
 
     // this.createDots(this.c2, dots);
     // drawImage();
+  }
+  drawOutline(c2) {
+    c2.stroke(0, 0, 255, 0.6);
+    c2.strokeWeight(5);
+    c2.fill(0, 0, 0, 0);
+    if (mode == "Landscape") {
+      c2.strokeWeight(c.map(5, 0, 754, 0, window.innerHeight));
+      c2.rect(
+        0,
+        0,
+        this.width,
+        this.height,
+        c.map(20, 0, 754, 0, window.innerHeight)
+      );
+    } else {
+      // c2.strokeWeight(10);
+      c2.strokeWeight(c.map(8, 0, 1286, 0, window.innerWidth));
+      c2.rect(
+        0,
+        0,
+        this.width,
+        this.height,
+        c.map(10, 0, 407.2, 0, window.innerWidth)
+      );
     }
-    drawOutline(c2){
-      c2.stroke(0,0,255,0.6)
-      c2.strokeWeight(5);
-      c2.fill(0,0,0,0)
-      if (mode == "Landscape") {
-        c2.strokeWeight(c.map(5, 0, 754, 0, window.innerHeight));
-        c2.rect(
-          0,
-          0,
-          this.width,
-          this.height,
-          c.map(20, 0, 754, 0, window.innerHeight)
-        );
-      } else {
-        // c2.strokeWeight(10);
-        c2.strokeWeight(c.map(8, 0, 1286, 0, window.innerWidth));
-        c2.rect(
-          0,
-          0,
-          this.width,
-          this.height,
-          c.map(10, 0, 407.2, 0, window.innerWidth)
-        );
-      }
-    }
+  }
   createDots2(c2, grid, num, dpc) {
     c2.reset();
-    this.drawOutline(c2)
+    this.drawOutline(c2);
     let colors = this.selectColors(num);
     let s = this.width / grid;
     let padding = 0.5;
@@ -274,7 +274,7 @@ class createCard {
     for (let i = 0; i < this.dots.length / grid; i++) {
       for (let j = 0; j < grid; j++) {
         if (this.dots[i + j * grid] == 1) {
-          c2.stroke(0,0,0,0)
+          c2.stroke(0, 0, 0, 0);
           c2.fill(colors[~~c2.random(0, colors.length)]);
           c2.ellipse(
             i * spacing + s / 2,
@@ -331,8 +331,8 @@ class createCard {
       }
     }
 
-    let div = document.createElement('div')
-    
+    let div = document.createElement("div");
+
     let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let use = document.createElementNS("http://www.w3.org/2000/svg", "use");
 
@@ -346,11 +346,11 @@ class createCard {
     use.style.position = "relative";
 
     svg.append(use);
-    div.append(svg)
+    div.append(svg);
     selectionMenu.append(div);
   }
   appendHTML() {
-    let div = document.createElement('div')
+    let div = document.createElement("div");
     let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let use = document.createElementNS("http://www.w3.org/2000/svg", "use");
 
@@ -364,7 +364,7 @@ class createCard {
     use.style.position = "relative";
 
     svg.append(use);
-    div.append(svg)
+    div.append(svg);
     selectionMenu.append(div);
   }
   selectColors(len) {
@@ -461,7 +461,6 @@ class Card {
     this.scale = 1;
     this.newScale = 1;
 
-
     this.checkedRot = true;
     this.checkedScale = true;
     this.snapped = false;
@@ -490,18 +489,18 @@ class Card {
     // c.text(this.rotation.toFixed(2) + "," + this.newRotation, this.x, this.y-25);
     // c.text(this.scale.toFixed(2) + "," + this.newScale, this.x, this.y);
 
-    this.rotation = (c.lerp(this.rotation, this.newRotation, 0.02));
+    this.rotation = c.lerp(this.rotation, this.newRotation, 0.02);
     this.scale = c.lerp(this.scale, this.newScale, 0.05);
     if (this.rotation == 360) {
       this.rotation = 0;
       this.newRotation = 0;
     }
-    if(Math.abs(this.rotation-this.newRotation) < 2  && !this.checkedRot){
+    if (Math.abs(this.rotation - this.newRotation) < 2 && !this.checkedRot) {
       this.rotation = this.newRotation;
       check = true;
       this.checkedRot = true;
     }
-    if(Math.abs(this.scale - this.newScale) < 0.1 && !this.checkedScale){
+    if (Math.abs(this.scale - this.newScale) < 0.1 && !this.checkedScale) {
       this.scale = this.newScale;
       check = true;
       this.checkedScale = true;
@@ -590,6 +589,17 @@ class Card {
 }
 class Game {
   constructor() {
+    let location = window.location.search;
+    let search = location.replace(/[\?|a-zA-Z]|\&/g, "").split("=");
+    // console.log(search)
+    document.getElementById("stats").innerHTML = search;
+
+    cardCount = Number(search[4]);
+    this.grid = Number(search[1]);
+    this.dots = Number(search[2]);
+    this.cardCount = cardCount;
+    this.cs = Number(search[3]);
+
     this.run();
   }
   resetArrays() {
@@ -608,8 +618,8 @@ class Game {
   }
   run() {
     this.resetArrays();
-    for (let i = 0; i < cardCount; i++) {
-      new createCard(i, cardSize, cardSize, 6, 4);
+    for (let i = 0; i < this.cardCount; i++) {
+      new createCard(i, cardSize, cardSize, this.grid, this.dots, this.cs);
     }
 
     this[`create${mode}Display`]();
@@ -644,7 +654,7 @@ class Game {
           (i * cardSize) / 10 +
             c.map(10, 0, originalCanvas.height, 0, window.innerHeight),
           c.map(100, 0, originalCanvas.height, 0, window.innerHeight) +
-            (cardSize / cardCount*2) * i,
+            (cardSize / cardCount) * 2 * i,
           i
         )
       );
@@ -751,9 +761,9 @@ class Game {
   win() {
     document.getElementById("win").style.display = "block";
     document
-    .querySelectorAll(".active")
-    .forEach((el) => el.classList.toggle("active"));
-    controls.style.display = 'none'
+      .querySelectorAll(".active")
+      .forEach((el) => el.classList.toggle("active"));
+    controls.style.display = "none";
   }
 }
 
@@ -941,14 +951,13 @@ function selectCard(mx, my, card, i, done) {
     .forEach((el) => el.classList.toggle("active"));
   document.getElementById(currentCard.card.card).classList.toggle("active");
   controls.style.display = "flex";
-
 }
 
 function ontouchDown(e, mx, my) {
   // console.log(e.target.tagName);
   // console.log(e.target.parentElement.tagName);
-  
-  if (e.target.tagName == "use" && e.target.parentElement.tagName == "svg" ) {
+
+  if (e.target.tagName == "use" && e.target.parentElement.tagName == "svg") {
     cards.forEach((card, i) => {
       // console.log(card.index, e.target.parentElement);
       if (card.card == e.target.parentElement.id) {
@@ -1006,7 +1015,7 @@ document.addEventListener("mouseup", (e) => {
     prevCard = currentCard;
     currentCard = false;
   }
-  refreshElement(selectionMenu)
+  refreshElement(selectionMenu);
 });
 document.addEventListener("touchend", (e) => {
   if (currentCard) {
@@ -1014,15 +1023,15 @@ document.addEventListener("touchend", (e) => {
     prevCard = currentCard;
     currentCard = false;
   }
-    refreshElement(selectionMenu)
+  refreshElement(selectionMenu);
 });
 document.getElementById("rot").addEventListener("click", (_) => {
   // console.log(prevCard);
   if (prevCard) {
-    prevCard.card.newRotation += 90 * (prevCard.card.scale<0?-1:1);
+    prevCard.card.newRotation += 90 * (prevCard.card.scale < 0 ? -1 : 1);
     prevCard.card.checkedRot = false;
-    console.log(prevCard.card.newRotation)
-    
+    console.log(prevCard.card.newRotation);
+
     // check = true;
   }
 });
@@ -1083,11 +1092,11 @@ window.onresize = function () {
 document.getElementById("next").addEventListener("click", (_) => {
   game.run();
 });
-function refreshElement(el){
+function refreshElement(el) {
   let children = Array.from(el.children);
-  el.innerHTML = '';
-  children.forEach(child => {
-    el.append(child)
-  })
+  el.innerHTML = "";
+  children.forEach((child) => {
+    el.append(child);
+  });
 }
 ////

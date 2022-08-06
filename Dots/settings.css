@@ -1,0 +1,62 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  body {
+    background-color: black;
+  }
+  /*#region HEADER*/
+  header {
+    display: flex;
+    padding: 1em;
+    background-color: black;
+    border-bottom: 5px solid red;
+
+  }
+  h1 {
+    margin: 1% auto;
+    color: white;
+  }
+  .return {
+    width: 2.5em;
+    height: 2.5em;
+    color: #007a54;
+    background-color: #ffff00;
+  }
+  /*#endregion HEADER*/
+  /*#region MAIN*/
+  main {
+    max-width: 32.5em;
+    margin: auto;
+  }
+  h2 {
+    margin: 1em;
+    color: white;
+  }
+  form {
+    /* border: 2px solid red; */
+    color: white;
+    margin: 0 20% 1em;
+    padding: 1em;
+  }
+  input, select {
+    height: 1.5em;
+    display: flex;
+    margin: 0.5em auto 2em;
+    border: none;
+    border-left: 5px solid #07d300;
+  }
+  .play {
+    display: block;
+    margin: 1em auto;
+    width: 40%;
+    height: 2em;
+    background-color: #ffff00;
+  }
+  /*#endregion MAIN*/
+  footer {
+    border-top: 2px solid red;
+    padding: 1em;
+    color: white;
+  }
