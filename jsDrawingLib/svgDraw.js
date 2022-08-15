@@ -24,20 +24,23 @@ class Canvas {
 
   constructor(canvas, width, height, createTouch = true) {
     // SETUP this.#canvas
-    this.#canvas = canvas;
-    this.#canvas.style.overflow = "show";
-    this.#canvas.style.position = "relative";
-    this.#canvas.style.width = (width || 400) + "px";
-    this.#canvas.style.height = (height || 400) + "px";
-    this.#canvas.style.margin = "auto";
-    this.cameraPos = { x: 0, y: 0 };
-    Width = width;
-    Height = height;
-    //1536x754
-    console.log(`Your canvas is ${Width}x${Height}`);
-    recursive();
-    if (createTouch) {
-      this.createTouchContainer();
+    //change if this breaks dots program
+    if (canvas) {
+      this.#canvas = canvas;
+      this.#canvas.style.overflow = "show";
+      this.#canvas.style.position = "relative";
+      this.#canvas.style.width = (width || 400) + "px";
+      this.#canvas.style.height = (height || 400) + "px";
+      this.#canvas.style.margin = "auto";
+      this.cameraPos = { x: 0, y: 0 };
+      Width = width;
+      Height = height;
+      //1536x754
+      console.log(`Your canvas is ${Width}x${Height}`);
+      recursive();
+      if (createTouch) {
+        this.createTouchContainer();
+      }
     }
   }
   moveCamera(p, w) {
@@ -357,7 +360,13 @@ class Canvas {
   map(value, istart, istop, ostart, ostop) {
     return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
   }
-
+  componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+  rgbToHex(r, g, b) {
+    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+  }
   constrain(aNumber, aMin, aMax) {
     return aNumber > aMax ? aMax : aNumber < aMin ? aMin : aNumber;
   }

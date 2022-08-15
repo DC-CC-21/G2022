@@ -4,39 +4,42 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#317EFB" />
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="main.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="./assets/icon192.png" />
   </head>
   <body>
     <div id="levels">
-      <a href="levels.html?grid=4&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=4">
         <span>4 x 4</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=5&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=5">
         <span>5 x 5</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=6&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=6">
         <span>6 x 6</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=7&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=7">
         <span>7 x 7</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=8&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=8">
         <span>8 x 8</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=9&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=9">
         <span>9 x 9</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=10&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=10">
         <span>10 x 10</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=11&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=11">
         <span>11 x 11</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=12&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=12">
         <span>12 x 12</span><span class="levels">levels - 100</span></a
       >
-      <a href="levels.html?grid=15&dots=4&colors=4?cards=4">
+      <a href="levels.html?grid=15&">
         <span>15 x 15</span><span class="levels">levels - 100</span></a
       >
       <a href="settings.html"> <span>Custom</span></a>
@@ -77,6 +80,13 @@
         `inset ${num.blue[0]}px ${num.blue[1]}px ${num.blue[2]}px blue`;
       // `inset ${num.red[0]} ${num.red[1]} ${num.red[2]}px indigo,`+
       // `inset ${num.red[0]} ${num.red[1]} ${num.red[2]}px violet`
+
+      //create serviceWorker
+      window.addEventListener("load", () => {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("service-worker.js");
+        }
+      });
     </script>
   </body>
 </html>

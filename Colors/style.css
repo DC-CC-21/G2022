@@ -1,0 +1,12 @@
+#colors{
+    display:grid;
+    grid-template-rows:1fr;
+    grid-template-columns: repeat(3, 1fr);
+    height:90vh;
+}
+#colors div{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height:100%;
+}
