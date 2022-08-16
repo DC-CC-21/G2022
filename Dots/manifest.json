@@ -15,7 +15,8 @@
         }
     ],
     "start_url": "./?source=pwa",
+    "display_override": ["window-control-overlay", "fullscreen"],
     "display": "fullscreen",
-    "background_color": "#000000",
-    "theme_color": "#000000"
+    "background_color": "#ff0000",
+    "theme_color": "#00ff00"
 }
