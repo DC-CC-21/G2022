@@ -45,7 +45,7 @@ h1{
     justify-content: center;
     align-items: center;
 }
-#back{
+/* #back{
     position:absolute;
     left:1%;
     top:1%;
@@ -56,4 +56,20 @@ h1{
     text-decoration: none;
     background:white;
 
-}
+} */
+button{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 20;
+    background-color: rgb(0, 0, 0);
+    width: 4em; 
+    font-size:1.2em;
+    padding:2px 5px;
+    border:1px solid white;
+    box-shadow:inset 0 0 5px white, 0 0 5px white;
+    text-align: center;
+    color:white;
+    text-decoration:none;
+  }
+  

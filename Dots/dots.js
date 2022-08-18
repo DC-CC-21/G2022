@@ -732,6 +732,7 @@ class Game {
     //   // }
     //   // //console.log(str)
     // });
+    document.getElementById('backBtn').parentElement.href = 'levels.html?grid='+ this.grid
     if (this.level !== "custom") {
       // console.log(window.location)
       let host = window.location.pathname
