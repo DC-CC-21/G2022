@@ -157,8 +157,8 @@ function imgFromSVGnode(ctx, rawSVG, callback) {
 
     // ctx.resetTransform()
     ctx.translate(w / 2, h / 2);
-    ctx.rotate((rotation * Math.PI) / 180);
     ctx.scale(scale, 1);
+    ctx.rotate((rotation * Math.PI) / 180);
     ctx.drawImage(this, -w / 2, -h / 2, w, h);
     ctx.restore();
     callback();
