@@ -94,6 +94,10 @@ label input{
     grid-column:1/3;
     grid-row:1/2;
 }
+
+.selected {
+
+}
 /* 
 transition-property: width;
 transition-duration: 2s;

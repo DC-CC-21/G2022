@@ -1,5 +1,33 @@
-console.log(window.location);
+localStorage.setItem(
+  "dots",
+  JSON.stringify({
+    theme: [
+      "#ff0000",
+      "#0abcda",
+      "#00ff00",
+      "#0000ff",
+      "#ffff00",
+      "#00ffff",
+      "#00aaff",
+      "#ffaa00",
+    ],
+    levelsBeat: {
+      x4: new Array(100).fill(0),
+      x5: new Array(100).fill(0),
+      x6: new Array(100).fill(0),
+      x7: new Array(100).fill(0),
+      x8: new Array(100).fill(0),
+      x9: new Array(100).fill(0),
+      x10: new Array(100).fill(0),
+      x11: new Array(100).fill(0),
+      x12: new Array(100).fill(0),
+      x15: new Array(100).fill(0),
+    },
+  })
+);
 
+////console.log(window.location);
+console.clear();
 let errors = document.createElement("ul");
 document.getElementById("stats").append(errors);
 
@@ -66,7 +94,7 @@ function transferSVG(svg, newSvg, i) {
     "svg"
   );
   let attr = document.querySelectorAll(`#${newSvg.id} use`)[i];
-  // console.log(newSvg);
+  // ////console.log(newSvg);
 
   Array.from(attr.attributes).forEach((attribute) => {
     if (attribute.name != "id" && attribute.name != "transform-origin") {
@@ -84,12 +112,12 @@ function transferSVG(svg, newSvg, i) {
     );
 
     Array.from(child.attributes).forEach((attribute) => {
-      // console.log(attribute, child.getAttribute(attribute.name));
+      // ////console.log(attribute, child.getAttribute(attribute.name));
       el.setAttribute(attribute.name, child.getAttribute(attribute.name));
     });
     newSVGcontainer.append(el);
-    // console.log(child.tagName)
-    // console.log(child.attributes)
+    // ////console.log(child.tagName)
+    // ////console.log(child.attributes)
   });
   newSvg.append(newSVGcontainer);
 }
@@ -151,7 +179,7 @@ function canvasToDataURL(canvas) {
 const canvas = document.getElementById("canvas");
 const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
 
-console.log(window.innerWidth, window.innerHeight);
+////console.log(window.innerWidth, window.innerHeight);
 let mode = window.innerWidth > window.innerHeight ? "Landscape" : "Portrait";
 
 let originalCanvas = {
@@ -201,7 +229,7 @@ class customImg {
   }
 }
 class createCard {
-  constructor(name, width, height, grid, dots, cs) {
+  constructor(name, width, height, grid, dots, cs, level) {
     this.name = `card${name}`;
     this.card1 = new customImg(
       document.querySelector("body"),
@@ -226,17 +254,57 @@ class createCard {
     ];
 
     //createDots(canvas, grid x*x, number of colors, number of dots)
-    this.createDots2(this.c2, grid, dots, cs);
+    if (level == "custom") {
+      this.createDots2(this.c2, grid, dots, cs);
+    } else {
+      this.createLevel(this.c2, cs, grid);
+    }
 
     // this.createDots(this.c2, dots);
     // drawImage();
   }
+  createLevel(c2, data, grid) {
+    //console.log(data, "hi");
+    let theme = JSON.parse(localStorage.getItem("dots")).theme;
+    if (theme !== "random") {
+      var colors = JSON.parse(localStorage.getItem("dots")).theme;
+      colors = c.shuffleArray(colors);
+    } else {
+      var colors = this.selectColors(num);
+    }
+
+    // console.log(colors)
+    // let colors
+    // this.createDots2(c2, 4, 4, 4);
+    c2.reset();
+    this.drawOutline(c2);
+    c2.reset();
+    let offsetWidth = this.width / 2;
+    let s = this.width / grid;
+    let padding = 0.5;
+    let spacing = this.width / grid;
+    data.colors.forEach((color) => {
+      if (color) {
+        //console.log(color);
+        c2.fill(colors[color.color]);
+        c2.ellipse(
+          color.x * spacing + s / 2,
+          color.y * spacing + s / 2,
+          s * padding,
+          s * padding
+        );
+      }
+    });
+    this.appendHTML(false);
+  }
+
   drawOutline(c2) {
     c2.stroke(0, 0, 255, 0.6);
     c2.strokeWeight(5);
     c2.fill(0, 0, 0, 0);
+
     if (mode == "Landscape") {
-      c2.strokeWeight(c.map(5, 0, 754, 0, window.innerHeight));
+      c2.strokeWeight(c.map(2.5, 0, 754, 0, window.innerHeight));
       c2.rect(
         0,
         0,
@@ -252,14 +320,24 @@ class createCard {
         0,
         this.width,
         this.height,
-        c.map(10, 0, 407.2, 0, window.innerWidth)
+        c.map(5, 0, 407.2, 0, window.innerWidth)
       );
     }
   }
-  createDots2(c2, grid, num, dpc) {
+  createDots2(c2, grid, dpc, num) {
     c2.reset();
     this.drawOutline(c2);
-    let colors = this.selectColors(num);
+    c2.reset();
+
+    let theme = JSON.parse(localStorage.getItem("dots")).theme;
+    if (theme !== "random" && theme.length == 8) {
+      var colors = c
+        .shuffleArray(JSON.parse(localStorage.getItem("dots")).theme)
+        .slice(0, num);
+    } else {
+      var colors = this.selectColors(num);
+    }
+    let offsetWidth = this.width / 2;
     let s = this.width / grid;
     let padding = 0.5;
     let spacing = this.width / grid;
@@ -270,12 +348,22 @@ class createCard {
     }
     this.dots = c.shuffleArray(this.dots);
 
-    console.log(colors);
+    this.arrayOfColors = [];
+    c2.transformOrigin(this.width / 2, this.width / 2);
+    c2.scale(0.9, 0.9);
     for (let i = 0; i < this.dots.length / grid; i++) {
       for (let j = 0; j < grid; j++) {
         if (this.dots[i + j * grid] == 1) {
           c2.stroke(0, 0, 0, 0);
-          c2.fill(colors[~~c2.random(0, colors.length)]);
+          let index = ~~c2.random(0, colors.length);
+          c2.fill(colors[index]);
+
+          this.arrayOfColors.push({
+            x: i,
+            y: j,
+            color: index,
+          });
+
           c2.ellipse(
             i * spacing + s / 2,
             j * spacing + s / 2,
@@ -285,7 +373,8 @@ class createCard {
         }
       }
     }
-    this.appendHTML();
+    // //console.log(JSON.stringify(this.arrayOfColors))
+    this.appendHTML(this.arrayOfColors);
   }
 
   createDots(c2, dots) {
@@ -293,7 +382,7 @@ class createCard {
     let colors = this.selectColors(dots);
     c2.fill(c2.color(255, 0, 0, 0));
     c2.stroke(0, 0, 255, 0.6);
-    // console.log(mode)
+    // ////console.log(mode)
     if (mode == "Landscape") {
       c2.strokeWeight(c.map(5, 0, 754, 0, window.innerHeight));
       c2.rect(
@@ -318,6 +407,7 @@ class createCard {
     let s = this.width / 12;
     let offset = 0;
     c2.translate(s, s);
+    //console.log(colors);
     for (let i = offset; i < this.width - offset; i += this.width / 6) {
       for (let j = offset; j < this.height - offset; j += this.height / 6) {
         if (Math.random() > 0.05) {
@@ -349,13 +439,17 @@ class createCard {
     div.append(svg);
     selectionMenu.append(div);
   }
-  appendHTML() {
+  appendHTML(aOC) {
     let div = document.createElement("div");
     let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let use = document.createElementNS("http://www.w3.org/2000/svg", "use");
 
     svg.setAttribute("class", "select");
     svg.setAttribute("id", this.index);
+
+    if (aOC) {
+      svg.setAttribute("data-solve", JSON.stringify(aOC));
+    }
 
     use.setAttribute("href", "#" + this.name);
     svg.setAttribute("viewBox", `0 0 ${cardSize} ${cardSize}`);
@@ -370,26 +464,43 @@ class createCard {
   selectColors(len) {
     let colors = [];
     let colorsCopy = this.colors[0];
-    // console.log(this.colors, "a");
+    // ////console.log(this.colors, "a");
     while (colors.length < len) {
       let color = ~~this.c2.random(0, colorsCopy.length);
       colors.push(colorsCopy[color]);
       colorsCopy.pop(color);
       // break;
     }
-    // console.log(colors);
+    // ////console.log(colors);
     return colors;
   }
 }
 class targetCard {
-  constructor(x, y, i) {
+  constructor(x, y, i, data) {
     this.x = x;
     this.y = y;
     this.scales = [-1, 1];
     this.rotations = [0, 90, 180, 270];
+    if (data) {
+      //console.log(data);
+      this.rotation = data.rotation;
+      this.scale = data.scale;
+    } else {
+      this.rotation = this.rotations[~~c.random(0, this.rotations.length)];
+      this.scale = this.scales[~~c.random(0, this.scales.length)];
+    }
+      // console.log(this.rotation)
+      // console.log(this.scale)
 
-    this.rotation = this.rotations[~~c.random(0, this.rotations.length)];
-    this.scale = this.scales[~~c.random(0, this.scales.length)];
+    // //console.log("solve" in document.getElementById(i).dataset);
+    this.set = document.getElementById(i).dataset;
+
+    this.arrayOfCards = {
+      colors: "solve" in this.set ? JSON.parse(this.set.solve) : false,
+      rotation: this.rotation,
+      scale: this.scale,
+    };
+    // //console.log(this.arrayOfCards);
     this.card = i;
     this.s = cardSize;
     this.setTarget();
@@ -404,7 +515,7 @@ class targetCard {
     if (this.card == 0) {
       //ardCount-1){
       c.fill(0, 0, 0);
-      c.rect(this.x, this.y, this.s, this.s, 30);
+      c.rect(this.x, this.y, this.s, this.s, 20);
     }
     c.fill(0, 0, 0, 0);
 
@@ -450,7 +561,7 @@ class Card {
     this.x = x;
     this.y = y;
     this.src = `assets/card${cardNum}.png`;
-    // console.log(this.src);
+    // ////console.log(this.src);
     this.index = cardNum;
     this.card = cardNum;
     this.s = cardSize;
@@ -483,13 +594,13 @@ class Card {
     // if(this.isin(mx, my)){c.fill(0,255,0)}
     // else {c.fill(255,0,0)}
     // c.rect(this.x, this.y, this.s, this.s);
-    // console.log(dst)
+    // ////console.log(dst)
     // c.textSize(30);
     // c.textFont("sans-serif");
     // c.text(this.rotation.toFixed(2) + "," + this.newRotation, this.x, this.y-25);
     // c.text(this.scale.toFixed(2) + "," + this.newScale, this.x, this.y);
 
-    this.rotation = c.lerp(this.rotation, this.newRotation, 0.02);
+    this.rotation = c.lerp(this.rotation, this.newRotation, 0.05);
     this.scale = c.lerp(this.scale, this.newScale, 0.05);
     if (this.rotation == 360) {
       this.rotation = 0;
@@ -509,7 +620,7 @@ class Card {
     //   this.checkedRot = false;
     // }
     // if (this.checkedRot == false && ~~this.rotation % 90 == 0) {
-    //   console.log("check");
+    //   ////console.log("check");
     //   check = true;
     //   this.checkedRot = true;
     // }
@@ -590,17 +701,92 @@ class Card {
 class Game {
   constructor() {
     let location = window.location.search;
-    let search = location.replace(/[\?|a-zA-Z]|\&/g, "").split("=");
-    // console.log(search)
-    document.getElementById("stats").innerHTML = search;
+    let search = location.split("&"); //location.replace(/[\?|a-zA-Z]|\&/g, "").split("=");
+    let urlParams = this.getURLParams(search);
+    ////console.log(urlParams);
+    document.getElementById("stats").innerHTML = JSON.stringify(urlParams)
+      .replace(/"/g, "")
+      .replace(/,/g, ", ");
 
-    cardCount = Number(search[4]);
-    this.grid = Number(search[1]);
-    this.dots = Number(search[2]);
+    cardCount = Number(urlParams.cards);
+    this.grid = Number(urlParams.grid);
+    this.dots = Number(urlParams.dots);
     this.cardCount = cardCount;
-    this.cs = Number(search[3]);
+    this.cs = Number(urlParams.colors);
+    this.level = urlParams.level || "custom";
 
-    this.run();
+    // cardCount = 3;
+    // this.grid = 4;
+    // this.dots = 8
+    // this.cs = 1;
+    // this.cardCount = cardCount;
+
+    // fetch("./levels.json")
+    // .then((response) => response.json())
+    // .then((jsObject) => {
+    //   //console.log(jsObject[this.grid].length)
+    //   // let js = c.shuffleArray(jsObject[this.grid])
+    //   // let str = ''
+    //   // for(let i = 0; i < 20; i ++){
+    //   //   str += JSON.stringify(js[i])+', \n'
+    //   // }
+    //   // //console.log(str)
+    // });
+    if (this.level !== "custom") {
+      // console.log(window.location)
+      let host = window.location.pathname
+      document.getElementById('win').children[1].href = `?grid=${this.grid}&level=${Number(this.level)+1}`
+      // console.log(document.getElementById('win').children[1])
+   
+      fetch("./levels.json")
+        .then((response) => response.json())
+        .then((jsObject) => {
+          this.maxLevel = jsObject[this.grid].length
+          cardCount = jsObject[this.grid][this.level].length
+          this.cardCount = cardCount
+          this.createLevel(jsObject[this.grid][this.level]);
+        });
+    } else {
+      this.run();
+    }
+
+  }
+  createLevel(data) {
+   //console.log(data.length);
+    this.resetArrays();
+    // this.win()
+
+    data.forEach((card, index) => {
+      new createCard(
+        index,
+        cardSize,
+        cardSize,
+        this.grid,
+        this.dots,
+        data[index],
+        this.level
+      );
+      this[`create${mode}Display`]();
+      this.imageData = ctx.getImageData(0, 0, 200, 200);
+      this.dataURL = checkCardsCanvas.toDataURL("image/png");
+      this.dataURL = this.dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+      this.shuffleCards(cards);
+    });
+
+    this[`create${mode}Display`](data.length, data);
+    this.imageData = ctx.getImageData(0, 0, 200, 200);
+    this.dataURL = checkCardsCanvas.toDataURL("image/png");
+    this.dataURL = this.dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    this.shuffleCards(cards);
+  }
+  getURLParams(search) {
+    let params = {};
+    for (let i = 0; i < search.length; i++) {
+      let split = search[i].split("=");
+      split[0] = split[0].replace(/\?/g, "");
+      params[split[0]] = split[1];
+    }
+    return params;
   }
   resetArrays() {
     document.getElementById("win").style.display = "none";
@@ -619,16 +805,24 @@ class Game {
   run() {
     this.resetArrays();
     for (let i = 0; i < this.cardCount; i++) {
-      new createCard(i, cardSize, cardSize, this.grid, this.dots, this.cs);
+      new createCard(
+        i,
+        cardSize,
+        cardSize,
+        this.grid,
+        this.dots,
+        this.cs,
+        this.level
+      );
     }
 
-    this[`create${mode}Display`]();
+    this[`create${mode}Display`](cardCount);
     this.imageData = ctx.getImageData(0, 0, 200, 200);
     this.dataURL = checkCardsCanvas.toDataURL("image/png");
     this.dataURL = this.dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
     this.shuffleCards(cards);
   }
-  createPortraitDisplay() {
+  createPortraitDisplay(cardCount, data = false) {
     for (let i = 0; i < cardCount; i++) {
       let offset = i / 2 - cardCount / 4;
       cards.push(
@@ -642,12 +836,13 @@ class Game {
         new targetCard(
           window.innerWidth / 2 - cardSize / 2,
           c.map(10, 0, originalCanvas.width, 0, window.innerWidth),
-          i
+          i,
+          data[i]
         )
       );
     }
   }
-  createLandscapeDisplay() {
+  createLandscapeDisplay(cardCount, data = false) {
     for (let i = 0; i < cardCount; i++) {
       cards.push(
         new Card(
@@ -662,7 +857,8 @@ class Game {
         new targetCard(
           window.innerWidth / 2 - cardSize / 2,
           c.map(0, 0, originalCanvas.width, 0, window.innerWidth),
-          i
+          i,
+          data[i]
         )
       );
     }
@@ -694,9 +890,34 @@ class Game {
 
     var pixels = imageData.data;
     var pixels2 = imageData2.data;
-
+    console.clear();
+    let totalDist = 0;
+    for (var i = 0; i < pixels.length; i += 4) {
+      if (
+        this.getColorDist(
+          {
+            r: pixels[i],
+            g: pixels[i + 1],
+            b: pixels[i + 2],
+          },
+          {
+            r: pixels2[i],
+            g: pixels2[i + 1],
+            b: pixels2[i + 2],
+          }
+        ) < 100
+      ) {
+        continue;
+      } else {
+        totalDist += 1;
+      }
+    }
+    document.getElementById('stats').innerHTML = totalDist
+    if (totalDist < 100) {
+      this.win();
+    }
     if (pixels.join("") === pixels2.join("")) {
-      console.log("complete with pixels search");
+      ////console.log("complete with pixels search");
       this.win();
       return true;
     }
@@ -719,13 +940,13 @@ class Game {
 
       if (dataURL == dataURL2) {
         //match
-        console.log("complete with data url search");
+        ////console.log("complete with data url search");
         this.win();
         return true;
       } else {
         let l = levenshtein(dataURL, dataURL2);
         if (l < 100) {
-          console.log("complete with levenshtein search");
+          ////console.log("complete with levenshtein search");
           this.win();
           return true;
         }
@@ -733,15 +954,25 @@ class Game {
         return false;
       }
     });
-    let totalDist = 0;
   }
+  getColorDist(c1, c2) {
+    let r = c1.r - c2.r;
+    let g = c1.g - c2.g;
+    let b = c1.b - c2.b;
+    return Math.sqrt(r * r + g * g + b * b);
+  }
+  getColorIndicesForCoord = (x, y, width) => {
+    const red = y * (width * 4) + x * 4;
+    return [red, red + 1, red + 2, red + 3];
+  };
+  // const colorIndices = getColorIndicesForCoord(xCoord, yCoord, canvasWidth);
   debugCheckSequence(pixels, pixels2, dataURL, dataURL2) {
-    console.log("pixels: ", pixels.length);
-    console.log("pixels2: ", pixels2.length);
-    console.log(dataURL);
-    console.log(dataURL2);
+    ////console.log("pixels: ", pixels.length);
+    ////console.log("pixels2: ", pixels2.length);
+    ////console.log(dataURL);
+    ////console.log(dataURL2);
     let leven = levenshtein(dataURL, dataURL2);
-    console.log(leven);
+    ////console.log(leven);
   }
   check() {
     if (check) {
@@ -759,11 +990,23 @@ class Game {
   }
 
   win() {
+    if(this.level == this.maxLevel-1){
+      let winText = document.getElementById('win')
+      let winBtn = winText.children[1]
+      let winH1 = winText.children[0]
+      winH1.innerHTML = `Congratulations<br> You have finished the ${this.grid}x${this.grid} pack!`
+      winBtn.children[0].innerHTML = "Click to return to main screen"
+      winBtn.href = "index.html"
+    }
+
+
     document.getElementById("win").style.display = "block";
     document
       .querySelectorAll(".active")
       .forEach((el) => el.classList.toggle("active"));
     controls.style.display = "none";
+
+
   }
 }
 
@@ -879,12 +1122,13 @@ let textY = 0;
 let game = new Game();
 //temp
 let x = 0;
-cards[0].snap();
-c.textSize(50);
 //
 
 let placedCards = 0;
-
+let centerSquare = {
+  x: window.innerWidth/2 - cardSize/2 ,
+  y: window.innerHeight/2 - cardSize/2
+}
 draw = function () {
   game.check();
   x += 10;
@@ -897,8 +1141,8 @@ draw = function () {
   c.fill(0, 0, 0);
   c.strokeWeight(0);
   c.rect(
-    window.innerWidth / 2 - cardSize / 2,
-    window.innerHeight / 2 - cardSize / 2,
+   centerSquare.x,
+   centerSquare.y,
     cardSize,
     cardSize,
     20
@@ -924,6 +1168,7 @@ draw = function () {
     targetComplete.push(card.card);
   });
 };
+// draw2()
 // draw
 // let frame = 0;
 // draw=function(){
@@ -954,18 +1199,18 @@ function selectCard(mx, my, card, i, done) {
 }
 
 function ontouchDown(e, mx, my) {
-  // console.log(e.target.tagName);
-  // console.log(e.target.parentElement.tagName);
+  // ////console.log(e.target.tagName);
+  // ////console.log(e.target.parentElement.tagName);
 
   if (e.target.tagName == "use" && e.target.parentElement.tagName == "svg") {
     cards.forEach((card, i) => {
-      // console.log(card.index, e.target.parentElement);
+      // ////console.log(card.index, e.target.parentElement);
       if (card.card == e.target.parentElement.id) {
         selectCard(mx, my, card, i, 0);
         return;
       }
     });
-    // console.log(currentCard);
+    // ////console.log(currentCard);
   }
   if (e.target.tagName == "BUTTON" || e.target.tagName == "use") {
     return;
@@ -980,7 +1225,7 @@ function ontouchDown(e, mx, my) {
 }
 
 document.addEventListener("mousedown", (e) => {
-  console.log(complete, targetComplete);
+  ////console.log(complete, targetComplete);
   ontouchDown(e, e.clientX, e.clientY);
   //   controls.style.display = 'none';
 });
@@ -1026,17 +1271,17 @@ document.addEventListener("touchend", (e) => {
   refreshElement(selectionMenu);
 });
 document.getElementById("rot").addEventListener("click", (_) => {
-  // console.log(prevCard);
+  // ////console.log(prevCard);
   if (prevCard) {
     prevCard.card.newRotation += 90 * (prevCard.card.scale < 0 ? -1 : 1);
     prevCard.card.checkedRot = false;
-    console.log(prevCard.card.newRotation);
+    ////console.log(prevCard.card.newRotation);
 
     // check = true;
   }
 });
 document.getElementById("flip").addEventListener("click", (_) => {
-  // console.log(prevCard);
+  // ////console.log(prevCard);
   if (prevCard) {
     prevCard.card.newScale *= -1;
     prevCard.card.checkedScale = false;
@@ -1044,7 +1289,7 @@ document.getElementById("flip").addEventListener("click", (_) => {
   }
 });
 document.getElementById("for").addEventListener("click", (_) => {
-  // console.log(prevCard);
+  // ////console.log(prevCard);
   check = true;
   if (prevCard) {
     if (prevCard.index == cards.length - 1) {
@@ -1057,7 +1302,7 @@ document.getElementById("for").addEventListener("click", (_) => {
   }
 });
 document.getElementById("back").addEventListener("click", (_) => {
-  // console.log(prevCard);
+  // ////console.log(prevCard);
   check = true;
   if (prevCard) {
     if (prevCard.index == 0) {
@@ -1067,6 +1312,19 @@ document.getElementById("back").addEventListener("click", (_) => {
     prevCard.index -= 1;
     prevCard.card.index = prevCard.index;
   }
+});
+let result = [];
+document.getElementById("backBtn").addEventListener("click", (_) => {
+  // console.clear();
+  // let newSet = [];
+  // targets.forEach((card) => {
+  //   newSet.push(card.arrayOfCards);
+  // });
+  // result.push(newSet);
+  // let str = JSON.stringify(result)
+  // //console.log(str.slice(1,str.length-1)+',');
+  // //console.log(result.length)
+  // game.run();
 });
 function array_move(arr, old_index, new_index) {
   if (new_index >= arr.length) {
@@ -1090,7 +1348,7 @@ window.onresize = function () {
   ).innerHTML = `Width: ${window.innerWidth}, Height: ${window.innerHeight}, cardSize: ${cardSize}`;
 };
 document.getElementById("next").addEventListener("click", (_) => {
-  game.run();
+  // game.run();
 });
 function refreshElement(el) {
   let children = Array.from(el.children);

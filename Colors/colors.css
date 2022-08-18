@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+#colors {
+  margin: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#colors div {
+  padding: 5em 0.5em;
+}
+#colors p {
+  border: 2px solid green;
+  font-size: 1.2em;
+}
+#colors button {
+  border: 2px solid blue;
+  margin-top: 5em;
+  font-size: 1.1em;
+}
+.selected {
+  border: 5px dashed yellow;
+}
+#gradient div{
+    background-color: blue;
+    
+}
+
+#saved div {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  width: 100px;
+}
+#saved p {
+  grid-column:1/4;
+}
+
+#saved div div {
+  grid-row: 2 / 3;
+  min-width: 10px;
+  min-height: 10px;
+}
+

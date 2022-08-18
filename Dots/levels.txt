@@ -1,0 +1,104 @@
+4x4
+cards 3 - 6 {
+    levels 1-20 {
+        cards=3
+        levels 1-5 {
+            dots=2
+            colors=1
+        }
+        levels 5-10 {
+            dots=2
+            colors=2
+        }
+        levels 10-15 {
+            dots=3
+            colors=8
+        }
+        levels 15-20 {
+            dots=3
+            colors=8
+        }
+    }
+    levels 20 - 40{
+        card=3
+        levels 20-25 {
+            dots=4
+            colors=1
+        }
+        
+        levels 25-30 {
+            dots=4
+            colors=8
+        }
+        cards=4
+        levels 30-35 {
+            dots=5
+            colors=2
+        }
+        levels 35-40 {
+            dots=5
+            colors=3
+        }
+    }
+
+    levels 40 - 60{
+        cards = 4
+        levels 1-5 {
+            dots=5
+            colors=8
+        }
+        levels 5-10 {
+            dots=6
+            colors=2
+        }
+        levels 10-15 {
+            dots=6
+            colors=4
+        }
+        levels 15-20 {
+            dots=6
+            colors=8
+        }
+    }
+
+    levels 60 - 80{
+        cards=5
+        levels 1-5 {
+            dots=7
+            colors=1
+        }
+                cards=5
+        levels 5-10 {
+            dots=7
+            colors=4
+        }
+        levels 10-15 {
+            dots=7
+            colors=6
+        }
+        levels 15-20 {
+            dots=7
+            colors=8
+        }
+    }
+
+    levels 80 - 100{
+        cards=6
+        levels 1-5 {
+            dots=8
+            colors=1
+        } 
+        levels 5-10 {
+            dots=8
+            colors=3
+        }
+        levels 10-15 {
+            dots=8
+            colors=4
+        }
+        levels 15-20 {
+            dots=8
+            colors=8
+        }
+    }
+}

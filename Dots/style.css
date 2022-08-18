@@ -106,7 +106,7 @@ p {
   position: absolute;
   left: 3px;
   top: 3px;
-  z-index: 2;
+  z-index: 20;
   background-color: rgb(150, 133, 83);
   width: 4em;
 }
@@ -172,4 +172,6 @@ p {
   width: -moz-fit-content;
   width: fit-content;
   display: none;
+
 }
+

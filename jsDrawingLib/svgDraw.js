@@ -36,7 +36,7 @@ class Canvas {
       Width = width;
       Height = height;
       //1536x754
-      console.log(`Your canvas is ${Width}x${Height}`);
+      // console.log(`Your canvas is ${Width}x${Height}`);
       recursive();
       if (createTouch) {
         this.createTouchContainer();
