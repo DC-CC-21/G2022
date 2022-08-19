@@ -21,7 +21,11 @@ function createElement(i) {
   el.href = `play.html?grid=${search[1]}&level=${i - 1}`;
 
   let completeLevels = JSON.parse(localStorage.getItem("dots"));
-  if (completeLevels.levelsBeat["x" + search[1]][i]) {
+  console.log(completeLevels);
+  if (!completeLevels) {
+    completeLevels = setLocalStorage();
+  }
+  if (completeLevels.levelsBeat["x" + search[1]][i-1]) {
     el.setAttribute("class", "complete");
     let p = document.createElement("p");
     p.innerHTML = "Complete";
@@ -31,4 +35,32 @@ function createElement(i) {
   el.style.width = smallest * 0.1 + "px";
   el.style.height = smallest * 0.1 + "px";
   levels.append(el);
+}
+function setLocalStorage() {
+  let data = {
+    theme: [
+      "#ff0000",
+      "#0abcda",
+      "#00ff00",
+      "#0000ff",
+      "#ffff00",
+      "#00ffff",
+      "#00aaff",
+      "#ffaa00",
+    ],
+    levelsBeat: {
+      x4: new Array(100).fill(0),
+      x5: new Array(100).fill(0),
+      x6: new Array(100).fill(0),
+      x7: new Array(100).fill(0),
+      x8: new Array(100).fill(0),
+      x9: new Array(100).fill(0),
+      x10: new Array(100).fill(0),
+      x11: new Array(100).fill(0),
+      x12: new Array(100).fill(0),
+      x15: new Array(100).fill(0),
+    },
+  };
+  localStorage.setItem("dots", JSON.stringify(data));
+  return data
 }

@@ -844,7 +844,7 @@ class Game {
         )
       );
     }
-    this.win()
+    // this.win()
   }
   createLandscapeDisplay(cardCount, data = false) {
     for (let i = 0; i < cardCount; i++) {
