@@ -25,7 +25,7 @@ cards 3 - 6 {
             dots=4
             colors=1
         }
-        
+
         levels 25-30 {
             dots=4
             colors=8
@@ -99,6 +99,111 @@ cards 3 - 6 {
         levels 15-20 {
             dots=8
             colors=8
+        }
+    }
+}
+
+5x5
+cards 3 - 6 {
+    levels 1-20 {
+        cards=3
+        levels 1-5 {
+            dots=3
+            colors=1
+        }
+        levels 5-10 {
+            dots=3
+            colors=2
+        }
+        levels 10-15 {
+            dots=3
+            colors=5
+        }
+        levels 15-20 {
+            dots=3
+            colors=6
+        }
+    }
+    levels 20 - 40{
+        card=4
+        levels 20-25 {
+            dots=4
+            colors=3
+        }
+        
+        levels 25-30 {
+            dots=4
+            colors=4
+        }
+        cards=4
+        levels 30-35 {
+            dots=5
+            colors=5
+        }
+        levels 35-40 {
+            dots=5
+            colors=6
+        }
+    }
+
+    levels 40 - 60{
+        cards = 4
+        levels 1-5 {
+            dots=6
+            colors=4
+        }
+        levels 5-10 {
+            dots=6
+            colors=5
+        }
+        levels 10-15 {
+            dots=7
+            colors=6
+        }
+        levels 15-20 {
+            dots=7
+            colors=7
+        }
+    }
+
+    levels 60 - 80{
+        cards=5
+        levels 1-5 {
+            dots=8
+            colors=4
+        }
+        levels 5-10 {
+            dots=8
+            colors=6
+        }
+        levels 10-15 {
+            dots=9
+            colors=7
+        }
+        levels 15-20 {
+            dots=9
+            colors=8
+        }
+    }
+
+    levels 80 - 100{
+        cards=6
+        levels 1-5 {
+            dots=10
+            colors=1
+        } 
+        levels 5-10 {
+            dots=10
+            colors=4
+        }
+        cards=6
+        levels 10-15 {
+            dots=10
+            colors=7
+        }
+        levels 15-20 {
+            dots=10
+            colors=10
         }
     }
 }

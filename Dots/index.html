@@ -13,35 +13,35 @@
   <body>
     <div id="levels">
       <a href="levels.html?grid=4">
-        <span>4 x 4</span><span class="levels">levels - 100</span></a
-      >
+        <span>4 x 4</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=5">
-        <span>5 x 5</span><span class="levels">levels - 100</span></a
-      >
+        <span>5 x 5</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=6">
-        <span>6 x 6</span><span class="levels">levels - 100</span></a
-      >
+        <span>6 x 6</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=7">
-        <span>7 x 7</span><span class="levels">levels - 100</span></a
-      >
+        <span>7 x 7</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=8">
-        <span>8 x 8</span><span class="levels">levels - 100</span></a
-      >
+        <span>8 x 8</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=9">
-        <span>9 x 9</span><span class="levels">levels - 100</span></a
-      >
+        <span>9 x 9</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=10">
-        <span>10 x 10</span><span class="levels">levels - 100</span></a
-      >
+        <span>10 x 10</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=11">
-        <span>11 x 11</span><span class="levels">levels - 100</span></a
-      >
+        <span>11 x 11</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=12">
-        <span>12 x 12</span><span class="levels">levels - 100</span></a
-      >
+        <span>12 x 12</span><span class="levels"></span
+      ></a>
       <a href="levels.html?grid=15">
-        <span>15 x 15</span><span class="levels">levels - 100</span></a
-      >
+        <span>15 x 15</span><span class="levels"></span
+      ></a>
       <a href="settings.html"> <span>Custom</span></a>
     </div>
     <script>
@@ -60,9 +60,94 @@
       let levels = Array.from(document.getElementById("levels").children);
       levels.forEach((element, index) => {
         let strength = 30;
+        checkCompletedLevels(element, index);
         element.style.boxShadow = `inset 0 0 ${strength}px ${colors[index]}, 0 0 ${strength}px ${colors[index]}`;
         element.style.border = `2px solid ${colors[index]}`;
       });
+
+      function checkCompletedLevels(element, index) {
+        console.clear();
+        let gridSize = element.children[0].innerHTML.split(" x ")[0];
+        let completedLevels = localStorage.getItem("dots");
+
+        if (!completedLevels) {
+          completedLevels = setLocalStorage();
+        } else {
+          completedLevels = JSON.parse(completedLevels);
+        }
+
+        if (completedLevels && "x" + gridSize in completedLevels.levelsBeat) {
+          fetch("./json/x" + gridSize + ".json")
+            .then((response) => response.json())
+            .then((jsObject) => {
+              completedLevels = JSON.parse(localStorage.getItem("dots"))
+
+              // if (!completedLevels) {
+              //   completedLevels = setLocalStorage();
+              // } else {
+              //   completedLevels = JSON.parse(completedLevels);
+              // }
+              if (
+                jsObject.length >
+                completedLevels.levelsBeat["x" + gridSize].length
+              ) {
+                while (
+                  jsObject.length >
+                  completedLevels.levelsBeat["x" + gridSize].length
+                ) {
+                  completedLevels.levelsBeat["x" + gridSize].push(0);
+                }
+              } else {
+                while (
+                  jsObject.length <
+                  completedLevels.levelsBeat["x" + gridSize].length
+                ) {
+                  completedLevels.levelsBeat["x" + gridSize].pop();
+                }
+              }
+              console.log(completedLevels.levelsBeat["x" + gridSize]);
+              console.log(JSON.stringify(completedLevels));
+              localStorage.setItem("dots", JSON.stringify(completedLevels));
+
+              let totalLevels =
+                completedLevels.levelsBeat["x" + gridSize].length;
+              completedLevels = completedLevels.levelsBeat[
+                "x" + gridSize
+              ].filter((e) => e == 1).length;
+              element.children[1].innerHTML = `${completedLevels}/${totalLevels}`;
+            });
+        }
+      }
+      function setLocalStorage() {
+        let data = {
+          theme: [
+            "#ff0000",
+            "#0abcda",
+            "#00ff00",
+            "#0000ff",
+            "#ffff00",
+            "#00ffff",
+            "#00aaff",
+            "#ffaa00",
+          ],
+          levelsBeat: {
+            x4: new Array(100).fill(0),
+            x5: new Array(100).fill(0),
+            x6: new Array(100).fill(0),
+            x7: new Array(100).fill(0),
+            x8: new Array(100).fill(0),
+            x9: new Array(100).fill(0),
+            x10: new Array(100).fill(0),
+            x11: new Array(100).fill(0),
+            x12: new Array(100).fill(0),
+            x15: new Array(100).fill(0),
+          },
+        };
+        localStorage.setItem("dots", JSON.stringify(data));
+        return data;
+      }
+
+      // custom button
       let num = {
         white: [0, 0, 50],
         green: [0, 0, 20],

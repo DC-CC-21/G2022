@@ -7,10 +7,11 @@ let smallest =
 let search = window.location.search.split("=");
 document.getElementById("grid").innerHTML = search[1] + "x" + search[1];
 
-fetch("./levels.json")
+fetch(`./json/x${search[1]}.json`)
   .then((response) => response.json())
   .then((jsObject) => {
-    for (let i = 0; i < jsObject[search[1]].length; i++) {
+    console.log(jsObject)
+    for (let i = 0; i < jsObject.length; i++) {
       createElement(i + 1);
     }
   });
@@ -21,7 +22,6 @@ function createElement(i) {
   el.href = `play.html?grid=${search[1]}&level=${i - 1}`;
 
   let completeLevels = JSON.parse(localStorage.getItem("dots"));
-  console.log(completeLevels);
   if (!completeLevels) {
     completeLevels = setLocalStorage();
   }

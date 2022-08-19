@@ -64,7 +64,7 @@ class Canvas {
     el.style.backgroundColor = "";
     el.style.position = "absolute";
     el.style.left = "0";
-    el.style.top = "0";
+    el.style.top ="0";
     el.style.width = Width + "px";
     el.style.height = Height + "px";
 

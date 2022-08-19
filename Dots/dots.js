@@ -296,7 +296,6 @@ class createCard {
       }
     });
     this.appendHTML(false);
-
   }
 
   drawOutline(c2) {
@@ -490,8 +489,8 @@ class targetCard {
       this.rotation = this.rotations[~~c.random(0, this.rotations.length)];
       this.scale = this.scales[~~c.random(0, this.scales.length)];
     }
-      // console.log(this.rotation)
-      // console.log(this.scale)
+    // console.log(this.rotation)
+    // console.log(this.scale)
 
     // //console.log("solve" in document.getElementById(i).dataset);
     this.set = document.getElementById(i).dataset;
@@ -715,7 +714,7 @@ class Game {
     this.cardCount = cardCount;
     this.cs = Number(urlParams.colors);
     this.level = urlParams.level || "custom";
-
+    this.debug = urlParams.debug;
     // cardCount = 3;
     // this.grid = 4;
     // this.dots = 8
@@ -733,28 +732,31 @@ class Game {
     //   // }
     //   // //console.log(str)
     // });
-    document.getElementById('backBtn').parentElement.href = 'levels.html?grid='+ this.grid
+    document.getElementById("backBtn").parentElement.href =
+      "levels.html?grid=" + this.grid;
     if (this.level !== "custom") {
       // console.log(window.location)
-      let host = window.location.pathname
-      document.getElementById('win').children[1].href = `?grid=${this.grid}&level=${Number(this.level)+1}`
+      let host = window.location.pathname;
+      document.getElementById("win").children[1].href = `?grid=${
+        this.grid
+      }&level=${Number(this.level) + 1}`;
       // console.log(document.getElementById('win').children[1])
-   
-      fetch("./levels.json")
+
+      fetch(`./json/x${this.grid}.json`)
         .then((response) => response.json())
         .then((jsObject) => {
-          this.maxLevel = jsObject[this.grid].length
-          cardCount = jsObject[this.grid][this.level].length
-          this.cardCount = cardCount
-          this.createLevel(jsObject[this.grid][this.level]);
+          // console.log(jsObject)
+          this.maxLevel = jsObject.length;
+          cardCount = jsObject[this.level].length;
+          this.cardCount = cardCount;
+          this.createLevel(jsObject[this.level]);
         });
     } else {
       this.run();
     }
-
   }
   createLevel(data) {
-   //console.log(data.length);
+    //console.log(data.length);
     this.resetArrays();
     // this.win()
 
@@ -916,7 +918,7 @@ class Game {
         totalDist += 1;
       }
     }
-    document.getElementById('stats').innerHTML = totalDist
+    document.getElementById("stats").innerHTML = totalDist;
     if (totalDist < 100) {
       this.win();
     }
@@ -994,15 +996,14 @@ class Game {
   }
 
   win() {
-    if(this.level == this.maxLevel-1){
-      let winText = document.getElementById('win')
-      let winBtn = winText.children[1]
-      let winH1 = winText.children[0]
-      winH1.innerHTML = `Congratulations<br> You have finished the ${this.grid}x${this.grid} pack!`
-      winBtn.children[0].innerHTML = "Click to return to main screen"
-      winBtn.href = "index.html"
+    if (this.level == this.maxLevel - 1) {
+      let winText = document.getElementById("win");
+      let winBtn = winText.children[1];
+      let winH1 = winText.children[0];
+      winH1.innerHTML = `Congratulations<br> You have finished the ${this.grid}x${this.grid} pack!`;
+      winBtn.children[0].innerHTML = "Click to return to main screen";
+      winBtn.href = "index.html";
     }
-
 
     document.getElementById("win").style.display = "block";
     document
@@ -1010,10 +1011,9 @@ class Game {
       .forEach((el) => el.classList.toggle("active"));
     controls.style.display = "none";
 
-    let completeLevels = JSON.parse(localStorage.getItem('dots'))
-    completeLevels.levelsBeat['x'+this.grid][this.level] = 1
-    localStorage.setItem('dots', JSON.stringify(completeLevels))
-
+    let completeLevels = JSON.parse(localStorage.getItem("dots"));
+    completeLevels.levelsBeat["x" + this.grid][this.level] = 1;
+    localStorage.setItem("dots", JSON.stringify(completeLevels));
   }
 }
 
@@ -1133,9 +1133,11 @@ let x = 0;
 
 let placedCards = 0;
 let centerSquare = {
-  x: window.innerWidth/2 - cardSize/2 ,
-  y: window.innerHeight/2 - cardSize/2
-}
+  x: window.innerWidth / 2 - cardSize / 2,
+  y: window.innerHeight / 2 - cardSize / 2,
+};
+let result = [];
+let drawOnce = false;
 draw = function () {
   game.check();
   x += 10;
@@ -1147,13 +1149,7 @@ draw = function () {
   // c.rect(x, 50, 100, 100);
   c.fill(0, 0, 0);
   c.strokeWeight(0);
-  c.rect(
-   centerSquare.x,
-   centerSquare.y,
-    cardSize,
-    cardSize,
-    20
-  );
+  c.rect(centerSquare.x, centerSquare.y, cardSize, cardSize, 20);
   // c.image('assets/Metal035.jpg', 0, 0, window.innerWidth, window.innerHeight)
 
   c.scale(0.5, 0.5);
@@ -1174,6 +1170,13 @@ draw = function () {
     targetComplete.push(card.card);
     targetComplete.push(card.card);
   });
+
+  if (game.debug && !drawOnce) {
+    drawOnce = true;
+    for (let i = 0; i < 5; i++) {
+      createCustomLevels();
+    }
+  }
 };
 // draw2()
 // draw
@@ -1254,7 +1257,6 @@ document.addEventListener("mousemove", (e) => {
   }
 });
 document.addEventListener("touchmove", (e) => {
-
   mx = e.touches[0].clientX;
   my = e.touches[0].clientY;
 
@@ -1323,7 +1325,7 @@ document.getElementById("back").addEventListener("click", (_) => {
     prevCard.card.index = prevCard.index;
   }
 });
-let result = [];
+
 document.getElementById("backBtn").addEventListener("click", (_) => {
   // console.clear();
   // let newSet = [];
@@ -1345,6 +1347,19 @@ function array_move(arr, old_index, new_index) {
   }
   arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
   return arr; // for testing
+}
+
+function createCustomLevels() {
+  console.clear();
+  let newSet = [];
+  targets.forEach((card) => {
+    newSet.push(card.arrayOfCards);
+  });
+  result.push(newSet);
+  let str = JSON.stringify(result);
+  console.log(str.slice(1, str.length - 1) + ",");
+  console.log(result.length);
+  game.run();
 }
 
 //#endregion
