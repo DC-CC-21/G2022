@@ -1,30 +1,30 @@
-localStorage.setItem(
-  "dots",
-  JSON.stringify({
-    theme: [
-      "#ff0000",
-      "#0abcda",
-      "#00ff00",
-      "#0000ff",
-      "#ffff00",
-      "#00ffff",
-      "#00aaff",
-      "#ffaa00",
-    ],
-    levelsBeat: {
-      x4: new Array(100).fill(0),
-      x5: new Array(100).fill(0),
-      x6: new Array(100).fill(0),
-      x7: new Array(100).fill(0),
-      x8: new Array(100).fill(0),
-      x9: new Array(100).fill(0),
-      x10: new Array(100).fill(0),
-      x11: new Array(100).fill(0),
-      x12: new Array(100).fill(0),
-      x15: new Array(100).fill(0),
-    },
-  })
-);
+// localStorage.setItem(
+//   "dots",
+//   JSON.stringify({
+//     theme: [
+//       "#ff0000",
+//       "#0abcda",
+//       "#00ff00",
+//       "#0000ff",
+//       "#ffff00",
+//       "#00ffff",
+//       "#00aaff",
+//       "#ffaa00",
+//     ],
+//     levelsBeat: {
+//       x4: new Array(100).fill(0),
+//       x5: new Array(100).fill(0),
+//       x6: new Array(100).fill(0),
+//       x7: new Array(100).fill(0),
+//       x8: new Array(100).fill(0),
+//       x9: new Array(100).fill(0),
+//       x10: new Array(100).fill(0),
+//       x11: new Array(100).fill(0),
+//       x12: new Array(100).fill(0),
+//       x15: new Array(100).fill(0),
+//     },
+//   })
+// );
 
 ////console.log(window.location);
 console.clear();
@@ -296,6 +296,7 @@ class createCard {
       }
     });
     this.appendHTML(false);
+
   }
 
   drawOutline(c2) {
@@ -768,6 +769,7 @@ class Game {
         this.level
       );
       this[`create${mode}Display`]();
+
       this.imageData = ctx.getImageData(0, 0, 200, 200);
       this.dataURL = checkCardsCanvas.toDataURL("image/png");
       this.dataURL = this.dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
@@ -842,6 +844,7 @@ class Game {
         )
       );
     }
+    this.win()
   }
   createLandscapeDisplay(cardCount, data = false) {
     for (let i = 0; i < cardCount; i++) {
@@ -1007,6 +1010,9 @@ class Game {
       .forEach((el) => el.classList.toggle("active"));
     controls.style.display = "none";
 
+    let completeLevels = JSON.parse(localStorage.getItem('dots'))
+    completeLevels.levelsBeat['x'+this.grid][this.level] = 1
+    localStorage.setItem('dots', JSON.stringify(completeLevels))
 
   }
 }
@@ -1230,6 +1236,7 @@ document.addEventListener("mousedown", (e) => {
   ontouchDown(e, e.clientX, e.clientY);
   //   controls.style.display = 'none';
 });
+
 document.addEventListener("touchstart", (e) => {
   e.clientX = e.touches[0].clientX;
   e.clientY = e.touches[0].clientY;
@@ -1247,6 +1254,7 @@ document.addEventListener("mousemove", (e) => {
   }
 });
 document.addEventListener("touchmove", (e) => {
+
   mx = e.touches[0].clientX;
   my = e.touches[0].clientY;
 
@@ -1254,6 +1262,7 @@ document.addEventListener("touchmove", (e) => {
     currentCard.card.drag(e.pageX, e.pageY);
     currentCard.card.snap();
   }
+  return false;
 });
 document.addEventListener("mouseup", (e) => {
   if (currentCard) {

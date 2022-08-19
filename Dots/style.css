@@ -5,10 +5,10 @@
 * {
   margin: 0px;
   padding: 0px;
-  /* -webkit-user-select: none;
+  -webkit-user-select: none;
     user-select: none;
     -ms-touch-action: none;
-    touch-action: none;  */
+    touch-action: none; 
 }
 
 .btns {
@@ -100,7 +100,7 @@ p {
   padding: 1%;
   border-radius: 5px;
   font-family: Arial, Helvetica, sans-serif;
-  display:none;
+  /* display:none; */
 }
 
 #backBtn {
@@ -132,7 +132,7 @@ p {
   display: none;
 }
 #completeTarget {
-  position: absolute;
+  position: absolute; 
   background-color: aqua;
   bottom: 0px;
   left: 0px;

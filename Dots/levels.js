@@ -1,23 +1,34 @@
-let levels = document.getElementById('levels')
-let smallest = window.innerHeight > window.innerWidth ? window.innerWidth : window.innerHeight;
+let levels = document.getElementById("levels");
+let smallest =
+  window.innerHeight > window.innerWidth
+    ? window.innerWidth
+    : window.innerHeight;
 
-let search = window.location.search.split('=')
-document.getElementById('grid').innerHTML = search[1]+'x'+search[1]
+let search = window.location.search.split("=");
+document.getElementById("grid").innerHTML = search[1] + "x" + search[1];
 
-fetch('./levels.json')
-.then(response => response.json())
-.then(jsObject => {
-    for(let i = 0; i < jsObject[search[1]].length; i ++){
-        createElement(i+1)  
+fetch("./levels.json")
+  .then((response) => response.json())
+  .then((jsObject) => {
+    for (let i = 0; i < jsObject[search[1]].length; i++) {
+      createElement(i + 1);
     }
-})
+  });
 
-function createElement(i){
-    let el = document.createElement('a')
-    el.innerHTML = i;
-    el.href = `play.html?grid=${search[1]}&level=${i-1}`
-    el.style.width = smallest*0.1+'px';
-    el.style.height = smallest*0.1+'px';
-    levels.append(el)
-    
+function createElement(i) {
+  let el = document.createElement("a");
+  el.innerHTML = i;
+  el.href = `play.html?grid=${search[1]}&level=${i - 1}`;
+
+  let completeLevels = JSON.parse(localStorage.getItem("dots"));
+  if (completeLevels.levelsBeat["x" + search[1]][i]) {
+    el.setAttribute("class", "complete");
+    let p = document.createElement("p");
+    p.innerHTML = "Complete";
+    el.append(p);
+  }
+
+  el.style.width = smallest * 0.1 + "px";
+  el.style.height = smallest * 0.1 + "px";
+  levels.append(el);
 }

@@ -35,15 +35,18 @@ h1{
     width:auto; 
     height:auto;
 
-    border: 1px solid purple;
-    box-shadow: inset 0px 0px 10px purple, 0px 0px 10px purple;
-
-    color:rgba(255, 255, 255, 0.784);
+    border-radius: 15%;
     font-size: 250%;
     aspect-ratio: 1/1;
     display:flex;
     justify-content: center;
     align-items: center;
+}
+#levels a:not(.complete){   
+    border: 1px solid purple;
+    box-shadow: inset 0px 0px 10px purple, 0px 0px 10px purple;
+
+    color:rgba(255, 255, 255, 0.784);
 }
 /* #back{
     position:absolute;
@@ -72,4 +75,21 @@ button{
     color:white;
     text-decoration:none;
   }
-  
+  .complete{
+    color:gold;
+    text-shadow: rgb(255, 255, 255) 1px 1px 2px;
+    border: 1px solid rgba(255, 255, 255, 0.653);
+
+    box-shadow: inset 0px 0px 10px gold, 0px 0px 10px rgb(255, 255, 255);
+
+  }
+  .complete p{
+    color:rgb(255, 255, 255);
+    text-shadow: rgb(0, 0, 0) 1px 1px 2px,  rgb(0, 0, 0) -1px -1px 2px;
+    font-size:25%;
+    position:absolute;
+    transform: rotate(-20deg);
+    background-color:rgba(255, 255, 255, 0.404);
+    padding:2px;
+    border-radius: 5px;
+  }
