@@ -1,66 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="A page full of different games">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="the menu page for Dots: choose your levels"
+    />
 
-        <title>Games</title>
+    <title>Dots: Category Select</title>
 
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-    <body>
-        <header>
-            <h1>Games</h1>
-        </header>
-        <main>
-            <article id="updates">
-                <h2>📢 Updates and Other Stuff</h2>
-                <h3>New games coming soon: <br><hr> 🏹 Huey! <br> Coin Chomper! 💰 <br> 🧩 Jigsaw Puzzle! <br> Snake! 🐍</h3>
-            </article>
-
-            <article>
-                <div>
-                <img src="" alt="MountainClimber Preview" width="100" height="100">
-            </div>
-            <h2><a href="MountainClimber">MountainClimber</a></h2>
-            </article>
-        
-            <article>
-                <div>
-                <img src="images/PacMan.jpg" alt="pacman preview" width="100" height="100"> 
-            </div>
-            <h2><a href="Pac-man/play.html">Coin Chomper</a></h2>
-            </article>
-            
-            <article>
-                <div>
-                <img src="images/Puzzle.jpg" alt="puzzle preview" width="100" height="100"> 
-            </div>
-            <h2><a href="Puzzle/libraryhome.html">Jigsaw Puzzle</a></h2>
-            </article>
-            
-            <article>
-                <div>
-                <img src="images/Snake.jpg" alt="snake preview" width="100" height="100"> 
-            </div>
-            <h2><a href="Snake/index.html">Snake</a></h2>
-            </article>
-            
-            <!-- <article>
-                <div>
-                <img src="" alt="space invaders preview" width="100" height="100"> 
-            </div>
-            <h2><a href="Snake/index.html">Space Invaders</a></h2>
-            </article> -->
-
-        </main>
-        <footer>
-            <p>&copy; 2022 🌊 DC-CC-21 🌴 Tauriel1202 🍍</p>
-        </footer>
-
-    </body>
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="./assets/icon192.png" />
+  </head>
+  <body>
+    <header>
+      <button class="return">↩</button>
+      <h1>Levels</h1>
+    </header>
+    <main>
+      <div class="grids">
+        <a href="levels.html?grid=4">
+          <span class="x">4 x 4</span>
+          <span class="numLevels">0 / 100</span></a
+        >
+        <a href="levels.html?grid=5">
+          <span class="x">5 x 5</span> <span class="perComp">0 / 100</span></a
+        >
+        <a href="levels.html?grid=6">
+          <span class="x">6 x 6</span> <span class="perComp">0 / 100</span></a
+        >
+        <a href="levels.html?grid=7">
+          <span class="x">7 x 7</span> <span class="perComp">0 / 100</span></a
+        >
+        <a href="levels.html?grid=8">
+          <span class="x">8 x 8</span> <span class="perComp">0 / 100</span></a
+        >
+        <a href="levels.html?grid=9">
+          <span class="x">9 x 9</span> <span class="perComp">0 / 100</span></a
+        >
+        <a href="levels.html?grid=10">
+          <span class="x">10 x 10</span> <span class="perComp">0 / 100</span></a
+        >
+        <a href="levels.html?grid=11">
+          <span class="x">11 x 11</span> <span class="perComp">0 / 100</span></a
+        >
+        <a href="levels.html?grid=12">
+          <span class="x">12 x 12</span> <span class="perComp">0 / 100</span></a
+        >
+        <a href="levels.html?grid=15">
+          <span class="x">15 x 15</span>
+          <span class="perComp"> 0 / 100</span></a
+        >
+        <a href="settings.html"><span class="x" id="custom">Custom</span></a>
+      </div>
+    </main>
     <script>
-        
+      let colors = [
+        "rgb(255,0,0)",
+        "rgb(0,255,0)",
+        "rgb(255,255,0)",
+        "rgb(255,255,255)",
+        "#0ac6ff",
+        "rgb(200,0,255)",
+        "rgb(255,50,100)",
+        "rgb(255,102,0)",
+        "#65e77f",
+        "rgb(0,100,200)",
+        "#c2a629",
+      ];
+      let levels = Array.from(document.querySelector(".grids").children);
+      let strength = 18;
+      levels.forEach((element, index) => {
+        element.style.boxShadow = `inset 0 0 ${strength}px ${colors[index]}, 0 0 ${strength}px ${colors[index]}`;
+        element.style.border = `2px solid ${colors[index]}`;
+      });
+
+      window.addEventListener("load", () => {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("service-worker.js");
+        }
+      });
     </script>
+  </body>
 </html>
