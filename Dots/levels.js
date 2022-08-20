@@ -1,4 +1,4 @@
-let levels = document.getElementById("levels");
+let levels = document.querySelector("levels");
 let smallest =
   window.innerHeight > window.innerWidth
     ? window.innerWidth
