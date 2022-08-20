@@ -28,7 +28,6 @@
 
 ////console.log(window.location);
 
-
 console.clear();
 let errors = document.createElement("ul");
 document.getElementById("stats").append(errors);
@@ -176,13 +175,13 @@ function canvasToDataURL(canvas) {
   let dataURL = canvas.toDataURL("image/png");
   return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 }
-function lockScroll () {
-  document.body.style.position = 'fixed';
+function lockScroll() {
+  document.body.style.position = "fixed";
   document.body.style.top = `-${window.scrollY}px`;
-  document.body.style.left = '0';
-  document.body.style.right = '0';
-};
-lockScroll()
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+}
+lockScroll();
 
 //#region setup
 const canvas = document.getElementById("canvas");
@@ -522,7 +521,7 @@ class targetCard {
   display() {
     // c.reset()
     // c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
-    c.transformOrigin(this.s/2, this.s/2);
+    c.transformOrigin(this.s / 2, this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
     c.scale(this.scale * 0.5, 1 * 0.5);
     if (this.card == 0) {
@@ -538,7 +537,7 @@ class targetCard {
   }
   setTarget() {
     // c.reset()
-    c.transformOrigin(this.s / 2,this.s / 2);
+    c.transformOrigin(this.s / 2, this.s / 2);
 
     // c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
@@ -587,9 +586,10 @@ class Card {
     this.scale = 1;
     this.newScale = 1;
 
-    this.checkedRot = true;
-    this.checkedScale = true;
+    this.checkedRot = false;
+    this.checkedScale = false;
     this.snapped = false;
+    this.needsUpdate = true;
   }
   display() {
     // switch (this.index) {
@@ -614,7 +614,7 @@ class Card {
     // c.textFont("sans-serif");
     // c.text(this.rotation.toFixed(2) + "," + this.newRotation, this.x, this.y-25);
     // c.text(this.scale.toFixed(2) + "," + this.newScale, this.x, this.y);
-
+    // this.needsUpdate = false;
     this.rotation = c.lerp(this.rotation, this.newRotation, 0.05);
     this.scale = c.lerp(this.scale, this.newScale, 0.05);
     if (this.rotation == 360) {
@@ -642,12 +642,13 @@ class Card {
     //   this.checkedRot = true;
     // }
     // c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
-    c.transformOrigin(this.s / 2,this.s / 2);
+    c.transformOrigin(this.s / 2, this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
     c.scale(this.scale, 1);
     // c.image(this.src, this.x, this.y, this.s, this.s);
     c.useLocal(`#card${this.card}`, this.x, this.y, this.s, this.s);
   }
+
   isin(mx, my) {
     return (
       mx >= this.x &&
@@ -664,9 +665,10 @@ class Card {
   }
   drag(mx, my) {
     if (this.clicked) {
-      this.x = c.constrain(mx + this.overlap.x, 0, window.innerWidth-this.s);
-      this.y = c.constrain(my + this.overlap.y, 0, window.innerHeight-this.s);
+      this.x = c.constrain(mx + this.overlap.x, 0, window.innerWidth - this.s);
+      this.y = c.constrain(my + this.overlap.y, 0, window.innerHeight - this.s);
       this.moveControls();
+      // this.moveElement();
     }
     return;
   }
@@ -689,6 +691,7 @@ class Card {
       this.x = window.innerWidth / 2 - cardSize / 2;
       this.y = window.innerHeight / 2 - cardSize / 2;
       this.moveControls();
+      // this.moveElement();
       return;
     }
     this.snapped = false;
@@ -715,6 +718,33 @@ class Card {
         game.checkImageData();
       }
     });
+  }
+  moveElement() {
+    let currentElement = document.querySelectorAll("#canvas use");
+    currentElement[this.index].setAttribute(
+      "transform",
+      `translate(${this.x} ${this.y})`
+    );
+  }
+  rotateElement() {
+    let currentElement = document.querySelectorAll("#canvas use");
+    setInterval(() => {
+      this.rotation = c.lerp(this.rotation, this.newRotation, 0.05);
+      if (this.rotation == 360) {
+        this.rotation = 0;
+        this.newRotation = 0;
+      }
+      if (Math.abs(this.rotation - this.newRotation) < 2 && !this.checkedRot) {
+        this.rotation = this.newRotation;
+        check = 5;
+        this.checkedRot = true;
+      }
+      currentElement[this.index].setAttribute(
+        "transform",
+        `translate(${this.x} ${this.y}) rotate(${this.rotation})`
+      );
+    }, 10);
+    console.log(currentElement[this.index].getAttribute("transform"));
   }
 }
 class Game {
@@ -940,8 +970,7 @@ class Game {
     document.getElementById("stats").innerHTML = totalDist;
     if (totalDist < 100) {
       this.win();
-    }
-    else {
+    } else {
       return;
     }
     if (pixels.join("") === pixels2.join("")) {
@@ -982,7 +1011,7 @@ class Game {
         return false;
       }
     });
-    check --;
+    check--;
   }
   getColorDist(c1, c2) {
     let r = c1.r - c2.r;
@@ -1004,8 +1033,8 @@ class Game {
     ////console.log(leven);
   }
   check() {
-    document.getElementById('stats') .innerHTML = check
-    if(check > 0){
+    document.getElementById("stats").innerHTML = check;
+    if (check > 0) {
       completeCards.innerHTML = "";
       eraseCanvas(ctx2);
       // sizeCanvas(checkCardsCanvas, cSize);
@@ -1183,10 +1212,10 @@ draw = function () {
   complete = [];
   targetComplete = [];
   cards.forEach((card, i) => {
-    card.index = i;
-    card.display();
-    complete.push(card.card);
-    complete.push(card.index);
+      card.index = i;
+      card.display();
+      complete.push(card.card);
+      complete.push(card.index);
   });
 
   c.reset();
@@ -1204,10 +1233,7 @@ draw = function () {
   }
 };
 
-
-
-
-// draw2()
+// draw2();
 // draw
 // let frame = 0;
 // draw=function(){
@@ -1316,6 +1342,7 @@ document.getElementById("rot").addEventListener("click", (_) => {
   if (prevCard) {
     prevCard.card.newRotation += 90 * (prevCard.card.scale < 0 ? -1 : 1);
     prevCard.card.checkedRot = false;
+    // prevCard.card.rotateElement();
     ////console.log(prevCard.card.newRotation);
 
     // check = true;
@@ -1331,7 +1358,7 @@ document.getElementById("flip").addEventListener("click", (_) => {
 });
 document.getElementById("for").addEventListener("click", (_) => {
   // ////console.log(prevCard);
-  check +=1;
+  check += 1;
   if (prevCard) {
     if (prevCard.index == cards.length - 1) {
       return;
