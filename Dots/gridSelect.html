@@ -58,7 +58,7 @@
       </div>
     </main>
     <script>
-      let colors = [
+            let colors = [
         "rgb(255,0,0)",
         "rgb(0,255,0)",
         "rgb(255,255,0)",
@@ -72,17 +72,100 @@
         "#c2a629",
       ];
       let levels = Array.from(document.querySelector(".grids").children);
-      let strength = 18;
       levels.forEach((element, index) => {
+        let strength = 18;
+        checkCompletedLevels(element, index);
         element.style.boxShadow = `inset 0 0 ${strength}px ${colors[index]}, 0 0 ${strength}px ${colors[index]}`;
         element.style.border = `2px solid ${colors[index]}`;
       });
+
+      function checkCompletedLevels(element, index) {
+        console.clear();
+        let gridSize = element.children[0].innerHTML.split(" x ")[0];
+        let completedLevels = localStorage.getItem("dots");
+
+        if (!completedLevels) {
+          completedLevels = setLocalStorage();
+        } else {
+          completedLevels = JSON.parse(completedLevels);
+        }
+
+        if (completedLevels && "x" + gridSize in completedLevels.levelsBeat) {
+          fetch("./json/x" + gridSize + ".json")
+            .then((response) => response.json())
+            .then((jsObject) => {
+              completedLevels = JSON.parse(localStorage.getItem("dots"))
+
+              // if (!completedLevels) {
+              //   completedLevels = setLocalStorage();
+              // } else {
+              //   completedLevels = JSON.parse(completedLevels);
+              // }
+              if (
+                jsObject.length >
+                completedLevels.levelsBeat["x" + gridSize].length
+              ) {
+                while (
+                  jsObject.length >
+                  completedLevels.levelsBeat["x" + gridSize].length
+                ) {
+                  completedLevels.levelsBeat["x" + gridSize].push(0);
+                }
+              } else {
+                while (
+                  jsObject.length <
+                  completedLevels.levelsBeat["x" + gridSize].length
+                ) {
+                  completedLevels.levelsBeat["x" + gridSize].pop();
+                }
+              }
+              // console.log(completedLevels.levelsBeat["x" + gridSize]);
+              // console.log(JSON.stringify(completedLevels));
+              localStorage.setItem("dots", JSON.stringify(completedLevels));
+
+              let totalLevels =
+                completedLevels.levelsBeat["x" + gridSize].length;
+              completedLevels = completedLevels.levelsBeat[
+                "x" + gridSize
+              ].filter((e) => e == 1).length;
+              element.children[1].innerHTML = `${completedLevels}/${totalLevels}`;
+            });
+        }
+      }
+      function setLocalStorage() {
+        let data = {
+          theme: [
+            "#ff0000",
+            "#0abcda",
+            "#00ff00",
+            "#0000ff",
+            "#ffff00",
+            "#00ffff",
+            "#00aaff",
+            "#ffaa00",
+          ],
+          levelsBeat: {
+            x4: new Array(100).fill(0),
+            x5: new Array(100).fill(0),
+            x6: new Array(100).fill(0),
+            x7: new Array(100).fill(0),
+            x8: new Array(100).fill(0),
+            x9: new Array(100).fill(0),
+            x10: new Array(100).fill(0),
+            x11: new Array(100).fill(0),
+            x12: new Array(100).fill(0),
+            x15: new Array(100).fill(0),
+          },
+        };
+        localStorage.setItem("dots", JSON.stringify(data));
+        return data;
+      }
 
       window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.register("service-worker.js");
         }
-      });
+      })
     </script>
   </body>
 </html>
