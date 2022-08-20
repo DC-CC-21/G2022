@@ -24,6 +24,7 @@
   padding: 3px;
   border-radius: 5%;
   box-shadow: inset 0px 0px 20px rgb(0, 255, 81);
+
 }
 
 button {
@@ -31,6 +32,8 @@ button {
   font-size: 100%;
   border-radius: 10%;
   margin: 2px;
+  background-color:white;
+
 }
 
 img {
@@ -181,3 +184,6 @@ p {
 
 }
 
+use {
+  /* transform-origin: 50px 50px; */
+}

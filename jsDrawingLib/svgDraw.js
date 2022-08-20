@@ -64,7 +64,7 @@ class Canvas {
     el.style.backgroundColor = "";
     el.style.position = "absolute";
     el.style.left = "0";
-    el.style.top ="0";
+    el.style.top = "0";
     el.style.width = Width + "px";
     el.style.height = Height + "px";
 
@@ -74,8 +74,8 @@ class Canvas {
   //SHAPES
   rect(x, y, width, height, radius, fixed) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
-    el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
+    // el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
+    // el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
     el.setAttribute("width", width);
     el.setAttribute("height", height);
     el.setAttribute("fill", this.#fillColor);
@@ -88,7 +88,9 @@ class Canvas {
     );
     el.setAttribute(
       "transform",
-      `rotate(${this.#rotation}), scale(${this.#scale.x},${this.#scale.y})`
+      `translate(${x} ${y}) scale(${this.#scale.x},${this.#scale.y}),rotate(${
+        this.#rotation
+      })`
     );
     // else{el.setAttribute('x', el.getAttribute('x')+this.#canvas.style.left) }
     // el.setAttribute("transform","rotate(-90 50 100)")
@@ -245,12 +247,14 @@ class Canvas {
     );
     el.setAttribute(
       "transform",
-      `scale(${this.#scale.x},${this.#scale.y}),rotate(${this.#rotation})`
+      `translate(${x} ${y}) scale(${this.#scale.x},${this.#scale.y}),rotate(${
+        this.#rotation
+      })`
     );
 
-    el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
+    // el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
+    // el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
 
-    el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
     // if (!aspect) {
     // }
     el.setAttribute("width", width || 100);
@@ -365,7 +369,12 @@ class Canvas {
     return hex.length == 1 ? "0" + hex : hex;
   }
   rgbToHex(r, g, b) {
-    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+    return (
+      "#" +
+      this.componentToHex(r) +
+      this.componentToHex(g) +
+      this.componentToHex(b)
+    );
   }
   constrain(aNumber, aMin, aMax) {
     return aNumber > aMax ? aMax : aNumber < aMin ? aMin : aNumber;

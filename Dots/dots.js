@@ -509,7 +509,8 @@ class targetCard {
   }
   display() {
     // c.reset()
-    c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
+    // c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
+    c.transformOrigin(this.s/2, this.s/2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
     c.scale(this.scale * 0.5, 1 * 0.5);
     if (this.card == 0) {
@@ -525,7 +526,9 @@ class targetCard {
   }
   setTarget() {
     // c.reset()
-    c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
+    c.transformOrigin(this.s / 2,this.s / 2);
+
+    // c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
     c.scale(this.scale * 0.5, 1 * 0.5);
     if (this.card == 0) {
@@ -608,14 +611,16 @@ class Card {
     }
     if (Math.abs(this.rotation - this.newRotation) < 2 && !this.checkedRot) {
       this.rotation = this.newRotation;
-      check = true;
+      check = 5;
       this.checkedRot = true;
     }
+
     if (Math.abs(this.scale - this.newScale) < 0.1 && !this.checkedScale) {
       this.scale = this.newScale;
-      check = true;
+      check = 5;
       this.checkedScale = true;
     }
+    // else {check = 0}
     // if (this.rotation !== this.newRotation) {
     //   this.checkedRot = false;
     // }
@@ -624,7 +629,8 @@ class Card {
     //   check = true;
     //   this.checkedRot = true;
     // }
-    c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
+    // c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
+    c.transformOrigin(this.s / 2,this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
     c.scale(this.scale, 1);
     // c.image(this.src, this.x, this.y, this.s, this.s);
@@ -653,6 +659,7 @@ class Card {
     return;
   }
   release() {
+    check += 1;
     this.clicked = false;
   }
   snap() {
@@ -666,7 +673,7 @@ class Card {
       cardSize / 4
     ) {
       this.snapped = true;
-      check = true;
+      check += 2;
       this.x = window.innerWidth / 2 - cardSize / 2;
       this.y = window.innerHeight / 2 - cardSize / 2;
       this.moveControls();
@@ -884,7 +891,7 @@ class Game {
   }
   checkImageData() {
     for (let i = 0; i < cards.length; i++) {
-      if (cards[i].snapped) {
+      if (cards[i].snapped && cards[i].checkedRot && cards[i].checkedScale) {
         continue;
       } else {
         return false;
@@ -921,6 +928,9 @@ class Game {
     document.getElementById("stats").innerHTML = totalDist;
     if (totalDist < 100) {
       this.win();
+    }
+    else {
+      return;
     }
     if (pixels.join("") === pixels2.join("")) {
       ////console.log("complete with pixels search");
@@ -960,6 +970,7 @@ class Game {
         return false;
       }
     });
+    check --;
   }
   getColorDist(c1, c2) {
     let r = c1.r - c2.r;
@@ -981,7 +992,8 @@ class Game {
     ////console.log(leven);
   }
   check() {
-    if (check) {
+    document.getElementById('stats') .innerHTML = check
+    if(check > 0){
       completeCards.innerHTML = "";
       eraseCanvas(ctx2);
       // sizeCanvas(checkCardsCanvas, cSize);
@@ -990,12 +1002,13 @@ class Game {
         cards[i].appendToHTML(i);
       }
 
-      check = false;
+      // check = false;
     }
     return false;
   }
 
   win() {
+    check = 0;
     if (this.level == this.maxLevel - 1) {
       let winText = document.getElementById("win");
       let winBtn = winText.children[1];
@@ -1122,7 +1135,7 @@ let cards = [];
 let targets = [];
 let targetComplete = [];
 let complete = [];
-let check = true;
+let check = 0;
 let offsetX = 0;
 let textY = 0;
 
@@ -1302,7 +1315,7 @@ document.getElementById("flip").addEventListener("click", (_) => {
 });
 document.getElementById("for").addEventListener("click", (_) => {
   // ////console.log(prevCard);
-  check = true;
+  check +=1;
   if (prevCard) {
     if (prevCard.index == cards.length - 1) {
       return;
@@ -1315,7 +1328,7 @@ document.getElementById("for").addEventListener("click", (_) => {
 });
 document.getElementById("back").addEventListener("click", (_) => {
   // ////console.log(prevCard);
-  check = true;
+  check += 1;
   if (prevCard) {
     if (prevCard.index == 0) {
       return;
