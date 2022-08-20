@@ -1,17 +1,16 @@
-let levels = document.querySelector("levels");
+let levels = document.querySelector(".levels");
 let smallest =
   window.innerHeight > window.innerWidth
     ? window.innerWidth
     : window.innerHeight;
 
 let search = window.location.search.split("=");
-document.getElementById("grid").innerHTML = search[1] + "x" + search[1];
+document.querySelector(".grid").innerHTML = search[1] + "x" + search[1];
 
-fetch(`./json/x${search[1]}.json`)
+fetch("./levels.json")
   .then((response) => response.json())
   .then((jsObject) => {
-    console.log(jsObject)
-    for (let i = 0; i < jsObject.length; i++) {
+    for (let i = 0; i < jsObject[search[1]].length; i++) {
       createElement(i + 1);
     }
   });
@@ -22,6 +21,7 @@ function createElement(i) {
   el.href = `play.html?grid=${search[1]}&level=${i - 1}`;
 
   let completeLevels = JSON.parse(localStorage.getItem("dots"));
+  console.log(completeLevels);
   if (!completeLevels) {
     completeLevels = setLocalStorage();
   }
@@ -32,8 +32,8 @@ function createElement(i) {
     el.append(p);
   }
 
-  el.style.width = smallest * 0.1 + "px";
-  el.style.height = smallest * 0.1 + "px";
+  // el.style.width = smallest * 0.1 + "px";
+  // el.style.height = smallest * 0.1 + "px";
   levels.append(el);
 }
 function setLocalStorage() {
