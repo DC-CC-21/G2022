@@ -27,6 +27,8 @@
 // );
 
 ////console.log(window.location);
+
+
 console.clear();
 let errors = document.createElement("ul");
 document.getElementById("stats").append(errors);
@@ -174,6 +176,13 @@ function canvasToDataURL(canvas) {
   let dataURL = canvas.toDataURL("image/png");
   return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 }
+function lockScroll () {
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${window.scrollY}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+};
+lockScroll()
 
 //#region setup
 const canvas = document.getElementById("canvas");
@@ -295,6 +304,9 @@ class createCard {
         );
       }
     });
+    this.appendHTML(false);
+    this.appendHTML(false);
+
     this.appendHTML(false);
   }
 
@@ -652,8 +664,8 @@ class Card {
   }
   drag(mx, my) {
     if (this.clicked) {
-      this.x = mx + this.overlap.x;
-      this.y = my + this.overlap.y;
+      this.x = c.constrain(mx + this.overlap.x, 0, window.innerWidth-this.s);
+      this.y = c.constrain(my + this.overlap.y, 0, window.innerHeight-this.s);
       this.moveControls();
     }
     return;
@@ -1191,6 +1203,10 @@ draw = function () {
     }
   }
 };
+
+
+
+
 // draw2()
 // draw
 // let frame = 0;

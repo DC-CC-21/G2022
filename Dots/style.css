@@ -6,9 +6,10 @@
   margin: 0px;
   padding: 0px;
   -webkit-user-select: none;
-    user-select: none;
-    -ms-touch-action: none;
-    touch-action: none; 
+  user-select: none;
+  -ms-touch-action: none;
+  touch-action: none;
+  overflow: hidden;
 }
 
 .btns {
@@ -24,7 +25,6 @@
   padding: 3px;
   border-radius: 5%;
   box-shadow: inset 0px 0px 20px rgb(0, 255, 81);
-
 }
 
 button {
@@ -32,8 +32,7 @@ button {
   font-size: 100%;
   border-radius: 10%;
   margin: 2px;
-  background-color:white;
-
+  background-color: white;
 }
 
 img {
@@ -57,17 +56,24 @@ img {
   background-color: rgba(170, 170, 170, 0.278);
 
   z-index: 2;
-  overflow: scroll !important;
+
+  overflow-y: scroll !important;
 }
+
 #selectionMenu div {
   position: relative;
   width: 100px;
   height: 100px;
   margin-top: 10%;
+
   /* background-color:white; */
   margin-left: auto;
   margin-right: auto;
 }
+#selectionMenu div:last-child{
+  margin-bottom:15%;
+}
+
 #selectionMenu svg {
   position: relative;
   width: 100%;
@@ -90,10 +96,6 @@ svg.active {
   color: rgb(255, 102, 0);
 }
 
-body {
-  overflow: hidden;
-}
-
 p {
   position: absolute;
   z-index: 1;
@@ -112,12 +114,12 @@ p {
   top: 10px;
   z-index: 20;
   background-color: rgb(0, 0, 0);
-  width: 4em; 
-  font-size:1.2em;
-  padding:2px 5px;
-  border:1px solid white;
-  box-shadow:inset 0 0 5px white, 0 0 5px white;
-  color:white;
+  width: 4em;
+  font-size: 1.2em;
+  padding: 2px 5px;
+  border: 1px solid white;
+  box-shadow: inset 0 0 5px white, 0 0 5px white;
+  color: white;
 }
 
 #checkCards {
@@ -135,7 +137,7 @@ p {
   display: none;
 }
 #completeTarget {
-  position: absolute; 
+  position: absolute;
   background-color: aqua;
   bottom: 0px;
   left: 0px;
@@ -153,6 +155,7 @@ p {
 #imgs img {
   width: 100px;
   height: 100px;
+  display: none;
 }
 
 #completeCards {
@@ -181,9 +184,11 @@ p {
   width: -moz-fit-content;
   width: fit-content;
   display: none;
-
 }
 
 use {
   /* transform-origin: 50px 50px; */
+}
+.dotsCard {
+  display: none;
 }
