@@ -946,38 +946,38 @@ class Game {
     var pixels = imageData.data;
     var pixels2 = imageData2.data;
     console.clear();
-    let totalDist = 0;
-    for (var i = 0; i < pixels.length; i += 4) {
-      if (
-        this.getColorDist(
-          {
-            r: pixels[i],
-            g: pixels[i + 1],
-            b: pixels[i + 2],
-          },
-          {
-            r: pixels2[i],
-            g: pixels2[i + 1],
-            b: pixels2[i + 2],
-          }
-        ) < 100
-      ) {
-        continue;
-      } else {
-        totalDist += 1;
-      }
-    }
-    document.getElementById("stats").innerHTML = totalDist;
-    if (totalDist < 100) {
-      this.win();
-    } else {
-      return;
-    }
-    if (pixels.join("") === pixels2.join("")) {
-      ////console.log("complete with pixels search");
-      this.win();
-      return true;
-    }
+    // let totalDist = 0;
+    // for (var i = 0; i < pixels.length; i += 4) {
+    //   if (
+    //     this.getColorDist(
+    //       {
+    //         r: pixels[i],
+    //         g: pixels[i + 1],
+    //         b: pixels[i + 2],
+    //       },
+    //       {
+    //         r: pixels2[i],
+    //         g: pixels2[i + 1],
+    //         b: pixels2[i + 2],
+    //       }
+    //     ) < 100
+    //   ) {
+    //     continue;
+    //   } else {
+    //     totalDist += 1;
+    //   }
+    // }
+    // document.getElementById("stats").innerHTML = totalDist;
+    // if (totalDist < 100) {
+    //   this.win();
+    // } else {
+    //   return;
+    // }
+    // if (pixels.join("") === pixels2.join("")) {
+    //   ////console.log("complete with pixels search");
+    //   this.win();
+    //   return true;
+    // }
 
     var img = new Image();
     img.src = checkCardsCanvas.toDataURL();
@@ -1056,7 +1056,7 @@ class Game {
       let winH1 = winText.children[0];
       winH1.innerHTML = `Congratulations<br> You have finished the ${this.grid}x${this.grid} pack!`;
       winBtn.children[0].innerHTML = "Click to return to main screen";
-      winBtn.href = "index.html";
+      winBtn.href = "gridSelect.html";
     }
 
     document.getElementById("win").style.display = "block";
