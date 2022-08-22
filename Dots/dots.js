@@ -712,6 +712,8 @@ class Card {
       this.y = window.innerHeight / 2 - cardSize / 2;
 
       cards.push(cards.splice(this.index, 1)[0]);
+      this.index = cards.length-1;
+      prevCard =  {card: this, index: this.index };
       this.moveControls();
       // this.moveElement();
       return;
@@ -981,7 +983,7 @@ class Game {
             g: pixels2[i + 1],
             b: pixels2[i + 2],
           }
-        ) < 10
+        ) < c.map(this.grid, 4,15,100,10)
       ) {
         continue;
       } else {
