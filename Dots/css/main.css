@@ -99,10 +99,28 @@ h1.grid {
 }
 /*#endregion LEVELS*/
 /*#region THEMES*/
-
-#themes {
+#themesMain{
   margin-top: 5em;
 }
+label{
+  font-size:1.2em;
+  width:fit-content;
+  margin:auto;
+  /* background-color:white; */
+  color:white;
+  height:auto;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  padding: 0 5px;
+  border:1px solid rgb(255, 255, 255);
+}
+input {
+  margin-left:5px;
+  height:3em;
+  padding:10px;
+}
+
 #themes h2 {
   margin: 0.5em;
   color: white;

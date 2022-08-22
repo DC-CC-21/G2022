@@ -20,6 +20,7 @@ class Canvas {
   #transformOrigin = { x: 0, y: 0 };
   #textFont = "sans-serif";
   #translate = { x: 0, y: 0 };
+  #invertC = false;
   //#endregion
 
   constructor(canvas, width, height, createTouch = true) {
@@ -164,6 +165,8 @@ class Canvas {
     // el.setAttribute("rx", this.#strokeWeightSize);
     // el.setAttribute("ry", this.#strokeWeightSize);
     el.setAttribute("fill", this.#fillColor);
+    // el.setAttribute('filter', this.#invertC)
+
     el.setAttribute("stroke", this.#strokeColor);
     // el.setAttribute("stroke-width", this.#strokeWeightSize);
     el.setAttribute("font-size", this.#textSize);
@@ -303,7 +306,68 @@ class Canvas {
   color(r, g, b, a = 1) {
     return `rgba(${r},${g},${b},${a})`;
   }
+  getRGB(color) {
+    return color
+      .replace(/\D+\(|\)/g, "")
+      .split(",")
+      .map((color) => Math.abs(255 - Number(color)));
+  }
+  invertColor(color) {
+    color = color
+      .replace(/\D+\(|\)/g, "")
+      .split(",")
+      .map((color) => Math.abs(255 - Number(color)));
 
+    let r = color[0];
+    let g = color[1];
+    let b = color[2];
+
+    return this.color(r, g, b);
+  }
+  selectColor(number) {
+    const hue = number * 137.508;
+    return `hsl(${hue},50%,75%)`;
+  }
+  rgb2hue(color) {
+    color = this.getRGB(color);
+    let r = color[0];
+    let g = color[1];
+    let b = color[2];
+
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    var c = max - min;
+    var hue;
+    if (c == 0) {
+      hue = 0;
+    } else {
+      switch (max) {
+        case r:
+          var segment = (g - b) / c;
+          var shift = 0 / 60; // R° / (360° / hex sides)
+          if (segment < 0) {
+            // hue > 180, full rotation
+            shift = 360 / 60; // R° / (360° / hex sides)
+          }
+          hue = segment + shift;
+          break;
+        case g:
+          var segment = (b - r) / c;
+          var shift = 120 / 60; // G° / (360° / hex sides)
+          hue = segment + shift;
+          break;
+        case b:
+          var segment = (r - g) / c;
+          var shift = 240 / 60; // B° / (360° / hex sides)
+          hue = segment + shift;
+          break;
+      }
+    }
+    return hue; // hue is in [0,6], scale it up
+  }
   stroke(r, g, b, a) {
     if (r != undefined && g != undefined && b != undefined && a != undefined) {
       this.#strokeColor = `rgba(${r}, ${g}, ${b}, ${a})`;

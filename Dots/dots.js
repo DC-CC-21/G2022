@@ -52,6 +52,7 @@ window.onerror = function (error, source, lineno, colno, err) {
 };
 
 //class checkCards
+let colorDiv = document.getElementById("colors");
 
 let completeTarget = document.getElementById("completeTarget");
 let completeCards = document.getElementById("completeCards");
@@ -260,15 +261,18 @@ class createCard {
       [],
       [],
     ];
+    this.c2.textAlign("middle");
+    this.c2.textSize(this.width / grid / 3);
 
+    this.cBlind = JSON.parse(localStorage.getItem("dots")).colorblind
+    console.log(this.cBlind)
     //createDots(canvas, grid x*x, number of colors, number of dots)
-
+    this.abc = "ABCDEFGH";
     if (level == "custom" || level == "daily") {
       this.createDots2(this.c2, grid, dots, cs);
     } else {
       this.createLevel(this.c2, cs, grid);
     }
-
     // this.createDots(this.c2, dots);
     // drawImage();
   }
@@ -277,6 +281,7 @@ class createCard {
     let theme = JSON.parse(localStorage.getItem("dots")).theme;
     if (theme !== "random") {
       var colors = JSON.parse(localStorage.getItem("dots")).theme;
+      var origColors = [...colors];
       colors = c.shuffleArray(colors);
     } else {
       var colors = this.selectColors(num);
@@ -303,6 +308,19 @@ class createCard {
           s * padding,
           s * padding
         );
+
+        if (this.cBlind) {
+          colorDiv.style.color = colors[color.color];
+          let textColor = window.getComputedStyle(colorDiv).color;
+          textColor = c2.invertColor(textColor);
+          c2.fill(textColor);
+          let letter = origColors.indexOf(colors[color.color]);
+          c2.text(
+            this.abc[letter],
+            color.x * spacing + s / 2,
+            color.y * spacing + s / 2 + this.width / grid / 3 / 3
+          );
+        }
       }
     });
     this.appendHTML(false);
@@ -685,7 +703,9 @@ class Card {
       ) <
       cardSize / 4
     ) {
-      if(!this.snapped){totalMoves ++;}
+      if (!this.snapped) {
+        totalMoves++;
+      }
       this.snapped = true;
       check += 2;
       this.x = window.innerWidth / 2 - cardSize / 2;
@@ -783,8 +803,7 @@ class Game {
     //   // }
     //   // //console.log(str)
     // });
-    document.getElementById("backBtn").href =
-      "levels.html?grid=" + this.grid;
+    document.getElementById("backBtn").href = "levels.html?grid=" + this.grid;
     if (this.level !== "custom") {
       // console.log(window.location)
       let host = window.location.pathname;
@@ -1239,7 +1258,7 @@ draw = function () {
     }
   }
 
-  document.getElementById("stats").innerHTML = 'Moves: '+totalMoves;
+  document.getElementById("stats").innerHTML = "Moves: " + totalMoves;
 };
 
 // draw2();

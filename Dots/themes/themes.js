@@ -1,15 +1,15 @@
 let url = "./themes.json";
 let bigDiv = document.querySelector("#themes");
-
-fetch(url)
-  .then((response) => response.json())
-  .then((jsObject) => {
     let storage = localStorage.getItem('dots')
     if(!storage){
       storage = setLocalStorage(jsObject.themes[0].colors)
     } else {
       storage = JSON.parse(storage)
     }
+fetch(url)
+  .then((response) => response.json())
+  .then((jsObject) => {
+
 
     console.log(jsObject.themes[0].colors);
     for (let i = 0; i < jsObject.themes.length; i++) {
@@ -35,7 +35,7 @@ fetch(url)
 
       for (let j = 0; j < colors.length; j++) {
         let color = document.createElement("div");
-        color.innerHTML = ".";
+        color.innerHTML = "A";
         color.style.backgroundColor = colors[j];
         colDiv.append(color);
       }
@@ -61,4 +61,12 @@ function setLocalStorage(jsObject) {
   };
   localStorage.setItem("dots", JSON.stringify(data));
   return data;
+}
+
+let check = document.querySelector('input')
+check.checked = storage.colorblind
+check.onchange = function(){
+  console.log(check.checked)
+  storage.colorblind = check.checked;
+  localStorage.setItem('dots', JSON.stringify(storage))
 }
