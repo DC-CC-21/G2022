@@ -262,7 +262,8 @@ class createCard {
     ];
 
     //createDots(canvas, grid x*x, number of colors, number of dots)
-    if (level == "custom") {
+
+    if (level == "custom" || level == "daily") {
       this.createDots2(this.c2, grid, dots, cs);
     } else {
       this.createLevel(this.c2, cs, grid);
@@ -291,7 +292,7 @@ class createCard {
     let s = this.width / grid;
     let padding = 0.5;
     let spacing = this.width / grid;
-    c2.stroke(0,0,0,0)
+    c2.stroke(0, 0, 0, 0);
     data.colors.forEach((color) => {
       if (color) {
         //console.log(color);
@@ -684,10 +685,13 @@ class Card {
       ) <
       cardSize / 4
     ) {
+      if(!this.snapped){totalMoves ++;}
       this.snapped = true;
       check += 2;
       this.x = window.innerWidth / 2 - cardSize / 2;
       this.y = window.innerHeight / 2 - cardSize / 2;
+
+      cards.push(cards.splice(this.index, 1)[0]);
       this.moveControls();
       // this.moveElement();
       return;
@@ -779,7 +783,7 @@ class Game {
     //   // }
     //   // //console.log(str)
     // });
-    document.getElementById("backBtn").parentElement.href =
+    document.getElementById("backBtn").href =
       "levels.html?grid=" + this.grid;
     if (this.level !== "custom") {
       // console.log(window.location)
@@ -958,7 +962,7 @@ class Game {
             g: pixels2[i + 1],
             b: pixels2[i + 2],
           }
-        ) < 100
+        ) < 10
       ) {
         continue;
       } else {
@@ -1009,7 +1013,6 @@ class Game {
         return false;
       }
     });
-    check--;
   }
   getColorDist(c1, c2) {
     let r = c1.r - c2.r;
@@ -1033,6 +1036,8 @@ class Game {
   check() {
     document.getElementById("stats").innerHTML = check;
     if (check > 0) {
+      check--;
+      console.log(check);
       completeCards.innerHTML = "";
       eraseCanvas(ctx2);
       // sizeCanvas(checkCardsCanvas, cSize);
@@ -1066,6 +1071,7 @@ class Game {
     let completeLevels = JSON.parse(localStorage.getItem("dots"));
     completeLevels.levelsBeat["x" + this.grid][this.level] = 1;
     localStorage.setItem("dots", JSON.stringify(completeLevels));
+    console.log(completeLevels);
   }
 }
 
@@ -1168,6 +1174,7 @@ function levenshtein(s, t) {
   return h;
 }
 
+const date = new Date();
 let cardCount = 8;
 let customCards = [];
 let cards = [];
@@ -1177,6 +1184,7 @@ let complete = [];
 let check = 0;
 let offsetX = 0;
 let textY = 0;
+let totalMoves = 0;
 
 let game = new Game();
 //temp
@@ -1190,6 +1198,7 @@ let centerSquare = {
 };
 let result = [];
 let drawOnce = false;
+
 draw = function () {
   game.check();
   x += 10;
@@ -1210,10 +1219,10 @@ draw = function () {
   complete = [];
   targetComplete = [];
   cards.forEach((card, i) => {
-      card.index = i;
-      card.display();
-      complete.push(card.card);
-      complete.push(card.index);
+    card.index = i;
+    card.display();
+    complete.push(card.card);
+    complete.push(card.index);
   });
 
   c.reset();
@@ -1229,6 +1238,8 @@ draw = function () {
       createCustomLevels();
     }
   }
+
+  document.getElementById("stats").innerHTML = 'Moves: '+totalMoves;
 };
 
 // draw2();
@@ -1337,6 +1348,7 @@ document.addEventListener("touchend", (e) => {
 });
 document.getElementById("rot").addEventListener("click", (_) => {
   // ////console.log(prevCard);
+  totalMoves++;
   if (prevCard) {
     prevCard.card.newRotation += 90 * (prevCard.card.scale < 0 ? -1 : 1);
     prevCard.card.checkedRot = false;
@@ -1348,6 +1360,7 @@ document.getElementById("rot").addEventListener("click", (_) => {
 });
 document.getElementById("flip").addEventListener("click", (_) => {
   // ////console.log(prevCard);
+  totalMoves++;
   if (prevCard) {
     prevCard.card.newScale *= -1;
     prevCard.card.checkedScale = false;
@@ -1355,6 +1368,7 @@ document.getElementById("flip").addEventListener("click", (_) => {
   }
 });
 document.getElementById("for").addEventListener("click", (_) => {
+  totalMoves++;
   // ////console.log(prevCard);
   check += 1;
   if (prevCard) {
@@ -1369,6 +1383,7 @@ document.getElementById("for").addEventListener("click", (_) => {
 });
 document.getElementById("back").addEventListener("click", (_) => {
   // ////console.log(prevCard);
+  totalMoves++;
   check += 1;
   if (prevCard) {
     if (prevCard.index == 0) {

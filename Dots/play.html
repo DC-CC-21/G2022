@@ -10,9 +10,10 @@
     <title>Dots</title>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://josephg.github.io/noisejs/perlin.js" defer></script>
+
     <script src="../jsDrawingLib/svgDraw.js" defer></script>
     <script src="dots.js" defer></script>
-    
   </head>
   <body onload="window.scrollTo(0,0)">
     <!-- <svg style="display: none" id="test">-->
@@ -24,7 +25,6 @@
     <!-- </defs> -->
     <!--    </svg> -->
     <svg id="canvas"></svg>
-    <p id="stats">MouseX: 0, MouseY:0, Card:0</p>
 
     <div id="selectionMenu"></div>
     <div class="btns">
@@ -33,8 +33,10 @@
       <button id="back">back</button>
       <button id="flip">flip</button>
     </div>
-    <a><button id="backBtn">BACK</button></a>
-
+    <span id="tl"     >
+      <a id="backBtn">BACK</a>
+      <p id="stats">MouseX: 0, MouseY:0, Card:0</p>
+    </span>
     <canvas id="checkCards" width="200" height="200"> hello</canvas>
     <canvas id="checkCards2" width="200" height="200"> hello</canvas>
 
@@ -43,8 +45,6 @@
     <svg id="completeCards"></svg>
     <div id="imgs"></div>
     <div id="compare"></div>
-
-
 
     <div id="win">
       <h1>Level Complete</h1>
