@@ -1574,7 +1574,7 @@ function createCustomLevels() {
   });
   result.push(newSet);
   let str = JSON.stringify(result);
-  // console.log(str.slice(1, str.length - 1) + ",");
+  console.log(str.slice(1, str.length - 1) + ",");
   console.log(result.length);
   game.run();
 }
