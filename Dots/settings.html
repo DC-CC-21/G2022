@@ -20,22 +20,27 @@
     </header>
     <main>
       <h2>Custom Settings</h2>
+      <h2 id="a" style="background-color: red; display:none;">Please choose a number</h2>
       <form method="get" action="#">
         <label
-          >Number of Colored Dots:
-          <input type="number" name="dotColNum" id="dotColNum"
+          >Number of cards:
+          <input type="number" name="cards" id="cardsNum" min="2" max="6" placeholder="2"
         /></label>
         <label
-          >Number of Dots to Solve For:
-          <input type="number" name="dotSolve" id="dotSolve"
+        >Dots per card:
+        <input type="number" name="dots" id="dotColNum" min="2" max="1"
+      /></label>
+        <label
+          >Number of colors per card:
+          <input type="number" name="colors" id="dotSolve" min="2" max="8" placeholder="5"
         /></label>
         <label
           >Grid Size:
           <select class="gridSize">
-            <option>💩 x 💩</option>
+
           </select></label
         >
-        <button class="play">Play Now!</button>
+        <a href="play.html" class="play" id="play">Play Now</a>
       </form>
     </main>
     <footer>

@@ -876,10 +876,10 @@ class Game {
     //   // }
     //   // //console.log(str)
     // });
-    if(this.level !== 'daily'){
-    document.getElementById("backBtn").href = "levels.html?grid=" + this.grid;
-    } else {
+    if(this.level == 'daily' || this.level == 'custom'){
       document.getElementById("backBtn").href = "index.html";
+    } else {
+      document.getElementById("backBtn").href = "levels.html?grid=" + this.grid;
     }
 
     if (this.level == "daily") {
@@ -1387,7 +1387,7 @@ draw = function () {
     }
   }
 
-  // document.getElementById("stats").innerHTML = "Moves: " + totalMoves;
+  document.getElementById("stats").innerHTML = "Moves: " + totalMoves;
 };
 
 // draw2();
