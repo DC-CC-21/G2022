@@ -264,11 +264,14 @@ class createCard {
     this.c2.textAlign("middle");
     this.c2.textSize(this.width / grid / 3);
 
-    this.cBlind = JSON.parse(localStorage.getItem("dots")).colorblind
-    console.log(this.cBlind)
+    this.cBlind = JSON.parse(localStorage.getItem("dots")).colorblind;
+    // console.log(this.cBlind);
     //createDots(canvas, grid x*x, number of colors, number of dots)
     this.abc = "ABCDEFGH";
-    if (level == "custom" || level == "daily") {
+    if (level == "daily") {
+      // console.log(grid);
+      this.createDaily(this.c2, grid, dots, cs);
+    } else if (level == "custom") {
       this.createDots2(this.c2, grid, dots, cs);
     } else {
       this.createLevel(this.c2, cs, grid);
@@ -404,7 +407,68 @@ class createCard {
     // //console.log(JSON.stringify(this.arrayOfColors))
     this.appendHTML(this.arrayOfColors);
   }
+  createDaily(c2, grid, dpc, num) {
+    c2.reset();
+    this.drawOutline(c2);
+    c2.reset();
 
+    let theme = JSON.parse(localStorage.getItem("dots")).theme;
+    if (theme !== "random" && theme.length == 8) {
+      var colors = c
+        .shuffleArray(JSON.parse(localStorage.getItem("dots")).theme)
+        .slice(0, num);
+    } else {
+      var colors = this.selectColors(num);
+    }
+
+    let s = this.width / grid;
+    let padding = 0.5;
+    let spacing = this.width / grid;
+
+    this.dots = new Array(grid * grid).fill(0);
+    this.positions = new Array(grid * grid)
+      .fill(0)
+      .map((value, index) => index);
+
+    for (let i = 0; i < dpc; i++) {
+      let index = ~~Math.abs(
+        noise.simplex2(i ** 5, selectionMenu.children.length ** day) *
+          this.positions.length
+      );
+      let position = this.positions[index];
+      // console.log(~~noise.simplex2(i, date.getDay())*this.dots.length, this.dots.length)
+      this.dots[position] = 1;
+      this.positions.splice(index, 1);
+    }
+
+    this.arrayOfColors = [];
+    c2.transformOrigin(this.width / 2, this.width / 2);
+    c2.scale(0.9, 0.9);
+    for (let i = 0; i < this.dots.length / grid; i++) {
+      for (let j = 0; j < grid; j++) {
+        if (this.dots[i + j * grid] == 1) {
+          c2.stroke(0, 0, 0, 0);
+          let index = ~~c2.random(0, colors.length);
+          c2.fill(colors[index]);
+
+          this.arrayOfColors.push({
+            x: i,
+            y: j,
+            color: index,
+          });
+
+          c2.ellipse(
+            i * spacing + s / 2,
+            j * spacing + s / 2,
+            s * padding,
+            s * padding
+          );
+        }
+      }
+    }
+
+    this.appendHTML(false);
+  }
   createDots(c2, dots) {
     c2.reset();
     let colors = this.selectColors(dots);
@@ -509,7 +573,18 @@ class targetCard {
     this.y = y;
     this.scales = [-1, 1];
     this.rotations = [0, 90, 180, 270];
-    if (data) {
+
+    if (data == "daily") {
+      let rotation = ~~Math.abs(
+        noise.simplex2((day**month)/year, i ** day) * this.rotations.length
+      );
+      this.rotation = this.rotations[rotation];
+      let scale = ~~Math.abs(
+        noise.simplex2(day ** day, i ** year) * this.scales.length
+      );
+      this.scale = this.scales[scale];
+
+    } else if (data) {
       //console.log(data);
       this.rotation = data.rotation;
       this.scale = data.scale;
@@ -517,18 +592,14 @@ class targetCard {
       this.rotation = this.rotations[~~c.random(0, this.rotations.length)];
       this.scale = this.scales[~~c.random(0, this.scales.length)];
     }
-    // console.log(this.rotation)
-    // console.log(this.scale)
 
-    // //console.log("solve" in document.getElementById(i).dataset);
     this.set = document.getElementById(i).dataset;
-
     this.arrayOfCards = {
       colors: "solve" in this.set ? JSON.parse(this.set.solve) : false,
       rotation: this.rotation,
       scale: this.scale,
     };
-    // //console.log(this.arrayOfCards);
+
     this.card = i;
     this.s = cardSize;
     this.setTarget();
@@ -712,8 +783,8 @@ class Card {
       this.y = window.innerHeight / 2 - cardSize / 2;
 
       cards.push(cards.splice(this.index, 1)[0]);
-      this.index = cards.length-1;
-      prevCard =  {card: this, index: this.index };
+      this.index = cards.length - 1;
+      prevCard = { card: this, index: this.index };
       this.moveControls();
       // this.moveElement();
       return;
@@ -768,7 +839,7 @@ class Card {
         `translate(${this.x} ${this.y}) rotate(${this.rotation})`
       );
     }, 10);
-    console.log(currentElement[this.index].getAttribute("transform"));
+    // console.log(currentElement[this.index].getAttribute("transform"));
   }
 }
 class Game {
@@ -805,8 +876,43 @@ class Game {
     //   // }
     //   // //console.log(str)
     // });
+    if(this.level !== 'daily'){
     document.getElementById("backBtn").href = "levels.html?grid=" + this.grid;
-    if (this.level !== "custom") {
+    } else {
+      document.getElementById("backBtn").href = "index.html";
+    }
+
+    if (this.level == "daily") {
+      noise.seed(month);
+      cardCount = c.constrain(~~noise.simplex2(day, year), 2, 6);
+      noise.seed(month + day);
+      this.grid = c.constrain(
+        ~~Math.abs(noise.simplex2(day, year) * 10),
+        2,
+        15
+      );
+      noise.seed((month / (day + 1)) * 30);
+      this.dots = c.constrain(
+        ~~Math.abs(noise.simplex2(day, year) * 10),
+        2,
+        (this.grid * this.grid) / 2
+      );
+      noise.seed(month + day);
+      this.cardCount = cardCount;
+      noise.seed(month - day);
+      this.cs = c.constrain(~~Math.abs(noise.simplex2(day, year) * 10), 2, 8);
+      document.getElementById("tl").innerHTML +=
+        "<h1>" +
+        this.grid +
+        "," +
+        cardCount +
+        "," +
+        this.cs +
+        "," +
+        this.dots +
+        "</h1>";
+      this.run();
+    } else if (this.level !== "custom") {
       // console.log(window.location)
       let host = window.location.pathname;
       document.getElementById("win").children[1].href = `?grid=${
@@ -893,7 +999,15 @@ class Game {
       );
     }
 
-    this[`create${mode}Display`](cardCount);
+    if (this.level == "daily") {
+      this[`create${mode}Display`](
+        cardCount,
+        new Array(cardCount).fill("daily")
+      );
+    } else {
+      this[`create${mode}Display`](cardCount);
+    }
+
     this.imageData = ctx.getImageData(0, 0, 200, 200);
     this.dataURL = checkCardsCanvas.toDataURL("image/png");
     this.dataURL = this.dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
@@ -983,14 +1097,14 @@ class Game {
             g: pixels2[i + 1],
             b: pixels2[i + 2],
           }
-        ) < c.map(this.grid, 4,15,100,10)
+        ) < c.map(this.grid, 4, 15, 100, 10)
       ) {
         continue;
       } else {
         totalDist += 1;
       }
     }
-    document.getElementById("stats").innerHTML = totalDist;
+    // document.getElementById("stats").innerHTML = totalDist;
     if (totalDist < 100) {
       this.win();
     } else {
@@ -1055,10 +1169,10 @@ class Game {
     ////console.log(leven);
   }
   check() {
-    document.getElementById("stats").innerHTML = check;
+    // document.getElementById("stats").innerHTML = check;
     if (check > 0) {
       check--;
-      console.log(check);
+      // console.log(check);
       completeCards.innerHTML = "";
       eraseCanvas(ctx2);
       // sizeCanvas(checkCardsCanvas, cSize);
@@ -1073,8 +1187,19 @@ class Game {
   }
 
   win() {
+    let completeLevels = JSON.parse(localStorage.getItem("dots"));
+
     check = 0;
-    if (this.level == this.maxLevel - 1) {
+    if(this.level == 'daily'){
+      let winText = document.getElementById("win");
+      let winBtn = winText.children[1];
+      let winH1 = winText.children[0];
+      winH1.innerHTML = `Congratulations<br> You have finished the daily level!`;
+      winBtn.children[0].innerHTML = "Click to return to main screen";
+      winBtn.href = "gridSelect.html";
+      completeLevels.daily = date
+    }
+    else if (this.level == this.maxLevel - 1) {
       let winText = document.getElementById("win");
       let winBtn = winText.children[1];
       let winH1 = winText.children[0];
@@ -1089,10 +1214,9 @@ class Game {
       .forEach((el) => el.classList.toggle("active"));
     controls.style.display = "none";
 
-    let completeLevels = JSON.parse(localStorage.getItem("dots"));
-    completeLevels.levelsBeat["x" + this.grid][this.level] = 1;
+    if(this.level !== 'daily'){completeLevels.levelsBeat["x" + this.grid][this.level] = 1;}
     localStorage.setItem("dots", JSON.stringify(completeLevels));
-    console.log(completeLevels);
+    // console.log(completeLevels);
   }
 }
 
@@ -1196,6 +1320,9 @@ function levenshtein(s, t) {
 }
 
 const date = new Date();
+const month = date.getMonth();
+const day = date.getDate()
+const year = date.getFullYear();
 let cardCount = 8;
 let customCards = [];
 let cards = [];
@@ -1207,7 +1334,7 @@ let offsetX = 0;
 let textY = 0;
 let totalMoves = 0;
 
-let game = new Game();
+var game = new Game();
 //temp
 let x = 0;
 //
@@ -1260,7 +1387,7 @@ draw = function () {
     }
   }
 
-  document.getElementById("stats").innerHTML = "Moves: " + totalMoves;
+  // document.getElementById("stats").innerHTML = "Moves: " + totalMoves;
 };
 
 // draw2();
@@ -1447,7 +1574,7 @@ function createCustomLevels() {
   });
   result.push(newSet);
   let str = JSON.stringify(result);
-  console.log(str.slice(1, str.length - 1) + ",");
+  // console.log(str.slice(1, str.length - 1) + ",");
   console.log(result.length);
   game.run();
 }

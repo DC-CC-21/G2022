@@ -21,6 +21,7 @@
     </header>
     <main>
       <nav id="playBtns">
+        <a class="homeChoice" id="daily" href="play.html?level=daily">Daily Puzzle!</a>
         <a class="homeChoice" href="gridSelect.html">Play!</a>
         <a class="homeChoice" href="themes/themes.html">Themes</a>
         <a class="homeChoice" href="#">Backgrounds</a>
@@ -31,5 +32,56 @@
       <p>&copy; 2022 🟡 Dots 🔴 DC-CC-21 🟢 Tauriel1202</p>
       <!-- Download App Shortcut -->
     </footer>
+
+    <script>
+      let storage = localStorage.getItem("dots");
+      if (storage) {
+        storage = JSON.parse(storage);
+      } else {
+        storage = setLocalStorage();
+      }
+
+      if(new Date() != storage.daily){
+        daily = ''
+      }
+
+      if(storage.daily != ''){
+        let dailyA = document.getElementById('daily')
+        dailyA.classList.toggle('complete')        
+
+      }
+    
+      function setLocalStorage(jsObject) {
+        let data = {
+          theme: [
+            "red",
+            "yellow",
+            "blue",
+            "green",
+            "purple",
+            "pink",
+            "orange",
+            "gray",
+          ],
+          daily: "",
+          levelsBeat: {
+            x4: new Array(100).fill(0),
+            x5: new Array(100).fill(0),
+            x6: new Array(100).fill(0),
+            x7: new Array(100).fill(0),
+            x8: new Array(100).fill(0),
+            x9: new Array(100).fill(0),
+            x10: new Array(100).fill(0),
+            x11: new Array(100).fill(0),
+            x12: new Array(100).fill(0),
+            x15: new Array(100).fill(0),
+          },
+        };
+        localStorage.setItem("dots", JSON.stringify(data));
+        return data;
+      }
+
+      console.log(storage);
+    </script>
   </body>
 </html>

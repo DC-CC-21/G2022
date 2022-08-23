@@ -46,6 +46,7 @@ fetch(url)
 function setLocalStorage(jsObject) {
   let data = {
     theme: jsObject,
+    daily:'',
     levelsBeat: {
       x4: new Array(100).fill(0),
       x5: new Array(100).fill(0),
