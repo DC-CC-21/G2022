@@ -15,6 +15,20 @@
       ]
     },
     {
+      "name": "Pastels",
+      "price": "50",
+      "colors": [
+        "#F9B3B3",
+        "#FFC6AD",
+        "#FCF9B1",
+        "#ADFFE4",
+        "#B0CBFD",
+        "#D9C1EB",
+        "#FFF1EB",
+        "#D8D4D4"
+      ]
+    },
+    {
       "name": "Neon",
       "price": "100",
       "colors": [
@@ -57,8 +71,22 @@
       ]
     },
     {
-      "name": "Fortress",
+      "name": "Medieval",
       "price": "500",
+      "colors": [
+        "#0758ED",
+        "#F5EE14",
+        "#57287B",
+        "#DC1010",
+        "#007D54",
+        "#93644B",
+        "#FFF3EE",
+        "#9E9896"
+      ]
+    },
+    {
+      "name": "Fortress",
+      "price": "750",
       "colors": [
         "#FEEFE5",
         "silver",
@@ -71,8 +99,22 @@
       ]
     },
     {
+      "name": "Space",
+      "price": "1000",
+      "colors": [
+        "#053B9E",
+        "#2B328C",
+        "#4C236C",
+        "#A3003F",
+        "#F7F026",
+        "#F9F1F8",
+        "#817474",
+        "#1F2518"
+      ]
+    },
+    {
       "name": "Island",
-      "price": "750",
+      "price": "1200",
       "colors": [
         "#f8f6f1",
         "#fac49e",
@@ -86,7 +128,7 @@
     }, 
     {
       "name": "Fantasy",
-      "price": "1000",
+      "price": "1500",
       "colors": [
         "#FF1B1C",
         "#57287B",
@@ -100,7 +142,7 @@
     },
     {
       "name": "Elven",
-      "price": "1200",
+      "price": "2000",
       "colors": [
         "#007A54",
         "#4B955A",
