@@ -121,7 +121,7 @@ input {
   padding:10px;
 }
 
-#themes h2 {
+#themes h2, #bgrounds h2 {
   margin: 0.5em;
   color: white;
   display: flex;
@@ -155,6 +155,15 @@ input {
   margin-left: 0.2em;
 }
 .money img {
+  width: 100%;
+  height: auto;
+}
+.bgDiv {
+  margin: 0 auto;
+  width: 15em;
+  height: 15em;
+}
+.bgDiv img {
   width: 100%;
   height: auto;
 }
