@@ -313,7 +313,7 @@ class createCard {
         );
 
         if (this.cBlind) {
-          c2.stroke(0,0,0,0)
+          c2.stroke(0, 0, 0, 0);
           colorDiv.style.color = colors[color.color];
           let textColor = window.getComputedStyle(colorDiv).color;
           textColor = c2.invertColor(textColor);
@@ -577,14 +577,13 @@ class targetCard {
 
     if (data == "daily") {
       let rotation = ~~Math.abs(
-        noise.simplex2((day**month)/year, i ** day) * this.rotations.length
+        noise.simplex2(day ** month / year, i ** day) * this.rotations.length
       );
       this.rotation = this.rotations[rotation];
       let scale = ~~Math.abs(
         noise.simplex2(day ** day, i ** year) * this.scales.length
       );
       this.scale = this.scales[scale];
-
     } else if (data) {
       //console.log(data);
       this.rotation = data.rotation;
@@ -877,7 +876,7 @@ class Game {
     //   // }
     //   // //console.log(str)
     // });
-    if(this.level == 'daily' || this.level == 'custom'){
+    if (this.level == "daily" || this.level == "custom") {
       document.getElementById("backBtn").href = "index.html";
     } else {
       document.getElementById("backBtn").href = "levels.html?grid=" + this.grid;
@@ -1191,16 +1190,15 @@ class Game {
     let completeLevels = JSON.parse(localStorage.getItem("dots"));
 
     check = 0;
-    if(this.level == 'daily'){
+    if (this.level == "daily") {
       let winText = document.getElementById("win");
       let winBtn = winText.children[1];
       let winH1 = winText.children[0];
       winH1.innerHTML = `Congratulations<br> You have finished the daily level!`;
       winBtn.children[0].innerHTML = "Click to return to main screen";
       winBtn.href = "gridSelect.html";
-      completeLevels.daily = month+'/'+day+'/'+year
-    }
-    else if (this.level == this.maxLevel - 1) {
+      completeLevels.daily = month + "/" + day + "/" + year;
+    } else if (this.level == this.maxLevel - 1) {
       let winText = document.getElementById("win");
       let winBtn = winText.children[1];
       let winH1 = winText.children[0];
@@ -1215,7 +1213,9 @@ class Game {
       .forEach((el) => el.classList.toggle("active"));
     controls.style.display = "none";
 
-    if(this.level !== 'daily'){completeLevels.levelsBeat["x" + this.grid][this.level] = 1;}
+    if (this.level !== "daily") {
+      completeLevels.levelsBeat["x" + this.grid][this.level] = 1;
+    }
     localStorage.setItem("dots", JSON.stringify(completeLevels));
     // console.log(completeLevels);
   }
@@ -1320,10 +1320,10 @@ function levenshtein(s, t) {
   return h;
 }
 
-let storage = JSON.parse(localStorage.getItem('dots'))
+let storage = JSON.parse(localStorage.getItem("dots"));
 const date = new Date();
 const month = date.getMonth();
-const day = date.getDate()
+const day = date.getDate();
 const year = date.getFullYear();
 let cardCount = 8;
 let customCards = [];
@@ -1348,18 +1348,18 @@ let centerSquare = {
 };
 let result = [];
 let drawOnce = false;
-console.log(storage.background.includes('http'))
-let w;
-if(storage.background.includes('http')){
+console.log(storage.background.includes("http"));
+let dim = false;
+if (storage.background.includes("http")) {
   var aspect = 0;
-  let image = new Image()
+  let image = new Image();
   image.src = storage.background;
-  image.onload = function(){
-    aspect = this.width/ this.height
-    console.log(aspect)
-    w = window.innerHeight*aspect
-    console.log(w,window.innerHeight,  w/window.innerHeight)
-  }
+  image.onload = function () {
+    aspect = this.width / this.height;
+      dim = {
+        x: window.innerWidth / 2 - (window.innerHeight * aspect) / 2,
+      };
+  };
 }
 draw = function () {
   game.check();
@@ -1368,12 +1368,22 @@ draw = function () {
   c.reset();
   c.textAlign("middle");
   c.background(75, 75, 75);
-  if(storage.background.includes('http')){
-    if(w){
-      c.image(storage.background, -w/2, 0, 100, window.innerHeight, true, true, true)
+
+  if (storage.background.includes("http")) {
+    if (dim) {
+        c.image(
+          storage.background,
+          dim.x,
+          0,
+          100,
+          window.innerHeight,
+          true,
+          true,
+          true
+        );
     }
   } else {
-    c.background(storage.background)
+    c.background(storage.background);
   }
   // x += 1;
   // c.rect(x, 50, 100, 100);
