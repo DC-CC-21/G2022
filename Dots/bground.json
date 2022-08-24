@@ -1,0 +1,22 @@
+{
+  "bgrounds": [
+    {
+      "name": "Classic",
+      "price": "0",
+      "color": "black",
+      "url": ""
+    },
+    {
+      "name": "Pink Bubbles",
+      "price": "250",
+      "color": "",
+      "url": "../assets/pinkBubbles.png"
+    },
+    {
+      "name": "Sunset Beach",
+      "price": "500",
+      "color": "",
+      "url": "../assets/sunsetBeach.png"
+    }
+  ]
+}
