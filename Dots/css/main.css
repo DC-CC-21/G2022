@@ -124,6 +124,8 @@ input {
 #themes h2 {
   margin: 0.5em;
   color: white;
+  display: flex;
+  justify-content: center;
 }
 .colSet {
   max-width: 30em;
@@ -146,6 +148,15 @@ input {
   border: 2px outset rgb(255, 255, 120);
   box-shadow: 0 0 7px inset #ffff00, 0 0 7px #ffff00;
   padding: 1em;
+}
+.money {
+  width: 0.8em;
+  margin-top: 0.1em;
+  margin-left: 0.2em;
+}
+.money img {
+  width: 100%;
+  height: auto;
 }
 /*#endregion THEMES*/
 /*#region HOME*/
