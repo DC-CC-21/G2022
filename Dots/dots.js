@@ -300,8 +300,8 @@ class createCard {
     let s = this.width / grid;
     let padding = 0.5;
     let spacing = this.width / grid;
-    c2.stroke(0, 0, 0, 0);
     data.colors.forEach((color) => {
+      c2.stroke(0, 0, 0);
       if (color) {
         //console.log(color);
         c2.fill(colors[color.color]);
@@ -313,6 +313,7 @@ class createCard {
         );
 
         if (this.cBlind) {
+          c2.stroke(0,0,0,0)
           colorDiv.style.color = colors[color.color];
           let textColor = window.getComputedStyle(colorDiv).color;
           textColor = c2.invertColor(textColor);
@@ -1197,7 +1198,7 @@ class Game {
       winH1.innerHTML = `Congratulations<br> You have finished the daily level!`;
       winBtn.children[0].innerHTML = "Click to return to main screen";
       winBtn.href = "gridSelect.html";
-      completeLevels.daily = date
+      completeLevels.daily = month+'/'+day+'/'+year
     }
     else if (this.level == this.maxLevel - 1) {
       let winText = document.getElementById("win");
@@ -1318,6 +1319,7 @@ function levenshtein(s, t) {
 
   return h;
 }
+
 
 const date = new Date();
 const month = date.getMonth();

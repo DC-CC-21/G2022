@@ -40,17 +40,22 @@
       } else {
         storage = setLocalStorage();
       }
+      let date = new Date()
+      date = date.getMonth()+'/'+date.getDate()+'/'+date.getFullYear()
 
-      if(new Date() != storage.daily){
-        daily = ''
-      }
 
-      if(storage.daily != ''){
+ 
+
+      if(storage.daily == date){
         let dailyA = document.getElementById('daily')
         dailyA.classList.toggle('complete')        
-
+      } else {
+        storage.daily = ''
       }
-    
+
+
+      localStorage.setItem('dots', JSON.stringify(storage))
+
       function setLocalStorage(jsObject) {
         let data = {
           theme: [
