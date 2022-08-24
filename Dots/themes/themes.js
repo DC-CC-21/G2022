@@ -13,12 +13,23 @@ fetch(url)
 
     console.log(jsObject.themes[0].colors);
     for (let i = 0; i < jsObject.themes.length; i++) {
+      let img = document.createElement('img');
+      img.src = '../assets/money.png';
+      img.alt = 'money image';
+      img.width = 25;
+      img.height = 25;
+
+      let monDiv = document.createElement('div');
+      monDiv.classList.add('money');
+      monDiv.append(img);
+
       let name = jsObject.themes[i].name;
       let price = jsObject.themes[i].price;
       let colors = jsObject.themes[i].colors;
 
       let h2 = document.createElement("h2");
-      // let p = document.createElement('p');
+
+
       let colDiv = document.createElement("div");
       colDiv.classList.add("colSet");
 
@@ -31,7 +42,8 @@ fetch(url)
         localStorage.setItem('dots', JSON.stringify(storage))
       });
 
-      h2.innerHTML = `${name} - $${price}`;
+      h2.innerHTML = `${name} - ${price}`;
+      h2.append(monDiv);
 
       for (let j = 0; j < colors.length; j++) {
         let color = document.createElement("div");
