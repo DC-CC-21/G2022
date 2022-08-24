@@ -222,7 +222,7 @@ class Canvas {
     if (!aspect) {
       el.setAttribute("preserveAspectRatio", "none");
     }
-
+    
     el.setAttribute("x", fixed ? x : x + this.#cameraPos.x);
 
     el.setAttribute("y", fixed ? y : y + this.#cameraPos.y);
@@ -275,8 +275,12 @@ class Canvas {
   getAspect(src) {
     let aspect = 0;
     let img = new Image(); // Create new img element
+    
     img.src = src;
-    return img;
+    img.onload = function(){
+      aspect=  img.width/img.height;
+    }
+    return aspect
   }
   //COLOR & STYLE
   background(r, g, b, a) {

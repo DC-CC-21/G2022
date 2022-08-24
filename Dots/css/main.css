@@ -121,6 +121,9 @@ input {
   padding:10px;
 }
 
+#bgroundMain{
+  margin-top:5em;
+}
 #themes h2, #bgrounds h2 {
   margin: 0.5em;
   color: white;

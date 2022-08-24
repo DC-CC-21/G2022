@@ -1320,7 +1320,7 @@ function levenshtein(s, t) {
   return h;
 }
 
-
+let storage = JSON.parse(localStorage.getItem('dots'))
 const date = new Date();
 const month = date.getMonth();
 const day = date.getDate()
@@ -1348,7 +1348,19 @@ let centerSquare = {
 };
 let result = [];
 let drawOnce = false;
-
+console.log(storage.background.includes('http'))
+let w;
+if(storage.background.includes('http')){
+  var aspect = 0;
+  let image = new Image()
+  image.src = storage.background;
+  image.onload = function(){
+    aspect = this.width/ this.height
+    console.log(aspect)
+    w = window.innerHeight*aspect
+    console.log(w,window.innerHeight,  w/window.innerHeight)
+  }
+}
 draw = function () {
   game.check();
   x += 10;
@@ -1356,6 +1368,13 @@ draw = function () {
   c.reset();
   c.textAlign("middle");
   c.background(75, 75, 75);
+  if(storage.background.includes('http')){
+    if(w){
+      c.image(storage.background, -w/2, 0, 100, window.innerHeight, true, true, true)
+    }
+  } else {
+    c.background(storage.background)
+  }
   // x += 1;
   // c.rect(x, 50, 100, 100);
   c.fill(0, 0, 0);
