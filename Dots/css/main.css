@@ -169,6 +169,7 @@ input {
 .bgDiv img {
   width: 100%;
   height: auto;
+  border: 2px solid white;
 }
 /*#endregion THEMES*/
 /*#region HOME*/
