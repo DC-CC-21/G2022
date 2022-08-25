@@ -17,6 +17,12 @@
       "price": "500",
       "color": "",
       "url": "../assets/sunsetBeach.png"
+    },
+    {
+      "name": "Space",
+      "price": "750",
+      "color": "",
+      "url": "../assets/space.png"
     }
   ]
 }
