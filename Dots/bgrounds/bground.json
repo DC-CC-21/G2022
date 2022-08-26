@@ -53,6 +53,12 @@
       "price": "1500",
       "color": "",
       "url": "../assets/bubblesResizedColored.jpg"
+    },
+    {
+      "name": "Forest Mountain",
+      "price": "2000",
+      "color": "",
+      "url": "../assets/treeResized.jpg"
     }
   ]
 }
