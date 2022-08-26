@@ -50,7 +50,9 @@ fetch(url)
         bgroundImg = document.createElement("div");
         bgroundImg.innerHTML = ".";
         bgroundImg.style.backgroundColor = `${color}`;
-        bgroundImg.style.border = "2px solid green";
+        bgroundImg.style.border = "2px solid white";
+        bgroundImg.style.height = "183.75px"
+        bgroundImg.style.marginBottom = "4em"
         bgroundImg.classList.add("bgDiv");
         bigDiv.append(bgroundImg);
       }
