@@ -32,13 +32,16 @@ fetch(url)
 
       let colDiv = document.createElement("div");
       colDiv.classList.add("colSet");
-
+      if(name == storage.themeName){
+        colDiv.classList.toggle('select')
+      }
       colDiv.addEventListener("click", (e) => {
         document.querySelectorAll(".select").forEach((el) => {
           el.classList.toggle("select");
         });
         colDiv.classList.toggle("select");
         storage.theme = jsObject.themes[i].colors
+        storage.themeName = name
         localStorage.setItem('dots', JSON.stringify(storage))
       });
 
@@ -71,6 +74,7 @@ function setLocalStorage(jsObject) {
       x12: new Array(100).fill(0),
       x15: new Array(100).fill(0),
     },
+    background:"gray"
   };
   localStorage.setItem("dots", JSON.stringify(data));
   return data;

@@ -1107,6 +1107,7 @@ class Game {
     // document.getElementById("stats").innerHTML = totalDist;
     if (totalDist < 100) {
       this.win();
+      return
     } else {
       return;
     }

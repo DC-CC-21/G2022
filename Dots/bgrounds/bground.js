@@ -1,12 +1,12 @@
 let url = "bground.json";
 let bigDiv = document.querySelector("#bgrounds");
-let storage = localStorage.getItem('dots')
-if(!storage){
-  storage = setLocalStorage(jsObject.themes[0].colors)
+let storage = localStorage.getItem("dots");
+if (!storage) {
+  storage = setLocalStorage(jsObject.themes[0].colors);
 } else {
-  storage = JSON.parse(storage)
+  storage = JSON.parse(storage);
 }
- 
+
 fetch(url)
   .then((response) => response.json())
   .then((jsObject) => {
@@ -46,25 +46,37 @@ fetch(url)
 
         imgDiv.append(bgroundImg);
         bigDiv.append(imgDiv);
+        if (bgroundImg.src == storage.background) {
+          bgroundImg.parentElement.classList.toggle("select");
+        }
       } else {
         bgroundImg = document.createElement("div");
+
         bgroundImg.innerHTML = ".";
         bgroundImg.style.backgroundColor = `${color}`;
         bgroundImg.style.border = "2px solid green";
         bgroundImg.classList.add("bgDiv");
+        if (color == storage.background) {
+          bgroundImg.classList.toggle("select");
+        }
         bigDiv.append(bgroundImg);
       }
 
       bgroundImg.addEventListener("click", (_) => {
+        document
+          .querySelectorAll(".select")
+          .forEach((el) => el.classList.toggle("select"));
         if (bgroundImg.src) {
+          bgroundImg.parentElement.classList.toggle("select");
           // console.log(bgroundImg.src);
-          storage.background = bgroundImg.src
+          storage.background = bgroundImg.src;
         } else {
-          storage.background = bgroundImg.style.backgroundColor
+          bgroundImg.classList.toggle("select");
+          storage.background = bgroundImg.style.backgroundColor;
 
           // console.log(bgroundImg.style.backgroundColor);
         }
-        localStorage.setItem('dots', JSON.stringify(storage))
+        localStorage.setItem("dots", JSON.stringify(storage));
       });
     }
   });
@@ -85,6 +97,7 @@ function setLocalStorage(jsObject) {
       x12: new Array(100).fill(0),
       x15: new Array(100).fill(0),
     },
+    background: "gray",
   };
   localStorage.setItem("dots", JSON.stringify(data));
   return data;
