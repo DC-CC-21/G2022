@@ -7,30 +7,52 @@
       "url": ""
     },
     {
+      "name": "Green",
+      "price": "50",
+      "color": "palegreen",
+      "url": ""
+    },
+    {
+      "name": "Blue",
+      "price": "100",
+      "color": "#0ac6ff",
+      "url": ""
+    },
+    {
       "name": "Pink Bubbles",
       "price": "250",
       "color": "",
-      "url": "../assets/pinkBubbles.png"
+      "url": "../assets/pinkBubblesResized.jpg"
     },
     {
       "name": "Sunset Beach",
       "price": "500",
       "color": "",
-      "url": "../assets/sunsetBeach.png"
+      "url": "../assets/sunsetBeachResized.jpg"
     },
     {
       "name": "Space",
       "price": "750",
       "color": "",
-      "url": "../assets/space.png"
+      "url": "../assets/spaceResized.jpg"
     },
-
-
+    {
+      "name": "Forest",
+      "price": "1000",
+      "color": "",
+      "url": "../assets/forestResized.jpg"
+    },
+    {
+      "name": "Green World",
+      "price": "1200",
+      "color": "",
+      "url": "../assets/greenWorldResized.jpg"
+    },
     {
       "name": "Underwater",
-      "price": "750",
+      "price": "1500",
       "color": "",
-      "url": "../assets/bubbles.png"
+      "url": "../assets/bubblesResizedColored.jpg"
     }
   ]
 }

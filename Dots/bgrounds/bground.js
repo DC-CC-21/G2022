@@ -54,7 +54,9 @@ fetch(url)
 
         bgroundImg.innerHTML = ".";
         bgroundImg.style.backgroundColor = `${color}`;
-        bgroundImg.style.border = "2px solid green";
+        bgroundImg.style.border = "2px solid white";
+        bgroundImg.style.height = "183.75px"
+        bgroundImg.style.marginBottom = "4em"
         bgroundImg.classList.add("bgDiv");
         if (color == storage.background) {
           bgroundImg.classList.toggle("select");
