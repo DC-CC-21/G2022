@@ -25,10 +25,10 @@
       "url": "../assets/pinkBubblesResized.jpg"
     },
     {
-      "name": "Sunset Beach",
+      "name": "Farm",
       "price": "500",
       "color": "",
-      "url": "../assets/sunsetBeachResized.jpg"
+      "url": "../assets/farm.png"
     },
     {
       "name": "Space",
@@ -49,14 +49,20 @@
       "url": "../assets/greenWorldResized.jpg"
     },
     {
-      "name": "Underwater",
+      "name": "Beach Sunset",
       "price": "1500",
+      "color": "",
+      "url": "../assets/sunsetBeachResized.jpg"
+    },
+    {
+      "name": "Underwater",
+      "price": "2000",
       "color": "",
       "url": "../assets/bubblesResizedColored.jpg"
     },
     {
       "name": "Forest Mountain",
-      "price": "2000",
+      "price": "2500",
       "color": "",
       "url": "../assets/treeResized.jpg"
     }
