@@ -23,19 +23,17 @@ function directionLight(scene, position, intensity=1, helper=false) {
   light.position.set(position[0], position[1], position[2]); //default; light shining from top
 
   let t = new THREE.Object3D();
-  t.translateX(0);
-  t.translateY(0);
-  t.translateZ(0);
+t.position.set(0,0,0)
   light.target = t
-
-  light.castShadow = true; // default false
-  scene.add(light);
-
   //Set up shadow properties for the light
+  light.castShadow = true; // default false
   light.shadow.mapSize.width = 512; // default
   light.shadow.mapSize.height = 512; // default
   light.shadow.camera.near = 0.5; // default
   light.shadow.camera.far = 500; // default
+  scene.add(light);
+
+
 
   if(helper){
     helper = new THREE.DirectionalLightHelper( light, 50 );
