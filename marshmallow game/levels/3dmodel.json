@@ -1,0 +1,15 @@
+{
+  "b": "assets/brick",
+  "i": "assets/item",
+  "g": {
+    "ice": "assets/iceG",
+    "grass": "assets/grassG",
+    "sand": "assets/sandG"
+  },
+  "d": {
+    "ice": "assets/iceD",
+    "grass": "assets/grassD",
+    "sand": "assets/sandD"
+  }
+}
+

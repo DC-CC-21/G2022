@@ -1,0 +1,20 @@
+body{
+    overflow:hidden;
+}
+svg {
+    position:fixed;
+    -webkit-user-select: none;
+    user-select: none;
+    /* transform: translateX(180px) rotate(60 40 50); */
+}
+
+
+image{
+    /* clip-path: url(#forward);
+    clip-path: url(#forward);
+    clip-path: url(#forward); */
+
+}
+.hidden{
+    display:none;
+}

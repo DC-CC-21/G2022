@@ -1,0 +1,42 @@
+*{
+    position:fixed;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    touch-action: none;
+    
+}
+canvas {
+     width:100%;
+     z-index:-1;
+}
+
+#buttons div{
+    display:flex;
+   justify-content:  center;
+
+    align-items: center;
+    background-color: rgb(111, 111, 111);
+    font-size: 2em;    
+    width:4em;
+    height:4em;
+    border-radius: 20px;
+}
+#buttons div:focus{
+    background-color: blue;
+}
+#left {
+    position:fixed;
+    left:1em;
+    bottom:1em;
+}
+#right {
+    position:fixed;
+    left:6em;
+    bottom:1em;
+}
+#jump {
+    position:fixed;
+    right:1em;
+    bottom:1em;
+}
