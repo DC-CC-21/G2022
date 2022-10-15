@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+    name="description"
+    content="the home page: play, change settings, or download the game"
+    />
+    
+    <title>Maps</title>
+    <script src="./js/script.js" defer></script>
+
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="./assets/icon192.png" />
+  </head>
+  <body>
+    <!-- <img src="assets/sugarHillMap.png" width="200px" title="map" alt="franconiaMap" id="shm">
+    <img src="assets/franconiaMap.png" width="200px" title="map" alt="franconiaMap" id="fm">
+    <img src="assets/southTwinMountainMap.png" width="200px" title="map" alt="franconiaMap" id="stmm">
+    <img src="assets/lincolnMap.png" width="200px" title="map" alt="franconiaMap" id="lm"> -->
+    <div id="maps"></div>
+    <p id="pos">pos</p>
+    <script>
+      window.addEventListener("load", () => {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("./js/service-worker.js");
+        }
+      });
+    </script>
+  </body>
+</html>

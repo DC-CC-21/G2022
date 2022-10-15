@@ -1,0 +1,43 @@
+:root{
+    --p:100vw;
+}
+*{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    /* -ms-touch-action: none; */
+    /* touch-action: none; */
+}
+#maps{
+    display:grid;
+    grid-template-columns: repeat(3 , var(--p));
+    grid-template-rows: repeat(3,calc(var(--p)/0.6945454545454546));
+}
+img{
+    width:100%;
+}
+#shm{
+    grid-column:1/2;
+    grid-row:2/3;
+}
+#fm{
+    grid-column:2/3;
+    grid-row:2/3;
+}
+#stmm{
+    grid-column:3/4;
+    grid-row:2/3;
+}
+#lm{
+    grid-column:2/3;
+    grid-row:3/4;
+}
+
+#pos{
+    position:fixed;
+    left:1em;
+    top:1em;
+    background-color:rgba(192, 192, 192, 0.885);
+    padding:10px;
+    display:none;
+}
