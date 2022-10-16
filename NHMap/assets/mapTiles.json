@@ -1,11 +1,20 @@
-{
-  "Littleton":"./assets/littletonMap.png",
-  "Bethlehem":"./assets/bethlehem.png",
-  "test":"./assets/testMap.png",
- "SugarHill":"./assets/sugarHillMap.png",
- "Franconia":"./assets/franconiaMap.png",
- "SouthTwinMountain":"./assets/southTwinMountainMap.png",
- "MountMoosilauke":"./assets/mountMoosilauke.png",
- "Lincoln":"./assets/lincolnMap.png",
- "MountOsceola":"./assets/mountOsceolaMap.png"
-}
+[
+  {
+    "Littleton": "./assets/littletonMap.png",
+    "Bethlehem": "./assets/bethlehem.png",
+    "test": "./assets/testMap.png",
+    "SugarHill": "./assets/sugarHillMap.png",
+    "Franconia": "./assets/franconiaMap.png",
+    "SouthTwinMountain": "./assets/southTwinMountainMap.png",
+    "MountMoosilauke": "./assets/mountMoosilauke.png",
+    "Lincoln": "./assets/lincolnMap.png",
+    "MountOsceola": "./assets/mountOsceolaMap.png"
+  },
+  [
+    {
+        "name":"Lost River Gorge",
+        "x":1000,
+        "y":5300
+    }
+  ]
+]

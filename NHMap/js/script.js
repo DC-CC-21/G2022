@@ -1,3 +1,6 @@
+function map(value, istart, istop, ostart, ostop) {
+    return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+  }
 
 fetch('./assets/mapTiles.json')
 .then(response => response.json())
@@ -16,11 +19,11 @@ fetch('./assets/mapTiles.json')
     
     
     let mapDiv = document.getElementById('maps')
-    Object.keys(jsObject).forEach(map => {
+    Object.keys(jsObject[0]).forEach(map => {
         let container = document.createElement('div')
         
         let img = document.createElement('img')
-        img.src = jsObject[map];
+        img.src = jsObject[0][map];
         container.append(img)
         
         let label = document.createElement('div')
@@ -29,9 +32,19 @@ fetch('./assets/mapTiles.json')
     
         mapDiv.append(container)
     })
-    
-    
+    jsObject[1].forEach(item => {
+        let container = document.createElement('div')
+        container.classList.add('marker')
+        
+        container.innerHTML = item.name;
+        container.style.left = map(item.x,0,4093, 0, window.innerWidth*3) + 'px'
+        container.style.top = map(item.y, 0, 5900.261780104712, 0, (window.innerWidth/0.6945454545454546)*3) + 'px'
 
+    
+        document.body.append(container)
+    })
+    var style = getComputedStyle(document.body)
+    document.getElementById('pos').innerHTML = window.innerWidth*3 + ',' + (window.innerWidth/0.6945454545454546)*3;
 })
 
 
