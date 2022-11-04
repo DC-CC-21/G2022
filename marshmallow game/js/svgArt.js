@@ -72,7 +72,9 @@ SVGElement.prototype.setTranslation = function (x = 0, y = 0) {
 };
 
 SVGElement.prototype.setRotation = function (deg, x = 0, y = 0) {
-  this.transform.baseVal.getItem(1).setRotate(deg, x, y);
+  if(deg && x && y){
+    this.transform.baseVal.getItem(1).setRotate(deg, x, y);
+  }
 };
 
 // class rect {
@@ -112,7 +114,7 @@ class Canvas {
     this.fillColor = "rgb(255,255,255)";
     this.strokeWeightSize = 1;
     this.textAlign = "middle";
-    this.textSize = 20;
+    this.fontSize = 20;
     this.textFont = "IMPACT";
   }
 
@@ -232,12 +234,15 @@ class Canvas {
     //style
     el.setAttribute("fill", this.fillColor);
     el.setAttribute("stroke", this.strokeColor);
-    el.setAttribute("font-size", this.textSize);
+    el.setAttribute("font-size", this.fontSize);
     el.setAttribute("text-anchor", this.textAlign);
     el.setAttribute("font-family", this.textFont);
     this.createTransformList(el);
     this.canvas.append(el);
     return el;
+  }
+  textSize(size){
+    this.fontSize = size
   }
   image(path, x, y, width, height, aspectRatio) {
     let el = document.createElementNS("http://www.w3.org/2000/svg", "image");
@@ -258,24 +263,44 @@ class Canvas {
     return el;
   }
 
-  animation(image, name) {
-    let clippath = document.createElementNS(
+  animation(image, name, width, height) {
+    let mask = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "clipPath"
+      "mask"
     );
-    clippath.id = name;
+    mask.id = name;
 
-    clippath.append(image);
-    this.canvas.append(clippath);
-    return clippath;
+
+
+    let rect = document.createElementNS('http://www.w3.org/2000/svg','rect')
+    rect.setAttribute('x', 0)
+    rect.setAttribute('y', 0)
+    // console.log('hi', image.getAttribute('width'))
+    rect.setAttribute('width', width);
+    rect.setAttribute('height', height)
+    rect.setAttribute('fill', 'white')
+
+    mask.append(rect);
+    
+    this.canvas.append(mask);
+    return mask
+    // let clippath = document.createElementNS(
+    //   "http://www.w3.org/2000/svg",
+    //   "clipPath"
+    // );
+    // clippath.id = name;
+
+    // clippath.append(image);
+    // this.canvas.append(clippath);
+    // return clippath;
   }
 
   // -- STYLE --
   background(r, g, b) {
     this.canvas.style.backgroundColor = `rgb(${r},${g},${b})`;
   }
-  fill(r, g, b) {
-    this.fillColor = `rgb(${r},${g},${b})`;
+  fill(r, g, b, a) {
+    this.fillColor = `rgba(${r},${g},${b},${a})`;
   }
   stroke(r, g, b) {
     this.strokeColor = `rgb(${r},${g},${b})`;
@@ -312,6 +337,12 @@ const cMath = {
   constrain(aNumber, aMin, aMax) {
     return aNumber > aMax ? aMax : aNumber < aMin ? aMin : aNumber;
   },
+  AABB (a, b) {
+    return  a.x - b.x < b.width &&
+            b.x - a.x < a.width &&
+            a.y - b.y < b.height &&
+            b.y - a.y < a.height;
+},
   AABBL(a, b) {
     
     return (
@@ -351,4 +382,7 @@ const cMath = {
       },
     ];
   },
+  map(value, istart, istop, ostart, ostop) {
+    return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+  }
 };
