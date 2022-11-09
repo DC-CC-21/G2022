@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+:root {
+  --offset: 3vh;
+  --size: 20vh;
+}
+
+#left,
+#right,
+#up {
+  position: fixed;
+  background-color: rgba(240, 255, 255, 0);
+  border-radius: 10px;
+  width: var(--size);
+  height: var(--size);
+}
+#left {
+  background-image: url("../assets/objects/Left\ Arrow.svg");
+  background-size: cover;
+  left: var(--offset);
+  bottom: var(--offset);
+}
+#right {
+  background-image: url("../assets/objects/Right\ Arrow.svg");
+  background-size: cover;
+  left: 26vh;
+  bottom: var(--offset);
+}
+#up {
+  background-image: url("../assets/objects/Up\ Arrow.svg");
+  background-size: cover;
+  right: var(--offset);
+  bottom: var(--offset);
+}
+
+#debugger {
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  font-size: 2em;
+  padding: 5px;
+  color: white;
+  background-color: black;
+  border: 1px solid green;
+  display: none;
+}
