@@ -1,0 +1,28 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+}
+canvas {
+  background-color: gray;
+}
+
+#backBtn {
+  position: absolute;
+  left: 1%;
+  top: 1%;
+  background: radial-gradient(
+    rgba(0, 187, 211, 0.856),
+    rgba(0, 201, 204, 0.856),
+    rgb(0, 99, 145),
+    rgb(0, 0, 0)
+  );
+  padding: 5px;
+  border-radius: 5px;
+  border: 3px solid green;
+  text-decoration: none;
+  color: black;
+}
