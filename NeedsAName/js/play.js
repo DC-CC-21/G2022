@@ -11,10 +11,10 @@ function map(value, istart, istop, ostart, ostop) {
 }
 function collide(a, b) {
   return (
-    a.x - b.x < b.width &&
-    b.x - a.x < a.width &&
-    a.y - b.y < b.height &&
-    b.y - a.y < a.height
+    ~~a.x - ~~b.x < ~~b.width &&
+    ~~b.x - ~~a.x < ~~a.width &&
+    ~~a.y - ~~b.y < ~~b.height &&
+    ~~b.y - ~~a.y < ~~a.height
   );
 }
 
@@ -28,6 +28,9 @@ class Player {
     this.acceleration = { x: 0, y: 0 };
     this.velocity = { x: 0, y: 0 };
     this.speed = 0.5;
+    if (BUILD) {
+      this.speed = 1;
+    }
     this.canMove = true;
     this.orig = {
       x: x * size,
@@ -44,18 +47,22 @@ class Player {
       if (keys["ArrowRight"]) {
         this.acceleration.x = this.speed;
         this.canMove = false;
+        keys = []
       }
       if (keys["ArrowLeft"]) {
         this.acceleration.x = -this.speed;
         this.canMove = false;
+        keys = []
       }
       if (keys["ArrowUp"]) {
         this.acceleration.y = -this.speed;
         this.canMove = false;
+        keys = []
       }
       if (keys["ArrowDown"]) {
         this.acceleration.y = this.speed;
         this.canMove = false;
+        keys = []
       }
     }
     this.velocity.x += this.acceleration.x;
@@ -98,6 +105,9 @@ class Player {
     this.draw();
   }
   collideWithPortal(type) {
+    if (BUILD) {
+      return;
+    }
     if (type != "portal") return;
     g.createWorld = false;
     this.acceleration = { x: 0, y: 0 };
@@ -106,10 +116,10 @@ class Player {
   }
   checkInsideWorld() {
     return (
-      this.x > 0 &&
-      this.y > 0 &&
-      this.x < canvas.width &&
-      this.y < canvas.height
+      this.x >= 0 &&
+      this.y >= 0 &&
+      this.x <= canvas.width &&
+      this.y <= canvas.height
     );
   }
 }
@@ -145,6 +155,7 @@ class Game {
     this.isFinished = false;
     this.createWorld = false;
     this.world = [];
+    this.gridSize = 15;
   }
 
   create() {
@@ -153,20 +164,28 @@ class Game {
     this.level += 1;
     fetch("./assets/levels.json")
       .then((response) => response.json())
-      .then((jsObject) => {
+      .then((jsObj) => {
+        let jsObject = jsObj[`${this.gridSize}x${this.gridSize}`];
         if (BUILD) {
           this.level = jsObject.length - 1;
         }
         let levelMap = jsObject[this.level];
+        if (!BUILD) {
+          gridSize = levelMap.length;
+        }
 
+        size = cSize / gridSize;
         offset = {
           x: (canvas.width - size * levelMap.length) / 2,
           y: (canvas.height - size * levelMap[0].length) / 2,
         };
         if (BUILD) {
           offset = { x: 0, y: 0 };
+          this.world = Array.from(new Array(gridSize), (a) => {
+            return Array(gridSize).fill(0);
+          });
         }
-        this.world = levelMap;
+
         console.log(this.world);
         levelMap.forEach((row, j) => {
           row.forEach((_, i) => {
@@ -198,14 +217,16 @@ class Game {
       this.create();
     }
     if (!this.isFinished) return;
+    if(!BUILD){
     ctx.fillStyle = "rgb(100,100,100)";
-    ctx.fillRect(offset.x, offset.y, size * 15, size * 15);
+    ctx.fillRect(offset.x, offset.y, cSize, cSize);
+    }
     p.move();
     blocks.forEach((block) => block.draw());
   }
 }
 
-let size = map(30, 0, 706, 0, canvas.height);
+let size = 10; //~~map(30, 0, 706, 0, canvas.height);
 let keys = [];
 let p;
 let blocks = [];
@@ -214,7 +235,16 @@ let offset = {
   x: 0,
   y: 0,
 };
+let gridSize = 20;
 let keyDelay = 10;
+
+let cSize = canvas.height * 0.9;
+if (canvas.width > canvas.height) {
+  cSize = canvas.height * 0.9;
+} else if (canvas.width < canvas.height) {
+  cSize = canvas.width * 0.9;
+}
+
 console.log(canvas.width, canvas.height);
 
 let g = new Game();
@@ -237,7 +267,9 @@ function draw() {
     keyDelay--;
   }
   frameCount += 1;
-  background(75, 75, 75);
+  if (!BUILD) {
+    background(75, 75, 75);
+  }
   g.draw();
 
   if (BUILD) {
@@ -285,11 +317,17 @@ document.addEventListener("keyup", (e) => {
   if (e.key == "s") {
     bType += 1;
   }
+
   if (bType - 1 >= types.length) {
     bType = 1;
   }
 });
 document.addEventListener("mousemove", (e) => {
+  if (BUILD) {
+    background(75, 75, 75);
+    ctx.fillStyle = "rgb(150,150,150)";
+    ctx.fillRect(0, 0, cSize, cSize);
+  }
   mouseX = e.clientX;
   mouseY = e.clientY;
 
@@ -299,6 +337,9 @@ document.addEventListener("mousemove", (e) => {
 
 if (BUILD) {
   document.addEventListener("click", (e) => {
+    background(75, 75, 75);
+    ctx.fillStyle = "rgb(150,150,150)";
+    ctx.fillRect(0, 0, cSize, cSize);
     mouseX = e.clientX;
     mouseY = e.clientY;
     bitX = ~~(mouseX / size);
@@ -307,9 +348,13 @@ if (BUILD) {
     console.log(bType, types[bType - 1]);
 
     if (types[bType - 1] == "erase") {
-      g.world[bitY][bitX] = bType;
+      // g.world[bitY][bitX] = bType;
       blocks.forEach((block, index) => {
-        if (block.x / size == bitX && block.y / size == bitY) {
+        console.log(block.x / size, block.y / size, bitX, bitY);
+        if (
+          Math.floor(block.x / size) == bitX &&
+          Math.floor(block.y / size) == bitY
+        ) {
           blocks.splice(index, 1);
         }
       });
@@ -319,7 +364,7 @@ if (BUILD) {
     } else {
       p.x = bitX * size;
       p.y = bitY * size;
-
+      p.orig = { x: p.x, y: p.y };
       g.world.forEach((row, j) => {
         row.forEach((column, i) => {
           let id = g.world[j][i];

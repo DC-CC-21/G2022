@@ -7,9 +7,25 @@ body {
     display:flex;
     justify-content: center;
     align-items: center;
+    overflow-x: hidden;
+
 }
 
-#play{
+div{
+    /* background:black; */
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+div a{
+    font-size:300%;
+    margin:2% 0px;
+    border:2px solid white;
+    padding:1%;
+    text-decoration: none;
+    color:rgb(0, 0, 0)
+}
+/* #play{
     text-decoration: none;
     background:radial-gradient(rgba(0, 187, 211, 0.856),rgba(0, 201, 204, 0.856),rgb(0, 99, 145), rgb(0, 0, 0));
     color:rgb(255, 153, 0);
@@ -18,4 +34,4 @@ body {
     padding:20px;
     border-radius: 10px;
     border:3px solid #00afff;
-}
+} */

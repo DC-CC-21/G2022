@@ -9,6 +9,22 @@
 </head>
 <body>
 
-    <a href="play.html" id="play">PLAY</a>
+    <!-- <a href="levels.html" id="play">PLAY</a> -->
+    <div id="gridSizes"></div>
+    <script>
+        const container = document.getElementById('gridSizes')
+        fetch('./assets/levels.json')
+        .then(response => response.json())
+        .then(jsObject => {
+            Object.keys(jsObject).forEach(gridSize => {
+                let el = document.createElement('a')
+                el.href = 'levels.html?gridSize='+gridSize
+                el.innerHTML = gridSize
+                console.log(gridSize)
+                container.append(el)
+
+            })
+        })
+    </script>
 </body>
 </html>
