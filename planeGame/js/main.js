@@ -3,7 +3,11 @@ import { GLTFLoader } from "../node_modules/three/examples/jsm/loaders/GLTFLoade
 import { PointerLockControls } from "../node_modules/three/examples/jsm/controls/PointerLockControls.js";
 import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js";
 import { RGBELoader } from "../node_modules/three/examples/jsm/loaders/RGBELoader.js";
+import * as CANNON from '../node_modules/cannon-es/dist/cannon-es.js'
 // import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+const world = new CANNON.World({
+  gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
+})
 
 const deviceRotation = document.getElementById("device-rotation");
 deviceRotation.innerHTML = "deviceRotation";
@@ -122,6 +126,17 @@ let playerComponents = {}
 //     console.error(error);
 //   }
 // );
+const sphereBody = new CANNON.Body({
+  mass: 5, // kg
+  shape: new CANNON.Sphere(2),
+})
+sphereBody.position.set(0, 10, 0) // m
+world.addBody(sphereBody)
+
+const g = new THREE.SphereGeometry(2)
+const m = new THREE.MeshNormalMaterial()
+const sphereMesh = new THREE.Mesh(g, m)
+scene.add(sphereMesh)
 
 async function loadBirds(){
   const loader = new GLTFLoader();
@@ -140,6 +155,12 @@ function setupModel(model, type){
     player = model
     player.position.y =2.5
     console.log('player found')
+  }else {
+    // const groundBody = new CANNON.Trimesh({
+    //   type: CANNON.Body.STATIC,
+    //   shape: model.geometry,
+    // })
+    // world.addBody(groundBody)
   }
   console.log(model)
 
@@ -168,8 +189,10 @@ const playerData = {
 }
 
 
-
 function animation(time) {
+  world.fixedStep()
+  sphereMesh.position.copy(sphereBody.position)
+  sphereMesh.quaternion.copy(sphereBody.quaternion)
   frameCount += 1;
   if (frameCount > 1000) {
     frameCount = 0;
@@ -186,34 +209,34 @@ function animation(time) {
     controls.target = player.position
     controls.update()
 
-    // if(keys['ArrowUp']){
-    //   playerData.x -= playerData.rotationSpeed;
-    // }
-    // else if(keys['ArrowDown']){
-    //   playerData.x += playerData.rotationSpeed;
-    // } else {
-    //   playerData.x = lerp(playerData.x, 0, playerData.h*500)
-    // }
+    if(keys['ArrowUp']){
+      playerData.x -= playerData.rotationSpeed;
+    }
+    else if(keys['ArrowDown']){
+      playerData.x += playerData.rotationSpeed;
+    } else {
+      playerData.x = lerp(playerData.x, 0, playerData.h*500)
+    }
 
-    // if(keys['ArrowRight']){
-    //   playerData.z -= playerData.rotationSpeed;
-    // }
-    // else if(keys['ArrowLeft']){
-    //   playerData.z += playerData.rotationSpeed;
-    // } else {
-    //   playerData.z = lerp(playerData.z, 0, playerData.h*500)
+    if(keys['ArrowRight']){
+      playerData.z -= playerData.rotationSpeed;
+    }
+    else if(keys['ArrowLeft']){
+      playerData.z += playerData.rotationSpeed;
+    } else {
+      playerData.z = lerp(playerData.z, 0, playerData.h*500)
 
-    // }
+    }
 
-    // if(keys['a']){
-    //   playerData.y += playerData.rotationSpeed;
-    // }
-    // else if(keys['d']){
-    //   playerData.y -= playerData.rotationSpeed;
-    // } else {
-    //   playerData.y = lerp(playerData.y, 0, playerData.h*500)
+    if(keys['a']){
+      playerData.y += playerData.rotationSpeed;
+    }
+    else if(keys['d']){
+      playerData.y -= playerData.rotationSpeed;
+    } else {
+      playerData.y = lerp(playerData.y, 0, playerData.h*500)
 
-    // }
+    }
 
     player.rotation.x = lerp(player.rotation.x, playerData.x,playerData.h)
     player.rotation.y = lerp(player.rotation.y, playerData.y,playerData.h)
@@ -298,6 +321,7 @@ function handleMotionEvent(event) {
 
 document.addEventListener('keydown', (e) => {
   keys[e.key] = true
+  playerData.h = Number(document.getElementById('i').value)
 })
 document.addEventListener('keyup', (e) => {
     keys[e.key] = false
