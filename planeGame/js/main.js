@@ -209,34 +209,34 @@ function animation(time) {
     controls.target = player.position
     controls.update()
 
-    if(keys['ArrowUp']){
-      playerData.x -= playerData.rotationSpeed;
-    }
-    else if(keys['ArrowDown']){
-      playerData.x += playerData.rotationSpeed;
-    } else {
-      playerData.x = lerp(playerData.x, 0, playerData.h*500)
-    }
+    // if(keys['ArrowUp']){
+    //   playerData.x -= playerData.rotationSpeed;
+    // }
+    // else if(keys['ArrowDown']){
+    //   playerData.x += playerData.rotationSpeed;
+    // } else {
+    //   playerData.x = lerp(playerData.x, 0, playerData.h*500)
+    // }
 
-    if(keys['ArrowRight']){
-      playerData.z -= playerData.rotationSpeed;
-    }
-    else if(keys['ArrowLeft']){
-      playerData.z += playerData.rotationSpeed;
-    } else {
-      playerData.z = lerp(playerData.z, 0, playerData.h*500)
+    // if(keys['ArrowRight']){
+    //   playerData.z -= playerData.rotationSpeed;
+    // }
+    // else if(keys['ArrowLeft']){
+    //   playerData.z += playerData.rotationSpeed;
+    // } else {
+    //   playerData.z = lerp(playerData.z, 0, playerData.h*500)
 
-    }
+    // }
 
-    if(keys['a']){
-      playerData.y += playerData.rotationSpeed;
-    }
-    else if(keys['d']){
-      playerData.y -= playerData.rotationSpeed;
-    } else {
-      playerData.y = lerp(playerData.y, 0, playerData.h*500)
+    // if(keys['a']){
+    //   playerData.y += playerData.rotationSpeed;
+    // }
+    // else if(keys['d']){
+    //   playerData.y -= playerData.rotationSpeed;
+    // } else {
+    //   playerData.y = lerp(playerData.y, 0, playerData.h*500)
 
-    }
+    // }
 
     player.rotation.x = lerp(player.rotation.x, playerData.x,playerData.h)
     player.rotation.y = lerp(player.rotation.y, playerData.y,playerData.h)
