@@ -39,8 +39,8 @@ class PlayScene extends Phaser.Scene {
       let f = this.add.image(
         spriteSize.width * 0.6,
         spriteSize.height * 0.4 +
-          offsetY * this.order.length -
-          index * offsetY,
+        offsetY * this.order.length -
+        index * offsetY,
         name
       );
       f.displayWidth = spriteSize.width;
@@ -49,6 +49,39 @@ class PlayScene extends Phaser.Scene {
   }
 
   create() {
+    function onDeviceMotion(event) {
+      function normalize(v){
+        return (~~(v*100))
+      }
+      // alpha.innerHTML = normalize(event.accelerationIncludingGravity.x);
+      // beta.innerHTML = normalize(event.accelerationIncludingGravity.y);
+      // gamma.innerHTML = normalize(event.accelerationIncludingGravity.z);
+      // x += normalize(event.accelerationIncludingGravity.x)
+      console.log(this)
+      this.base.setVelocityX(normalize(event.accelerationIncludingGravity.x))
+
+      document.getElementById("b").innerHTML = JSON.stringify(event.accelerationIncludingGravity)
+    }
+
+    async function onClick() {
+      document.getElementById("b").innerHTML = await DeviceMotionEvent.requestPermission()
+      if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        // Handle iOS 13+ devices.
+        DeviceMotionEvent.requestPermission()
+          .then((state) => {
+            if (state === 'granted') {
+              window.addEventListener('devicemotion', onDeviceMotion.bind(this));
+            } else {
+              console.error('Request to access the orientation was rejected');
+            }
+          })
+          .catch(console.error);
+      } else {
+        // Handle regular non iOS 13+ devices.
+        window.addEventListener('devicemotion', onDeviceMotion);
+      }
+    }
+    document.getElementById('b').addEventListener('click', onClick.bind(this))
     document.addEventListener("keydown", (e) => {
       console.log(this.landedFoods.map((x) => x.name));
       switch (e.key) {
@@ -218,3 +251,4 @@ class PlayScene extends Phaser.Scene {
     });
   }
 }
+

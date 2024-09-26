@@ -2,7 +2,7 @@
 // const HEIGHT = window.innerHeight;
 
 const speed = 200;
-const res = 5
+const res = 2
 
 const spriteSize = {
   width: 80*res,
