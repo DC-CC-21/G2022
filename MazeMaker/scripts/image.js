@@ -38,7 +38,7 @@ function boxify() {
       let b = blackOrWhite(imgData[pixelIndex + 2] * bRange.value);
       let a = 255 - Math.max(r, g, b);
 
-      arr[col][row] = Math.min(r, g, b) / 255 === 0 ? 5 : 0;
+      arr[col][row] = a / 255 === 0 ? 5 : 0;
       ctx.fillStyle = `rgba(${0}, ${0}, ${0}, ${a})`;
       ctx.fillRect(x, y, resolution, resolution);
     }
