@@ -1,0 +1,74 @@
+body {
+  background-color: rgb(87, 87, 87);
+}
+
+canvas {
+  margin: 1em auto;
+  display: block;
+}
+
+.tools {
+  background-color: rgb(202, 202, 202);
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-template-rows: 50px 1fr;
+  gap: 1em;
+  padding-bottom: 10px;
+  position: relative;
+  max-height: 41px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+}
+.tools.open {
+  max-height: 100vh;
+}
+
+.tools h4 {
+  grid-column: 1/5;
+  background-color: rgb(112, 112, 112);
+  color: white;
+  padding: 0.5em;
+  margin: 0;
+}
+
+.tools button {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: transparent;
+  border: none;
+}
+.tools svg {
+  stroke: white;
+  stroke-width: 5px;
+  pointer-events: none;
+}
+
+.tools label {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25em;
+}
+
+#run {
+  padding: 0.74em;
+}
+
+@media screen and (min-width: 600px) {
+  body {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: repeat(5, auto) 1fr;
+  }
+  .tools,
+  #run {
+    grid-column: 1/2;
+  }
+  canvas {
+    margin-left: 0.5em;
+    grid-column: 2/3;
+    grid-row: 1/7;
+  }
+}

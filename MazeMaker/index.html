@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="an awesome webpage" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="author" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./styles/style.css" />
+    <script src="./scripts/image.js" type="module"></script>
+    <script src="./scripts/mazeGenerator.js" type="module"></script>
+  </head>
+  <body>
+    <div class="tools">
+      <h4>Maze Design</h4>
+      <button
+        type="button"
+        class="toolButton"
+        aria-label="Open Maze Design Menu"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+          />
+        </svg>
+      </button>
+      <label for="imageButton">
+        Choose Image File:
+        <input
+          type="file"
+          accept="image/*"
+          name="imageButton"
+          id="imageButton"
+        />
+      </label>
+      <label for="speed">
+        Speed:
+        <input
+          type="range"
+          value="50"
+          min="0.1"
+          max="50"
+          step=".1"
+          name="speed"
+          id="speed"
+        />
+      </label>
+    </div>
+    <div class="tools">
+      <h4>Position</h4>
+      <button type="button" class="toolButton" aria-label="Open Position Menu">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+          />
+        </svg>
+      </button>
+      <label for="x">
+        X:
+        <input
+          type="range"
+          value="0"
+          min="-1"
+          max="1"
+          step="0.01"
+          name="x"
+          id="x"
+        />
+      </label>
+      <label for="y">
+        Y:
+        <input
+          type="range"
+          value="0"
+          min="-1"
+          max="1"
+          step="0.01"
+          name="y"
+          id="y"
+        />
+      </label>
+      <label for="scale">
+        Scale:
+        <input
+          type="range"
+          value="1"
+          min="0"
+          max="5"
+          step="0.1"
+          name="scale"
+          id="scale"
+        />
+      </label>
+    </div>
+    <div class="tools">
+      <h4>Color</h4>
+      <button type="button" class="toolButton" aria-label="Open Color Menu">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+          />
+        </svg>
+      </button>
+      <label for="r">
+        Red:
+        <input
+          type="range"
+          value="1"
+          min="0"
+          max="1"
+          step="0.01"
+          name="r"
+          id="r"
+        />
+      </label>
+      <label for="g">
+        Green:
+        <input
+          type="range"
+          value="1"
+          min="0"
+          max="1"
+          step="0.01"
+          name="g"
+          id="g"
+        />
+      </label>
+      <label for="b">
+        Blue:
+        <input
+          type="range"
+          value="1"
+          min="0"
+          max="1"
+          step="0.01"
+          name="b"
+          id="b"
+        />
+      </label>
+    </div>
+    <div class="tools">
+      <h4>Image Settings</h4>
+      <button type="button" class="toolButton" aria-label="Open Image Menu">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m19.5 8.25-7.5 7.5-7.5-7.5"
+          />
+        </svg>
+      </button>
+      <label for="threshold">
+        Threshold:
+        <input
+          type="range"
+          value="200"
+          min="0"
+          max="255"
+          name="threshold"
+          id="threshold"
+        />
+      </label>
+      <label for="resolution">
+        Resolution:
+        <input
+          type="range"
+          value="4"
+          min="1"
+          max="8"
+          name="resolution"
+          id="resolution"
+        />
+      </label>
+    </div>
+
+    <canvas id="canvas" width="100" height="100"></canvas>
+    <button type="button" id="run">Generate</button>
+  </body>
+</html>
