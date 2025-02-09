@@ -175,7 +175,7 @@ class HomeScene extends Phaser.Scene {
     playButton.on("pointerdown", () => {
       this.scene.start("PlayScene");
     });
-    // this.scene.start("PlayScene");
+    this.scene.start("PlayScene");
   }
 
   /**
