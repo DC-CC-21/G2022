@@ -1,4 +1,5 @@
 import { config } from "./config.js";
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 class Maze {
   constructor(width, height, size) {
@@ -51,7 +52,7 @@ class Maze {
       ctx.fillStyle = "rgb(0, 0, 0)";
       ctx.fillRect(x * this.size, y * this.size, this.size, this.size);
     } else if (status === 5) {
-      ctx.fillStyle = "rgb(0, 0, 0)";
+      ctx.fillStyle = picColor.value || "rgb(81, 255, 0)";
       ctx.fillRect(x * this.size, y * this.size, this.size, this.size);
     } else if (status === 1 || !debug) {
       ctx.fillStyle = "rgb(255, 255, 255)";
@@ -60,7 +61,7 @@ class Maze {
       ctx.fillStyle = "rgb(0, 255, 0)";
       ctx.fillRect(x * this.size, y * this.size, this.size, this.size);
     } else if (status === 3) {
-      ctx.fillStyle = "rgb(202, 202, 202)";
+      ctx.fillStyle = "rgb(224, 224, 224)";
       ctx.fillRect(x * this.size, y * this.size, this.size, this.size);
     } else if (status === 4) {
       ctx.fillStyle = "rgb(0, 255, 255)";
@@ -172,22 +173,34 @@ class Maze {
   }
 }
 function plot(xArray) {
-  const yArray = Array.from({ length: xArray.length }, (_, i) => i);
+  console.log(xArray);
+  const svg = d3.select("svg");
 
-  const data = [
-    {
-      x: yArray,
-      y: xArray,
-      mode: "lines",
-    },
-  ];
-  const layout = { width: 500, height: 400, title: "Maze" };
-  Plotly.newPlot("myPlot", data, layout);
+  // Remove any existing paths
+  svg.selectAll("path").remove();
+
+  // Append a new group and path
+  svg
+    .append("g")
+    .attr("transform", "translate(50, 50)")
+    .append("path")
+    .datum(xArray)
+    .attr("fill", "none")
+    .attr("stroke", "steelblue")
+    .attr("stroke-width", 2)
+    .attr(
+      "d",
+      d3
+        .line()
+        .x((d, i) => i * 2)
+        .y((d) => 100 - d * 2)
+    );
 }
 
 // ELEMENTS
 const runButton = document.getElementById("run");
 const speedRange = document.getElementById("speed");
+const picColor = config.picColor;
 
 // VARIABLES
 const debug = true;
@@ -201,7 +214,7 @@ const generate = async () => {
     setTimeout((_) => {
       config.setStatus("generating maze");
       resolve();
-    }, 100)
+    }, 100);
   });
 
   const arr = config.mazeArray;
@@ -210,6 +223,7 @@ const generate = async () => {
   maze.setArr(arr);
   await maze.step();
   maze.createOpening();
+  // plot(functionGraph);
 };
 
 runButton.addEventListener("click", generate);

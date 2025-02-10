@@ -11,6 +11,7 @@ class Config {
   ctx = canvas.getContext("2d");
   canvasSize = Math.min(window.innerWidth, window.innerHeight) * 0.8;
   running = false;
+  picColor = document.getElementById("picColor");
 
   setStatus(status) {
     switch (status) {
@@ -20,6 +21,15 @@ class Config {
       default:
         this.running = false;
     }
+  }
+  getRGB() {
+    const hexColor = this.picColor.value;
+
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+
+    return { r, g, b };
   }
 }
 export const config = new Config();

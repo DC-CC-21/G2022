@@ -14,6 +14,7 @@ function blackOrWhite(a) {
   return a > thresholdRange.value ? 255 : 0; //> 255 ? 255 : 0;
 }
 
+// Function to create boxes
 function boxify() {
   const { width, height } = canvas;
   const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
@@ -40,6 +41,67 @@ function boxify() {
 
       arr[col][row] = a / 255 === 0 ? 5 : 0;
       ctx.fillStyle = `rgba(${0}, ${0}, ${0}, ${a})`;
+      ctx.fillRect(x, y, resolution, resolution);
+    }
+  }
+  return arr;
+}
+
+// Function to create outline
+function genOutline() {
+  const { width, height } = canvas;
+  const imgData = ctx.getImageData(0, 0, width, height);
+  const data = imgData.data;
+
+  // ctx.fillRect(0, 0, width, height);
+
+  for (let i = 0; i < data.length; i += 4) {
+    const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+
+    data[i] = blackOrWhite(255 - avg);
+    data[i + 1] = blackOrWhite(255 - avg);
+    data[i + 2] = blackOrWhite(255 - avg);
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
+
+// Finished combination of the box and outline functions
+function genBoxedOutline() {
+  const { width, height } = canvas;
+  const imgData = ctx.getImageData(0, 0, width, height);
+  const data = imgData.data;
+  const resolution = resolutionRange.value;
+
+  const squaresPerRow = Math.floor(width / resolution);
+  const squaresPerColumn = Math.floor(height / resolution);
+  const arr = Array.from({ length: squaresPerRow }, () =>
+    Array.from({ length: squaresPerColumn }, () => 0)
+  );
+  const mazeRGB = config.getRGB();
+
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, width, height);
+
+  // ctx.drawImage(imageInfo.image, 0, 0, width, height);
+  for (let row = 0; row < squaresPerColumn; row++) {
+    for (let col = 0; col < squaresPerRow; col++) {
+      const x = col * resolution;
+      const y = row * resolution;
+      const pixelIndex = (y * width + x) * 4;
+
+      const r = data[pixelIndex] * rRange.value;
+      const g = data[pixelIndex + 1] * gRange.value;
+      const b = data[pixelIndex + 2] * bRange.value;
+      const avg = (r + g + b) / 3;
+
+      const avgR = blackOrWhite(255 - avg);
+      const avgG = blackOrWhite(255 - avg);
+      const avgB = blackOrWhite(255 - avg);
+      const color = blackOrWhite((avgR + avgG + avgB) / 3);
+      const a = color === 255 ? 255 : 0;
+
+      arr[col][row] = color === 255 ? 5 : 0;
+      ctx.fillStyle = `rgba(${mazeRGB.r}, ${mazeRGB.g}, ${mazeRGB.b}, ${a})`;
       ctx.fillRect(x, y, resolution, resolution);
     }
   }
@@ -78,7 +140,10 @@ function redraw() {
     imageWidth,
     imageHeight
   );
-  config.mazeArray = boxify();
+  // config.mazeArray = boxify();
+  // genOutline();
+  config.mazeArray = genBoxedOutline();
+  console.log(config.mazeArray.length)
 }
 
 // ELEMENTS
@@ -120,8 +185,9 @@ rRange.addEventListener("input", redraw);
 gRange.addEventListener("input", redraw);
 bRange.addEventListener("input", redraw);
 thresholdRange.addEventListener("input", redraw);
+config.picColor.addEventListener("input", redraw);
 document.addEventListener("click", (e) => {
-    if(e.target.classList.contains("toolButton")){
-        e.target.parentElement.classList.toggle("open")
-    }
-})
+  if (e.target.classList.contains("toolButton")) {
+    e.target.parentElement.classList.toggle("open");
+  }
+});

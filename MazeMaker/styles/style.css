@@ -56,7 +56,7 @@ canvas {
   padding: 0.74em;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 1000px) {
   body {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -70,5 +70,9 @@ canvas {
     margin-left: 0.5em;
     grid-column: 2/3;
     grid-row: 1/7;
+  }
+  .tools {
+    display:flex;
+    flex-direction: column;
   }
 }

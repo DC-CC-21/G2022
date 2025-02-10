@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Sudoku Home" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta name="author" content="DC-CC-21" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="./styles/style.css"
+    />
+    <script
+      src="./script/personalize.js"
+      type="module"
+      defer
+    ></script>
+  </head>
+  <body id="personalize">
+    <!-- <header><h1>Sudoku</h1></header> -->
+    <main>
+      <div>
+        <h2>Images</h2>
+        <div id="imageSets">
+          <!-- <div>
+            <div class="imagePlaceholder"></div>
+            <button class="addButton">+</button>
+          </div> -->
+          <button class="addButton" id="addSet">+</button>
+        </div>
+      </div>
+    </main>
+    <canvas id="b64Canvas"></canvas>
+    <input type="file" id="hidden" aria-label="hidden" accept="image/*"/>
+  </body>
+</html>
