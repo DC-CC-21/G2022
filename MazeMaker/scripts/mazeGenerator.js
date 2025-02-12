@@ -27,11 +27,11 @@ class Maze {
     this.grid.forEach((row, i) => {
       row.forEach((_, j) => {
         if (i === 0 || j === 0) {
-          this.grid[i][j] = 1;
-          this.drawCell(i, j, 1);
+          this.grid[i][j] = 6;
+          this.drawCell(i, j, 6);
         } else if (i === this.columnCount - 1 || j === this.rowCount - 1) {
-          this.drawCell(i, j, 0);
-          this.grid[i][j] = 1;
+          this.drawCell(i, j, 6);
+          this.grid[i][j] = 6;
         }
       });
     });
@@ -170,6 +170,7 @@ class Maze {
     const x2 = Math.floor(Math.random() * (this.columnCount - 2)) + 1;
     const y2 = this.rowCount - 1;
     this.drawCell(x2, y2, 4);
+    this.drawCell(x2, y2-1, 4);
   }
 }
 function plot(xArray) {
@@ -200,6 +201,7 @@ function plot(xArray) {
 // ELEMENTS
 const runButton = document.getElementById("run");
 const speedRange = document.getElementById("speed");
+const play = document.getElementById("play");
 const picColor = config.picColor;
 
 // VARIABLES
@@ -207,8 +209,10 @@ const debug = true;
 const canvas = config.canvas;
 const ctx = config.ctx;
 const functionGraph = [];
+let mazeOutput = []
 
 const generate = async () => {
+  play.classList.add("hidden");
   config.setStatus("stopped");
   await new Promise((resolve) => {
     setTimeout((_) => {
@@ -223,7 +227,18 @@ const generate = async () => {
   maze.setArr(arr);
   await maze.step();
   maze.createOpening();
+  play.classList.remove("hidden");
+  mazeOutput = maze.grid
+  console.log(mazeOutput)
   // plot(functionGraph);
 };
 
 runButton.addEventListener("click", generate);
+play.addEventListener("click", () => {
+  localStorage.setItem("mazeLevel", JSON.stringify(mazeOutput));
+  localStorage.setItem("mazeColor", picColor.value);
+  setTimeout(() => {
+    // open in new tab
+    window.open("play.html", "_blank");
+  }, 100);
+});
