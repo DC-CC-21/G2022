@@ -53,17 +53,17 @@ canvas {
 }
 
 #buttons {
-  display:flex;
-  flex-direction:row;
+  display: flex;
+  flex-direction: row;
   justify-content: center;
-  gap:2em;
+  gap: 2em;
 }
 #buttons button {
   padding: 0.74em;
-  width:200px;
+  width: 200px;
 }
 .hidden {
-  display:none;
+  display: none;
 }
 
 @media screen and (min-width: 1000px) {
@@ -82,7 +82,32 @@ canvas {
     grid-row: 1/7;
   }
   .tools {
-    display:flex;
+    display: flex;
     flex-direction: column;
   }
+}
+
+.mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+}
+
+.mask div {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2em;
+  display:flex;
+  flex-direction:column
+}
+.mask span {
+  color: white;
+}
+.mask button {
+  font-size: 2rem;
 }

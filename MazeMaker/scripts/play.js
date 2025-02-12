@@ -49,7 +49,7 @@ class Player {
     y ??= this.y;
 
     if (status === 0) {
-      ctx.fillStyle = "rgb(228, 228, 228)";
+      ctx.fillStyle = "rgb(153, 153, 153)";
     } else if (status === 2) {
       ctx.fillStyle = "rgb(255, 255, 0)";
     } else {
@@ -116,7 +116,7 @@ class Player {
   }
 
   async step(x, y, previous = [], isBacktrack = false, isEnd = false) {
-    await new Promise((resolve) => setTimeout(resolve, 15));
+    await new Promise((resolve) => setTimeout(resolve, 1));
 
     if (!x) {
       x = this.getXY().x;
@@ -245,18 +245,21 @@ for (let i = 0; i < mazeArray.length; i++) {
 }
 
 let clicked = false;
-document.addEventListener("click", () => {
+let timeStart;
+document.addEventListener("click", async () => {
   if (!clicked) {
     console.log("clicked");
+    timeStart = Date.now();
     clicked = true;
-    player.step();
+    await player.step();
+    document.querySelector(".mask").classList.remove("hidden");
+    document.getElementById("time").innerHTML = `Time to solve: ${(
+      (Date.now() - timeStart) /
+      1000
+    ).toFixed(2)}s`;
   }
 });
 
-// function animate() {
-//   player.render();
-//   //   player.step();
-
-//   requestAnimationFrame(animate);
-// }
-// animate();
+document.getElementById("solve").addEventListener("click", () => {
+  document.querySelector(".mask").classList.add("hidden");
+});
