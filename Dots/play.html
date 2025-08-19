@@ -3,16 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
+    <!-- <meta
       name="viewport"
       content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=1000, height=device-height, target-densitydpi=device-dpi"
-    />
+    /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Dots</title>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="https://josephg.github.io/noisejs/perlin.js" defer></script>
-
-    <script src="../jsDrawingLib/svgDraw.js" defer></script>
+    <script src="./svgDraw.js" defer></script>
     <script src="dots.js" defer></script>
   </head>
   <body onload="window.scrollTo(0,0)">
@@ -28,12 +29,12 @@
 
     <div id="selectionMenu"></div>
     <div class="btns">
-      <button id="rot">rotate</button>
-      <button id="for">forward</button>
-      <button id="back">back</button>
-      <button id="flip">flip</button>
+      <button type="button" id="rot">rotate</button>
+      <button type="button" id="for">forward</button>
+      <button type="button" id="back">back</button>
+      <button type="button" id="flip">flip</button>
     </div>
-    <span id="tl"     >
+    <span id="tl">
       <a id="backBtn">BACK</a>
       <p id="stats">MouseX: 0, MouseY:0, Card:0</p>
     </span>
@@ -50,7 +51,7 @@
       <h1>Level Complete</h1>
       <a><button id="next">NEXT</button></a>
     </div>
-    <div style='display:none' id="colors"></div>
+    <div style="display: none" id="colors"></div>
   </body>
 </html>
 

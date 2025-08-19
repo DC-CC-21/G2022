@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
     <link rel="manifest" href="manifest.json" />
     <link rel="apple-touch-icon" href="./assets/icon192.png" />
+    <link rel="icon" href="./favicon.ico" />
   </head>
   <body>
     <header id="homeHead">
@@ -21,7 +22,9 @@
     </header>
     <main>
       <nav id="playBtns">
-        <a class="homeChoice" id="daily" href="play.html?level=daily">Daily Puzzle!</a>
+        <a class="homeChoice" id="daily" href="play.html?level=daily"
+          >Daily Puzzle!</a
+        >
         <a class="homeChoice" href="gridSelect.html">Play!</a>
         <a class="homeChoice" href="themes/themes.html">Themes</a>
         <a class="homeChoice" href="bgrounds/bground.html">Backgrounds</a>
@@ -40,21 +43,17 @@
       } else {
         storage = setLocalStorage();
       }
-      let date = new Date()
-      date = date.getMonth()+'/'+date.getDate()+'/'+date.getFullYear()
+      let date = new Date();
+      date = date.getMonth() + "/" + date.getDate() + "/" + date.getFullYear();
 
-
- 
-
-      if(storage.daily == date){
-        let dailyA = document.getElementById('daily')
-        dailyA.classList.toggle('complete')        
+      if (storage.daily == date) {
+        let dailyA = document.getElementById("daily");
+        dailyA.classList.toggle("complete");
       } else {
-        storage.daily = ''
+        storage.daily = "";
       }
 
-
-      localStorage.setItem('dots', JSON.stringify(storage))
+      localStorage.setItem("dots", JSON.stringify(storage));
 
       function setLocalStorage(jsObject) {
         let data = {
@@ -82,7 +81,7 @@
             x12: new Array(100).fill(0),
             x15: new Array(100).fill(0),
           },
-          background:"rgb(75, 75, 75)"
+          background: "rgb(75, 75, 75)",
         };
         localStorage.setItem("dots", JSON.stringify(data));
         return data;
@@ -92,7 +91,7 @@
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.register("service-worker.js");
         }
-      })
+      });
       console.log(storage);
     </script>
   </body>

@@ -26,23 +26,22 @@
 //   })
 // );
 
-////console.log(window.location);
-
+// Clear console and initialize error container
 console.clear();
-let errors = document.createElement("ul");
+const errors = document.createElement("ul");
 document.getElementById("stats").append(errors);
 
 window.onerror = function (error, source, lineno, colno, err) {
   errors.style.display = "block";
 
-  let info = {
+  const info = {
     error: error,
     source: source,
     line: lineno,
     column: colno,
     err: err,
   };
-  let el = document.createElement("li");
+  const el = document.createElement("li");
   Object.keys(info).forEach((key) => {
     let li = document.createElement("p");
     li.innerHTML = `${key}: ${info[key]}`;
@@ -51,52 +50,28 @@ window.onerror = function (error, source, lineno, colno, err) {
   errors.append(el);
 };
 
-//class checkCards
-let colorDiv = document.getElementById("colors");
-
-let completeTarget = document.getElementById("completeTarget");
-let completeCards = document.getElementById("completeCards");
-
-const checkCardsCanvas = document.getElementById("checkCards");
-var ctx = checkCardsCanvas.getContext("2d");
-eraseCanvas(ctx);
-const checkCardsCanvas2 = document.getElementById("checkCards2");
-var ctx2 = checkCardsCanvas2.getContext("2d");
-eraseCanvas(ctx2);
-
+// ======================
+// Helper Functions
+// ======================
 function sizeCanvas(canvas, s) {
+  // Set the canvas size and style
   canvas.width = s;
   canvas.height = s;
   canvas.style.width = s + "px";
   canvas.style.height = s + "px";
 }
-
-let cSize = 200;
-sizeCanvas(checkCardsCanvas, cSize);
-sizeCanvas(checkCardsCanvas2, cSize);
-// checkCardsCanvas.width = 200
-// checkCardsCanvas.height = 200
-// checkCardsCanvas2.width = 200
-// checkCardsCanvas2.height = 200
-// checkCardsCanvas.style.width = '200px'
-// checkCardsCanvas.style.height = '200px'
-// checkCardsCanvas2.style.width = '200px'
-// checkCardsCanvas2.style.height = '200px'
-
 function drawImage(i) {
   transferSVG(document.getElementById(`card${i}`), completeTarget, i);
   let svgs = document.querySelectorAll("#completeTarget svg");
 
   imgFromSVGnode(ctx, svgs[i], function () {});
 }
-
 function transferSVG(svg, newSvg, i) {
   let newSVGcontainer = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "svg"
   );
   let attr = document.querySelectorAll(`#${newSvg.id} use`)[i];
-  // ////console.log(newSvg);
 
   Array.from(attr.attributes).forEach((attribute) => {
     if (attribute.name != "id" && attribute.name != "transform-origin") {
@@ -118,12 +93,9 @@ function transferSVG(svg, newSvg, i) {
       el.setAttribute(attribute.name, child.getAttribute(attribute.name));
     });
     newSVGcontainer.append(el);
-    // ////console.log(child.tagName)
-    // ////console.log(child.attributes)
   });
   newSvg.append(newSVGcontainer);
 }
-// //
 function createURLforSvg(rawSVG) {
   var svgURL = new XMLSerializer().serializeToString(rawSVG);
   var svg64 = btoa(svgURL);
@@ -141,7 +113,6 @@ function eraseCanvas(ctx) {
   // Restore the transform
   ctx.restore();
 }
-
 function imgFromSVGnode(ctx, rawSVG, callback) {
   //transform
   let transform = rawSVG.dataset.transform;
@@ -171,7 +142,6 @@ function imgFromSVGnode(ctx, rawSVG, callback) {
   nimg.src = image64;
   // document.getElementById("imgs").append(nimg);
 }
-
 function canvasToDataURL(canvas) {
   let dataURL = canvas.toDataURL("image/png");
   return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
@@ -182,47 +152,73 @@ function lockScroll() {
   document.body.style.left = "0";
   document.body.style.right = "0";
 }
-lockScroll();
-
-//#region setup
+// ======================
+// Elements
+// ======================
+const cSize = 200;
+const colorDiv = document.getElementById("colors");
+const completeTarget = document.getElementById("completeTarget");
+const completeCards = document.getElementById("completeCards");
+const checkCardsCanvas = document.getElementById("checkCards");
+const ctx = checkCardsCanvas.getContext("2d");
+const checkCardsCanvas2 = document.getElementById("checkCards2");
+const ctx2 = checkCardsCanvas2.getContext("2d");
 const canvas = document.getElementById("canvas");
 const c = new Canvas(canvas, window.innerWidth, window.innerHeight, true);
+const statsEl = document.getElementById("stats");
+const controls = document.querySelector(".btns");
+const selectionMenu = document.getElementById("selectionMenu");
 
-////console.log(window.innerWidth, window.innerHeight);
-let mode = window.innerWidth > window.innerHeight ? "Landscape" : "Portrait";
+// ======================
+// Setup
+// ======================
+// Erase and resize canvas
+eraseCanvas(ctx);
+eraseCanvas(ctx2);
+sizeCanvas(checkCardsCanvas, cSize);
+sizeCanvas(checkCardsCanvas2, cSize);
 
-let originalCanvas = {
+// Disable scrolling
+lockScroll();
+
+// Find the current orientation which will be used to determine the card size
+const mode = window.innerWidth > window.innerHeight ? "Landscape" : "Portrait";
+const originalCanvas = {
   width: 520,
   height: 706,
 };
 
+// Determine the card size based on the current orientation
 let cardSize;
 if (mode == "Landscape") {
-  cardSize = c.map(200, 0, 706, 0, window.innerHeight);
+  cardSize = c.map(200, 0, originalCanvas.height, 0, window.innerHeight);
 } else if (mode == "Portrait") {
   cardSize = c.map(120, 0, originalCanvas.width, 0, window.innerWidth);
 }
 
-document.getElementById(
-  "stats"
-).innerHTML = `Width: ${window.innerWidth}, Height: ${window.innerHeight}, cardSize: ${cardSize}`;
+// Update the stats to display the window dimensions and card size
+statsEl.innerHTML = `Width: ${window.innerWidth}, Height: ${window.innerHeight}, cardSize: ${cardSize}`;
 
-let controls = document.querySelector(".btns");
-let selectionMenu = document.getElementById("selectionMenu");
-
+// Used for tracking mouse position
 let mx = 0;
 let my = 0;
 
-//#endregion
-
+// ======================
+// Create the cards
+// ======================
 class customImg {
+  /**
+   * @param {Element} container the container for the created svg element
+   * @param {string} name the id of the svg element
+   * @param {number} s the size of the svg element
+   * @returns
+   */
   constructor(container, name, s) {
     this.svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg.style.width = s + "px";
     this.svg.style.height = s + "px";
     this.svg.setAttribute("viewBox", `0 0 ${s} ${s}`);
     this.svg.setAttribute("class", "dotsCard");
-    // this.defs = document.createElementNS('http://www.w3.org/2000/svg','defs')
 
     this.symbol = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.symbol.setAttribute("id", name);
@@ -230,7 +226,6 @@ class customImg {
     this.symbol.setAttribute("height", s);
     this.symbol.setAttribute("viewBox", `0 0 ${s} ${s}`);
 
-    // this.svg.append(this.defs)
     this.svg.append(this.symbol);
     container.append(this.svg);
 
@@ -239,7 +234,9 @@ class customImg {
 }
 class createCard {
   constructor(name, width, height, grid, dots, cs, level) {
+    // The name of the card
     this.name = `card${name}`;
+
     this.card1 = new customImg(
       document.querySelector("body"),
       this.name,
@@ -264,46 +261,38 @@ class createCard {
     this.c2.textAlign("middle");
     this.c2.textSize(this.width / grid / 3);
 
-    this.cBlind = JSON.parse(localStorage.getItem("dots")).colorblind;
-    // console.log(this.cBlind);
-    //createDots(canvas, grid x*x, number of colors, number of dots)
+    this.cBlind = JSON.parse(localStorage.getItem("dots"))?.colorblind || false;
+
     this.abc = "ABCDEFGH";
     if (level == "daily") {
-      // console.log(grid);
       this.createDaily(this.c2, grid, dots, cs);
     } else if (level == "custom") {
       this.createDots2(this.c2, grid, dots, cs);
     } else {
       this.createLevel(this.c2, cs, grid);
     }
-    // this.createDots(this.c2, dots);
-    // drawImage();
   }
   createLevel(c2, data, grid) {
-    //console.log(data, "hi");
-    let theme = JSON.parse(localStorage.getItem("dots")).theme;
+    const theme =
+      JSON.parse(localStorage.getItem("dots"))?.theme || this.colors[0];
+    let colors, origColors;
     if (theme !== "random") {
-      var colors = JSON.parse(localStorage.getItem("dots")).theme;
-      var origColors = [...colors];
+      colors =
+        JSON.parse(localStorage.getItem("dots"))?.theme || this.colors[0];
+      origColors = [...colors];
       colors = c.shuffleArray(colors);
-    } else {
-      var colors = this.selectColors(num);
     }
-
-    // console.log(colors)
-    // let colors
-    // this.createDots2(c2, 4, 4, 4);
+    console.log(colors);
     c2.reset();
     this.drawOutline(c2);
     c2.reset();
-    let offsetWidth = this.width / 2;
     let s = this.width / grid;
     let padding = 0.5;
     let spacing = this.width / grid;
     data.colors.forEach((color) => {
       c2.stroke(0, 0, 0);
       if (color) {
-        //console.log(color);
+        console.log(color);
         c2.fill(colors[color.color]);
         c2.ellipse(
           color.x * spacing + s / 2,
@@ -345,7 +334,6 @@ class createCard {
         c.map(20, 0, 754, 0, window.innerHeight)
       );
     } else {
-      // c2.strokeWeight(10);
       c2.strokeWeight(c.map(8, 0, 1286, 0, window.innerWidth));
       c2.rect(
         0,
@@ -369,7 +357,6 @@ class createCard {
     } else {
       var colors = this.selectColors(num);
     }
-    let offsetWidth = this.width / 2;
     let s = this.width / grid;
     let padding = 0.5;
     let spacing = this.width / grid;
@@ -405,7 +392,6 @@ class createCard {
         }
       }
     }
-    // //console.log(JSON.stringify(this.arrayOfColors))
     this.appendHTML(this.arrayOfColors);
   }
   createDaily(c2, grid, dpc, num) {
@@ -427,9 +413,7 @@ class createCard {
     let spacing = this.width / grid;
 
     this.dots = new Array(grid * grid).fill(0);
-    this.positions = new Array(grid * grid)
-      .fill(0)
-      .map((value, index) => index);
+    this.positions = new Array(grid * grid).fill(0).map((_, index) => index);
 
     for (let i = 0; i < dpc; i++) {
       let index = ~~Math.abs(
@@ -437,7 +421,6 @@ class createCard {
           this.positions.length
       );
       let position = this.positions[index];
-      // console.log(~~noise.simplex2(i, date.getDay())*this.dots.length, this.dots.length)
       this.dots[position] = 1;
       this.positions.splice(index, 1);
     }
@@ -611,7 +594,7 @@ class targetCard {
     // c.transformOrigin(this.x + this.s / 2, this.y + this.s / 2);
     c.transformOrigin(this.s / 2, this.s / 2);
     c.rotate(this.rotation, this.s / 2, this.s / 2);
-    c.scale(this.scale * 0.5, 1 * 0.5);
+    c.scale(this.scale * 0.8, 1 * 0.8);
     if (this.card == 0) {
       //ardCount-1){
       c.fill(0, 0, 0);
@@ -859,23 +842,7 @@ class Game {
     this.cs = Number(urlParams.colors);
     this.level = urlParams.level || "custom";
     this.debug = urlParams.debug;
-    // cardCount = 3;
-    // this.grid = 4;
-    // this.dots = 8
-    // this.cs = 1;
-    // this.cardCount = cardCount;
 
-    // fetch("./levels.json")
-    // .then((response) => response.json())
-    // .then((jsObject) => {
-    //   //console.log(jsObject[this.grid].length)
-    //   // let js = c.shuffleArray(jsObject[this.grid])
-    //   // let str = ''
-    //   // for(let i = 0; i < 20; i ++){
-    //   //   str += JSON.stringify(js[i])+', \n'
-    //   // }
-    //   // //console.log(str)
-    // });
     if (this.level == "daily" || this.level == "custom") {
       document.getElementById("backBtn").href = "index.html";
     } else {
@@ -883,34 +850,44 @@ class Game {
     }
 
     if (this.level == "daily") {
+      // Used to visualize the change in cards betweeen days (debugging)
+      const dayOffset = 0;
+      const newDay = day + dayOffset;
+
+      // Choose random card count
       noise.seed(month);
-      cardCount = c.constrain(~~noise.simplex2(day, year), 2, 6);
-      noise.seed(month + day);
-      this.grid = c.constrain(
-        ~~Math.abs(noise.simplex2(day, year) * 10),
+      cardCount = ~~c.constrain(
+        Math.abs(noise.simplex2(newDay, year)) * 4 + 2,
+        2,
+        6
+      );
+
+      // Choose random grid size
+      noise.seed(month + newDay);
+      this.grid = ~~c.constrain(
+        Math.abs(noise.simplex2(newDay, year) * 10) + 2,
         2,
         15
       );
-      noise.seed((month / (day + 1)) * 30);
-      this.dots = c.constrain(
-        ~~Math.abs(noise.simplex2(day, year) * 10),
+
+      // Choose random dot count
+      noise.seed((month / (newDay + 1)) * 30);
+      this.dots = ~~c.constrain(
+        Math.abs(noise.simplex2(newDay, year) * this.grid ** 2),
         2,
-        (this.grid * this.grid) / 2
+        this.grid ** 1.8
       );
-      noise.seed(month + day);
+
       this.cardCount = cardCount;
-      noise.seed(month - day);
-      this.cs = c.constrain(~~Math.abs(noise.simplex2(day, year) * 10), 2, 8);
-      document.getElementById("tl").innerHTML +=
-        "<h1>" +
-        this.grid +
-        "," +
-        cardCount +
-        "," +
-        this.cs +
-        "," +
-        this.dots +
-        "</h1>";
+
+      // Choose a random color scheme
+      noise.seed(month - newDay);
+      this.cs = c.constrain(
+        ~~Math.abs(noise.simplex2(newDay, year) * 10),
+        2,
+        8
+      );
+
       this.run();
     } else if (this.level !== "custom") {
       // console.log(window.location)
@@ -1104,51 +1081,12 @@ class Game {
         totalDist += 1;
       }
     }
-    // document.getElementById("stats").innerHTML = totalDist;
     if (totalDist < 100) {
       this.win();
-      return
+      return;
     } else {
       return;
     }
-    if (pixels.join("") === pixels2.join("")) {
-      ////console.log("complete with pixels search");
-      this.win();
-      return true;
-    }
-
-    var img = new Image();
-    img.src = checkCardsCanvas.toDataURL();
-
-    var img2 = new Image();
-    img2.src = checkCardsCanvas2.toDataURL();
-
-    var xPromise = new Promise((resolve) => {
-      img.onload = resolve;
-    });
-    var yPromise = new Promise((resolve) => {
-      img2.onload = resolve;
-    });
-    Promise.all([xPromise, yPromise]).then(() => {
-      let dataURL = canvasToDataURL(checkCardsCanvas);
-      let dataURL2 = canvasToDataURL(checkCardsCanvas2);
-
-      if (dataURL == dataURL2) {
-        //match
-        ////console.log("complete with data url search");
-        this.win();
-        return true;
-      } else {
-        let l = levenshtein(dataURL, dataURL2);
-        if (l < 100) {
-          ////console.log("complete with levenshtein search");
-          this.win();
-          return true;
-        }
-        this.debugCheckSequence(pixels, pixels2, dataURL, dataURL2);
-        return false;
-      }
-    });
   }
   getColorDist(c1, c2) {
     let r = c1.r - c2.r;
@@ -1160,7 +1098,6 @@ class Game {
     const red = y * (width * 4) + x * 4;
     return [red, red + 1, red + 2, red + 3];
   };
-  // const colorIndices = getColorIndicesForCoord(xCoord, yCoord, canvasWidth);
   debugCheckSequence(pixels, pixels2, dataURL, dataURL2) {
     ////console.log("pixels: ", pixels.length);
     ////console.log("pixels2: ", pixels2.length);
@@ -1349,17 +1286,16 @@ let centerSquare = {
 };
 let result = [];
 let drawOnce = false;
-console.log(storage.background.includes("http"));
 let dim = false;
-if (storage.background.includes("http")) {
+if (storage?.background.includes("http")) {
   var aspect = 0;
   let image = new Image();
-  image.src = storage.background;
+  image.src = storage?.background;
   image.onload = function () {
     aspect = this.width / this.height;
-      dim = {
-        x: window.innerWidth / 2 - (window.innerHeight * aspect) / 2,
-      };
+    dim = {
+      x: window.innerWidth / 2 - (window.innerHeight * aspect) / 2,
+    };
   };
 }
 draw = function () {
@@ -1370,21 +1306,21 @@ draw = function () {
   c.textAlign("middle");
   c.background(75, 75, 75);
 
-  if (storage.background.includes("http")) {
+  if (storage?.background.includes("http")) {
     if (dim) {
-        c.image(
-          storage.background,
-          dim.x,
-          0,
-          100,
-          window.innerHeight,
-          true,
-          true,
-          true
-        );
+      c.image(
+        storage.background,
+        dim.x,
+        0,
+        100,
+        window.innerHeight,
+        true,
+        true,
+        true
+      );
     }
   } else {
-    c.background(storage.background);
+    c.background(storage?.background);
   }
   // x += 1;
   // c.rect(x, 50, 100, 100);
@@ -1419,26 +1355,12 @@ draw = function () {
     }
   }
 
-  document.getElementById("stats").innerHTML = "Moves: " + totalMoves;
+  document.getElementById("stats").innerHTML = window.innerWidth; // "Moves: " + totalMoves;
 };
 
-// draw2();
-// draw
-// let frame = 0;
-// draw=function(){
-//   frame++;
-//   if(frame < 10){
-//     draw2()
-//   }
-//   if(frame > 1000){
-//     frame = 0;
-//   }
-//   if(frame%200== 0){
-//     draw2()
-//   }
-// }
-
-//#region listeners
+// ======================
+// Event Listeners
+// ======================
 let currentCard;
 let prevCard;
 
